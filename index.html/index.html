@@ -137,9 +137,10 @@
   const cursoID = selectCurso.value;
   const curso = cursos.find(c => c.codigo === cursoID);
 
-  if (!curso) {
-    alert("Seleccione un curso válido.");
-    return;
+// Validar que se haya seleccionado un curso válido
+if (!curso || !curso.preguntas || curso.preguntas.length === 0) {
+  alert("Seleccione un curso válido.");
+  return;
   }
 
   // Validar todas las respuestas
