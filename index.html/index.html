@@ -135,7 +135,8 @@
       const empresa = document.getElementById("empresa").value.trim();
       const cursoID = document.getElementById("curso").value;
       const curso = cursos.find(c => c.codigo === cursoID);
-       if (!curso || !curso.preguntas || curso.preguntas.length === 0) {
+      
+   if (!curso || !curso.preguntas || curso.preguntas.length === 0) {
       alert("Seleccione un curso válido.");
       return;
     }
