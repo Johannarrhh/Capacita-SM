@@ -135,25 +135,30 @@
       const empresa = document.getElementById("empresa").value.trim();
       const cursoID = document.getElementById("curso").value;
       const curso = cursos.find(c => c.codigo === cursoID);
-      let correctas = 0;
-      for (let i = 0; i < curso.preguntas.length; i++) {
-        const respuesta = document.querySelector(`input[name="pregunta${i}"]:checked`);
-        if (!respuesta) {
-          alert(`Debe responder todas las preguntas. Falta la número ${i + 1}.`);
-          return;
-        }
-        if (respuesta.value === curso.preguntas[i].correcta) {
-          correctas++;
-        }
-      }
+       if (!curso || !curso.preguntas || curso.preguntas.length === 0) {
+      alert("Seleccione un curso válido.");
+      return;
+    }
 
-      const porcentaje = (correctas / curso.preguntas.length) * 100;
-      if (porcentaje < 60) {
-        alert("❌ No alcanzaste el 60% requerido. Intenta nuevamente.");
+    let correctas = 0;
+    for (let i = 0; i < curso.preguntas.length; i++) {
+      const respuesta = document.querySelector(`input[name="pregunta${i}"]:checked`);
+      if (!respuesta) {
+        alert(`Debe responder todas las preguntas. Falta la número ${i + 1}.`);
         return;
       }
+      if (respuesta.value === curso.preguntas[i].correcta) {
+        correctas++;
+      }
+    }
 
-      const fecha = new Date().toLocaleDateString();
+    const porcentaje = (correctas / curso.preguntas.length) * 100;
+    if (porcentaje < 60) {
+      alert("❌ No alcanzaste el 60% requerido. Intenta nuevamente.");
+      return;
+    }
+     const cursoNombre = curso.nombre;
+     const fecha = new Date().toLocaleDateString();
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: "landscape" });
 
