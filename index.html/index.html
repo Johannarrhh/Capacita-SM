@@ -42,11 +42,11 @@
     button:hover {
       background-color: #27AE60;
     }
-    .hidden {
-      display: none;
-    }
-    hr {
-      margin: 10px 0;
+    .pregunta-block {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -60,10 +60,13 @@
     <label for="nombre">Nombre del Participante:</label>
     <input type="text" id="nombre" required>
 
+    <label for="empresa">Empresa:</label>
+    <input type="text" id="empresa" required>
+
     <label for="curso">Seleccione un Curso:</label>
     <select id="curso" required></select>
 
-    <div id="preguntaContainer" class="hidden"></div>
+    <div id="preguntasContainer"></div>
 
     <button type="submit">Generar Certificado</button>
   </form>
@@ -73,72 +76,75 @@
       {
         codigo: "C001",
         nombre: "Prevención de Riesgos Laborales",
-        preguntas: Array.from({ length: 20 }, (_, i) => {
-          return {
-            texto: `Pregunta ${i + 1}: ¿Cuál es la respuesta correcta?`,
-            opciones: ["Opción A", "Opción B", "Opción C"],
-            respuestaCorrecta: "Opción A"
-          };
-        })
+        preguntas: [
+          { texto: "¿Cuál es el objetivo principal de la prevención de riesgos?", opciones: ["Evitar accidentes", "Aumentar la producción", "Disminuir sueldos"], correcta: "Evitar accidentes" },
+          { texto: "¿Qué se debe hacer antes de usar una máquina?", opciones: ["Encenderla sin leer instrucciones", "Leer el manual de seguridad", "Pedir permiso"], correcta: "Leer el manual de seguridad" },
+          // Agrega más preguntas (total 20 por curso)
+        ]
+      },
+      {
+        codigo: "C002",
+        nombre: "Primeros Auxilios",
+        preguntas: [
+          { texto: "¿Qué es lo primero que debes hacer ante una emergencia?", opciones: ["Llamar a tu jefe", "Evaluar la situación", "Correr"], correcta: "Evaluar la situación" },
+          { texto: "¿Cuál es el número de emergencias en Chile?", opciones: ["131", "911", "103"], correcta: "131" },
+          // Agrega más preguntas (total 20 por curso)
+        ]
       }
     ];
 
     const selectCurso = document.getElementById("curso");
-    const preguntaContainer = document.getElementById("preguntaContainer");
+    const preguntasContainer = document.getElementById("preguntasContainer");
 
     cursos.forEach(curso => {
       const opt = document.createElement("option");
       opt.value = curso.codigo;
-      opt.textContent = `${curso.nombre}`;
+      opt.textContent = curso.nombre;
       selectCurso.appendChild(opt);
     });
 
     selectCurso.addEventListener("change", () => {
+      preguntasContainer.innerHTML = "";
       const curso = cursos.find(c => c.codigo === selectCurso.value);
-      preguntaContainer.innerHTML = "";
-      preguntaContainer.classList.remove("hidden");
-
-      curso.preguntas.forEach((pregunta, index) => {
-        const bloque = document.createElement("div");
-        bloque.innerHTML = `
-          <label><strong>${index + 1}. ${pregunta.texto}</strong></label>
-          ${pregunta.opciones.map((op, i) =>
-            `<div><input type="radio" name="pregunta${index}" value="${op}" required> ${op}</div>`
-          ).join("")}
-          <hr/>
-        `;
-        preguntaContainer.appendChild(bloque);
+      curso.preguntas.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.classList.add("pregunta-block");
+        div.innerHTML = `<label>${i + 1}. ${p.texto}</label>` +
+          p.opciones.map((op, j) => `
+            <div><input type="radio" name="pregunta${i}" value="${op}" required> ${op}</div>
+          `).join("");
+        preguntasContainer.appendChild(div);
       });
     });
 
     document.getElementById("formularioCertificado").addEventListener("submit", function(e) {
       e.preventDefault();
-      const nombre = document.getElementById("nombre").value.trim();
+      const nombre = document.getElementById("nombre").value;
+      const empresa = document.getElementById("empresa").value;
       const curso = cursos.find(c => c.codigo === selectCurso.value);
+      const respuestasCorrectas = curso.preguntas.reduce((acc, pregunta, i) => {
+        const respuesta = document.querySelector(`input[name='pregunta${i}']:checked`);
+        return respuesta && respuesta.value === pregunta.correcta ? acc + 1 : acc;
+      }, 0);
 
-      let respuestasCorrectas = 0;
-      curso.preguntas.forEach((pregunta, index) => {
-        const seleccionada = document.querySelector(`input[name="pregunta${index}"]:checked`);
-        if (seleccionada && seleccionada.value === pregunta.respuestaCorrecta) {
-          respuestasCorrectas++;
-        }
-      });
+      const porcentaje = (respuestasCorrectas / curso.preguntas.length) * 100;
 
-      if (respuestasCorrectas < curso.preguntas.length) {
-        alert(`❌ Solo respondiste correctamente ${respuestasCorrectas} de ${curso.preguntas.length}. No se puede generar el certificado.`);
+      if (porcentaje < 60) {
+        alert(`❌ Solo obtuvo un ${porcentaje.toFixed(0)}%. Se requiere al menos 60% para aprobar.`);
         return;
       }
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      doc.setFontSize(22);
-      doc.text("Certificado de Participación", 20, 30);
-      doc.setFontSize(16);
-      doc.text(`Se certifica que ${nombre}`, 20, 50);
-      doc.text(`ha completado satisfactoriamente el curso:`, 20, 60);
-      doc.text(`\"${curso.nombre}\"`, 20, 70);
-      doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 90);
-
+      doc.addImage("Capacita SM.png", "PNG", 10, 10, 40, 40);
+      doc.setFontSize(20);
+      doc.text("Certificado de Participación", 60, 30);
+      doc.setFontSize(14);
+      doc.text(`Se certifica que ${nombre}`, 20, 60);
+      doc.text(`perteneciente a la empresa ${empresa},`, 20, 70);
+      doc.text(`ha aprobado satisfactoriamente el curso:`, 20, 80);
+      doc.text(`"${curso.nombre}"`, 20, 90);
+      doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 110);
       doc.save(`${nombre.replace(/\s+/g, '_')}_${curso.codigo}_certificado.pdf`);
     });
   </script>
