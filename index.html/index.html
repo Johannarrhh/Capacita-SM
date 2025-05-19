@@ -42,29 +42,14 @@
     button:hover {
       background-color: #27AE60;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
+    .hidden {
+      display: none;
     }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background-color: #27AE60;
-    }
-    .filtros {
-      display: flex;
-      gap: 10px;
+    hr {
       margin: 10px 0;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-
 </head>
 <body>
   <div style="text-align: center;">
@@ -78,23 +63,27 @@
     <label for="curso">Seleccione un Curso:</label>
     <select id="curso" required></select>
 
-    <div id="preguntaContainer" class="hidden">
-      <label id="pregunta"></label>
-      <input type="text" id="respuesta" placeholder="Ingrese su respuesta">
-    </div>
+    <div id="preguntaContainer" class="hidden"></div>
 
     <button type="submit">Generar Certificado</button>
   </form>
 
   <script>
     const cursos = [
-      { codigo: "C001", nombre: "Prevención de Riesgos Laborales", precio: 25000, pregunta: "¿Cuál es el objetivo principal de la prevención de riesgos?", respuestaCorrecta: "evitar accidentes" },
-      { codigo: "C002", nombre: "Primeros Auxilios", precio: 20000, pregunta: "¿Qué es lo primero que debes hacer ante una emergencia?", respuestaCorrecta: "evaluar la situación" },
-      // Agrega los demás cursos con sus respectivas preguntas y respuestas
+      {
+        codigo: "C001",
+        nombre: "Prevención de Riesgos Laborales",
+        preguntas: Array.from({ length: 20 }, (_, i) => {
+          return {
+            texto: `Pregunta ${i + 1}: ¿Cuál es la respuesta correcta?`,
+            opciones: ["Opción A", "Opción B", "Opción C"],
+            respuestaCorrecta: "Opción A"
+          };
+        })
+      }
     ];
 
     const selectCurso = document.getElementById("curso");
-    const preguntaLabel = document.getElementById("pregunta");
     const preguntaContainer = document.getElementById("preguntaContainer");
 
     cursos.forEach(curso => {
@@ -106,20 +95,37 @@
 
     selectCurso.addEventListener("change", () => {
       const curso = cursos.find(c => c.codigo === selectCurso.value);
-      if (curso) {
-        preguntaLabel.textContent = curso.pregunta;
-        preguntaContainer.classList.remove("hidden");
-      }
+      preguntaContainer.innerHTML = "";
+      preguntaContainer.classList.remove("hidden");
+
+      curso.preguntas.forEach((pregunta, index) => {
+        const bloque = document.createElement("div");
+        bloque.innerHTML = `
+          <label><strong>${index + 1}. ${pregunta.texto}</strong></label>
+          ${pregunta.opciones.map((op, i) =>
+            `<div><input type="radio" name="pregunta${index}" value="${op}" required> ${op}</div>`
+          ).join("")}
+          <hr/>
+        `;
+        preguntaContainer.appendChild(bloque);
+      });
     });
 
     document.getElementById("formularioCertificado").addEventListener("submit", function(e) {
       e.preventDefault();
-      const nombre = document.getElementById("nombre").value;
+      const nombre = document.getElementById("nombre").value.trim();
       const curso = cursos.find(c => c.codigo === selectCurso.value);
-      const respuesta = document.getElementById("respuesta").value.trim().toLowerCase();
 
-      if (respuesta !== curso.respuestaCorrecta.toLowerCase()) {
-        alert("❌ Respuesta incorrecta. No se puede generar el certificado.");
+      let respuestasCorrectas = 0;
+      curso.preguntas.forEach((pregunta, index) => {
+        const seleccionada = document.querySelector(`input[name="pregunta${index}"]:checked`);
+        if (seleccionada && seleccionada.value === pregunta.respuestaCorrecta) {
+          respuestasCorrectas++;
+        }
+      });
+
+      if (respuestasCorrectas < curso.preguntas.length) {
+        alert(`❌ Solo respondiste correctamente ${respuestasCorrectas} de ${curso.preguntas.length}. No se puede generar el certificado.`);
         return;
       }
 
@@ -130,7 +136,7 @@
       doc.setFontSize(16);
       doc.text(`Se certifica que ${nombre}`, 20, 50);
       doc.text(`ha completado satisfactoriamente el curso:`, 20, 60);
-      doc.text(`"${curso.nombre}"`, 20, 70);
+      doc.text(`\"${curso.nombre}\"`, 20, 70);
       doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 90);
 
       doc.save(`${nombre.replace(/\s+/g, '_')}_${curso.codigo}_certificado.pdf`);
@@ -138,4 +144,5 @@
   </script>
 </body>
 </html>
+
 
