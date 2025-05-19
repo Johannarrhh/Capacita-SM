@@ -117,38 +117,104 @@
       });
     });
 
-    document.getElementById("formularioCertificado").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const nombre = document.getElementById("nombre").value;
-      const empresa = document.getElementById("empresa").value;
-      const curso = cursos.find(c => c.codigo === selectCurso.value);
-      const respuestasCorrectas = curso.preguntas.reduce((acc, pregunta, i) => {
-        const respuesta = document.querySelector(`input[name='pregunta${i}']:checked`);
-        return respuesta && respuesta.value === pregunta.correcta ? acc + 1 : acc;
-      }, 0);
+document.getElementById("formularioCertificado").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const nombre = document.getElementById("nombre").value.trim();
+  const cursoID = document.getElementById("curso").value;
+  const preguntas = preguntasPorCurso[cursoID];
 
-      const porcentaje = (respuestasCorrectas / curso.preguntas.length) * 100;
+  let correctas = 0;
+  preguntas.forEach((p, i) => {
+    const respuesta = document.querySelector(`input[name="respuesta${i}"]:checked`);
+    if (respuesta && respuesta.value === p.correcta) correctas++;
+  });
 
-      if (porcentaje < 60) {
-        alert(`❌ Solo obtuvo un ${porcentaje.toFixed(0)}%. Se requiere al menos 60% para aprobar.`);
-        return;
-      }
+  const porcentaje = (correctas / preguntas.length) * 100;
+  if (porcentaje < 60) {
+    alert("❌ No alcanzaste el 60% requerido. Intenta nuevamente.");
+    return;
+  }
 
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.addImage("Capacita SM.png", "PNG", 10, 10, 40, 40);
-      doc.setFontSize(20);
-      doc.text("Certificado de Participación", 60, 30);
-      doc.setFontSize(14);
-      doc.text(`Se certifica que ${nombre}`, 20, 60);
-      doc.text(`perteneciente a la empresa ${empresa},`, 20, 70);
-      doc.text(`ha aprobado satisfactoriamente el curso:`, 20, 80);
-      doc.text(`"${curso.nombre}"`, 20, 90);
-      doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 110);
-      doc.save(`${nombre.replace(/\s+/g, '_')}_${curso.codigo}_certificado.pdf`);
-    });
-  </script>
-</body>
-</html>
+  const cursoNombre = cursos.find(c => c.codigo === cursoID).nombre;
+  const fecha = new Date().toLocaleDateString();
+  const empresa = "Nombre de la Empresa S.A.";
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4"
+    const logoBase64 = "data:image/png;base64,iVBORw0K...";
+  });
+
+  // Marco exterior
+  doc.setDrawColor(39, 174, 96);
+  doc.setLineWidth(2);
+  doc.rect(10, 10, 277, 190); // marco en A4 landscape
+
+  // Fondo verde claro header
+  doc.setFillColor(39, 174, 96);
+  doc.rect(10, 10, 277, 30, "F");
+
+  // Logo (usa base64 o URL válida)
+  const logoImg = new Image();
+  logoImg.src = "Capacita SM.png"; // O usar base64
+  logoImg.onload = () => {
+   doc.addImage(logoBase64, "PNG", 245, 12, 40, 25);
+
+    // Título
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(28);
+    doc.setTextColor(255, 255, 255);
+    doc.text("CERTIFICADO DE APROBACIÓN", 20, 32);
+
+    // Texto principal
+    doc.setFontSize(16);
+    doc.setTextColor(51, 51, 51);
+    doc.setFont("helvetica", "normal");
+
+    let y = 60;
+    const lineHeight = 10;
+
+    doc.text(`Se certifica que `, 20, y);
+    doc.setFont("helvetica", "bold");
+    doc.text(nombre, 55, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(`, trabajador(a) de `, 90, y);
+    doc.setFont("helvetica", "bold");
+    doc.text(empresa, 120, y);
+    y += lineHeight;
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`ha aprobado satisfactoriamente el curso `, 20, y);
+    doc.setFont("helvetica", "bold");
+    doc.text(`"${cursoNombre}"`, 90, y);
+    y += lineHeight;
+
+    doc.setFont("helvetica", "normal");
+    doc.text(`con un rendimiento del ${Math.round(porcentaje)}%.`, 20, y);
+    y += lineHeight * 2;
+
+    doc.text(`Este certificado acredita que el trabajador y la empresa cumplen con la legislación laboral vigente en Chile.`, 20, y);
+    y += lineHeight * 3;
+
+    // Fecha
+    doc.text(`Fecha de emisión: ${fecha}`, 20, y);
+
+    // Firma simulada
+    y += 30;
+    doc.setDrawColor(0, 0, 0);
+    doc.line(20, y, 90, y); // línea firma
+    doc.setFontSize(12);
+    doc.text("Firma Responsable", 30, y + 7);
+
+    // Guarda PDF
+    doc.save(`${nombre.replace(/\s+/g, "_")}_${cursoID}_certificado.pdf`);
+  };
+
+  // En caso que no se cargue logo rápido, para que el PDF no quede vacío,
+  // se puede hacer doc.save() luego con un setTimeout, pero esta es la forma ideal.
+});
+
 
 
