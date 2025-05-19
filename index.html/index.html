@@ -64,7 +64,9 @@
     <input type="text" id="empresa" required>
 
     <label for="curso">Seleccione un Curso:</label>
-    <select id="curso" required></select>
+    <select id="curso" required>
+      <option value="">-- Seleccione --</option>
+    </select>
 
     <div id="preguntasContainer"></div>
 
@@ -72,6 +74,7 @@
   </form>
 
   <script>
+    // Datos de cursos y preguntas
     const cursos = [
       {
         codigo: "C001",
@@ -79,7 +82,7 @@
         preguntas: [
           { texto: "¿Cuál es el objetivo principal de la prevención de riesgos?", opciones: ["Evitar accidentes", "Aumentar la producción", "Disminuir sueldos"], correcta: "Evitar accidentes" },
           { texto: "¿Qué se debe hacer antes de usar una máquina?", opciones: ["Encenderla sin leer instrucciones", "Leer el manual de seguridad", "Pedir permiso"], correcta: "Leer el manual de seguridad" },
-          // Agrega más preguntas (total 20 por curso)
+          // ... completa hasta 20 preguntas
         ]
       },
       {
@@ -88,7 +91,7 @@
         preguntas: [
           { texto: "¿Qué es lo primero que debes hacer ante una emergencia?", opciones: ["Llamar a tu jefe", "Evaluar la situación", "Correr"], correcta: "Evaluar la situación" },
           { texto: "¿Cuál es el número de emergencias en Chile?", opciones: ["131", "911", "103"], correcta: "131" },
-          // Agrega más preguntas (total 20 por curso)
+          // ... completa hasta 20 preguntas
         ]
       }
     ];
@@ -96,6 +99,7 @@
     const selectCurso = document.getElementById("curso");
     const preguntasContainer = document.getElementById("preguntasContainer");
 
+    // Cargar cursos en el select
     cursos.forEach(curso => {
       const opt = document.createElement("option");
       opt.value = curso.codigo;
@@ -103,118 +107,135 @@
       selectCurso.appendChild(opt);
     });
 
+    // Cuando cambia el curso, mostrar preguntas
     selectCurso.addEventListener("change", () => {
       preguntasContainer.innerHTML = "";
       const curso = cursos.find(c => c.codigo === selectCurso.value);
+      if (!curso) return;
+
       curso.preguntas.forEach((p, i) => {
         const div = document.createElement("div");
         div.classList.add("pregunta-block");
-        div.innerHTML = `<label>${i + 1}. ${p.texto}</label>` +
-          p.opciones.map((op, j) => `
-            <div><input type="radio" name="pregunta${i}" value="${op}" required> ${op}</div>
-          `).join("");
+
+        let opcionesHTML = p.opciones.map((op, j) => `
+          <div>
+            <input type="radio" id="p${i}_op${j}" name="pregunta${i}" value="${op}" required>
+            <label for="p${i}_op${j}">${op}</label>
+          </div>
+        `).join("");
+
+        div.innerHTML = `<label><strong>${i + 1}. ${p.texto}</strong></label>${opcionesHTML}`;
         preguntasContainer.appendChild(div);
       });
     });
 
-document.getElementById("formularioCertificado").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const nombre = document.getElementById("nombre").value.trim();
-  const cursoID = document.getElementById("curso").value;
-  const preguntas = preguntasPorCurso[cursoID];
+    // Logo en base64 (debes poner el real o usar tu imagen)
+    const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."; // Poner aquí el base64 de tu logo
 
-  let correctas = 0;
-  preguntas.forEach((p, i) => {
-    const respuesta = document.querySelector(`input[name="respuesta${i}"]:checked`);
-    if (respuesta && respuesta.value === p.correcta) correctas++;
-  });
+    document.getElementById("formularioCertificado").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-  const porcentaje = (correctas / preguntas.length) * 100;
-  if (porcentaje < 60) {
-    alert("❌ No alcanzaste el 60% requerido. Intenta nuevamente.");
-    return;
-  }
+      const nombre = document.getElementById("nombre").value.trim();
+      const empresa = document.getElementById("empresa").value.trim();
+      const cursoID = selectCurso.value;
+      const curso = cursos.find(c => c.codigo === cursoID);
 
-  const cursoNombre = cursos.find(c => c.codigo === cursoID).nombre;
-  const fecha = new Date().toLocaleDateString();
-  const empresa = "Nombre de la Empresa S.A.";
+      if (!curso) {
+        alert("Seleccione un curso válido.");
+        return;
+      }
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({
-    orientation: "landscape",
-    unit: "mm",
-    format: "a4"
-    const logoBase64 = "data:image/png;base64,iVBORw0K...";
-  });
+      // Contar respuestas correctas
+      let correctas = 0;
+      for(let i = 0; i < curso.preguntas.length; i++) {
+        const resp = document.querySelector(`input[name="pregunta${i}"]:checked`);
+        if (!resp) {
+          alert("Debe responder todas las preguntas.");
+          return;
+        }
+        if (resp.value === curso.preguntas[i].correcta) {
+          correctas++;
+        }
+      }
 
-  // Marco exterior
-  doc.setDrawColor(39, 174, 96);
-  doc.setLineWidth(2);
-  doc.rect(10, 10, 277, 190); // marco en A4 landscape
+      const porcentaje = (correctas / curso.preguntas.length) * 100;
+      if (porcentaje < 60) {
+        alert("❌ No alcanzaste el 60% requerido para aprobar el curso. Intenta nuevamente.");
+        return;
+      }
 
-  // Fondo verde claro header
-  doc.setFillColor(39, 174, 96);
-  doc.rect(10, 10, 277, 30, "F");
+      // Generar PDF con jsPDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4"
+      });
 
-  // Logo (usa base64 o URL válida)
-  const logoImg = new Image();
-  logoImg.src = "Capacita SM.png"; // O usar base64
-  logoImg.onload = () => {
-   doc.addImage(logoBase64, "PNG", 245, 12, 40, 25);
+      // Marco exterior
+      doc.setDrawColor(39, 174, 96);
+      doc.setLineWidth(2);
+      doc.rect(10, 10, 277, 190);
 
-    // Título
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(28);
-    doc.setTextColor(255, 255, 255);
-    doc.text("CERTIFICADO DE APROBACIÓN", 20, 32);
+      // Fondo verde header
+      doc.setFillColor(39, 174, 96);
+      doc.rect(10, 10, 277, 30, "F");
 
-    // Texto principal
-    doc.setFontSize(16);
-    doc.setTextColor(51, 51, 51);
-    doc.setFont("helvetica", "normal");
+      // Logo
+      doc.addImage(logoBase64, "PNG", 245, 12, 40, 25);
 
-    let y = 60;
-    const lineHeight = 10;
+      // Título
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(28);
+      doc.setTextColor(255, 255, 255);
+      doc.text("CERTIFICADO DE APROBACIÓN", 20, 32);
 
-    doc.text(`Se certifica que `, 20, y);
-    doc.setFont("helvetica", "bold");
-    doc.text(nombre, 55, y);
-    doc.setFont("helvetica", "normal");
-    doc.text(`, trabajador(a) de `, 90, y);
-    doc.setFont("helvetica", "bold");
-    doc.text(empresa, 120, y);
-    y += lineHeight;
+      // Texto principal
+      doc.setFontSize(16);
+      doc.setTextColor(51, 51, 51);
+      doc.setFont("helvetica", "normal");
 
-    doc.setFont("helvetica", "normal");
-    doc.text(`ha aprobado satisfactoriamente el curso `, 20, y);
-    doc.setFont("helvetica", "bold");
-    doc.text(`"${cursoNombre}"`, 90, y);
-    y += lineHeight;
+      let y = 60;
+      const lineHeight = 10;
 
-    doc.setFont("helvetica", "normal");
-    doc.text(`con un rendimiento del ${Math.round(porcentaje)}%.`, 20, y);
-    y += lineHeight * 2;
+      doc.text("Se certifica que ", 20, y);
+      doc.setFont("helvetica", "bold");
+      doc.text(nombre, 55, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(", trabajador(a) de ", 90, y);
+      doc.setFont("helvetica", "bold");
+      doc.text(empresa, 120, y);
+      y += lineHeight;
 
-    doc.text(`Este certificado acredita que el trabajador y la empresa cumplen con la legislación laboral vigente en Chile.`, 20, y);
-    y += lineHeight * 3;
+      doc.setFont("helvetica", "normal");
+      doc.text("ha aprobado satisfactoriamente el curso ", 20, y);
+      doc.setFont("helvetica", "bold");
+      doc.text(`"${curso.nombre}"`, 90, y);
+      y += lineHeight;
 
-    // Fecha
-    doc.text(`Fecha de emisión: ${fecha}`, 20, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(`con un rendimiento del ${Math.round(porcentaje)}%.`, 20, y);
+      y += lineHeight * 2;
 
-    // Firma simulada
-    y += 30;
-    doc.setDrawColor(0, 0, 0);
-    doc.line(20, y, 90, y); // línea firma
-    doc.setFontSize(12);
-    doc.text("Firma Responsable", 30, y + 7);
+      doc.text("Este certificado acredita que el trabajador y la empresa cumplen con la legislación laboral vigente en Chile.", 20, y);
+      y += lineHeight * 3;
 
-    // Guarda PDF
-    doc.save(`${nombre.replace(/\s+/g, "_")}_${cursoID}_certificado.pdf`);
-  };
+      const fecha = new Date().toLocaleDateString();
+      doc.text(`Fecha de emisión: ${fecha}`, 20, y);
 
-  // En caso que no se cargue logo rápido, para que el PDF no quede vacío,
-  // se puede hacer doc.save() luego con un setTimeout, pero esta es la forma ideal.
-});
+      // Firma simulada
+      y += 30;
+      doc.setDrawColor(0, 0, 0);
+      doc.line(20, y, 90, y);
+      doc.setFontSize(12);
+      doc.text("Firma Responsable", 30, y + 7);
+
+      doc.save(`${nombre.replace(/\s+/g, "_")}_${cursoID}_certificado.pdf`);
+    });
+  </script>
+</body>
+</html>
+
 
 
 
