@@ -1,17 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Certificados de Cursos</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CURSOS</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    label, select, input, button { display: block; margin: 10px 0; }
-    .hidden { display: none; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #27AE60;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #333333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #333333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #27AE60;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #27AE60;
+    }
+    .filtros {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+    }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
 </head>
 <body>
-  <h2>Generador de Certificados de Capacitación</h2>
+  <div style="text-align: center;">
+    <img src="Capacita SM.png" alt="Capacita SM" style="max-width: 120px; margin-bottom: 10px;">
+  </div>
+  <h2>CURSOS</h2>
   <form id="formularioCertificado">
     <label for="nombre">Nombre del Participante:</label>
     <input type="text" id="nombre" required>
