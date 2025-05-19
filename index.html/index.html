@@ -132,107 +132,110 @@
     // Logo en base64 (debes poner el real o usar tu imagen)
     const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."; // Poner aquí el base64 de tu logo
 
-    document.getElementById("formularioCertificado").addEventListener("submit", async function (e) {
-      e.preventDefault();
+   document.getElementById("formularioCertificado").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-      const nombre = document.getElementById("nombre").value.trim();
-      const empresa = document.getElementById("empresa").value.trim();
-      const cursoID = selectCurso.value;
-      const curso = cursos.find(c => c.codigo === cursoID);
+  const nombre = document.getElementById("nombre").value.trim();
+  const empresa = document.getElementById("empresa").value.trim();
+  const cursoID = selectCurso.value;
+  const curso = cursos.find(c => c.codigo === cursoID);
 
-      if (!curso) {
-        alert("Seleccione un curso válido.");
-        return;
-      }
+  if (!curso) {
+    alert("Seleccione un curso válido.");
+    return;
+  }
 
-      // Contar respuestas correctas
-      let correctas = 0;
-      for(let i = 0; i < curso.preguntas.length; i++) {
-        const resp = document.querySelector(`input[name="pregunta${i}"]:checked`);
-        if (!resp) {
-          alert("Debe responder todas las preguntas.");
-          return;
-        }
-        if (resp.value === curso.preguntas[i].correcta) {
-          correctas++;
-        }
-      }
+  // Validar todas las respuestas
+  for(let i = 0; i < curso.preguntas.length; i++) {
+    const resp = document.querySelector(`input[name="pregunta${i}"]:checked`);
+    if (!resp) {
+      alert("Debe responder todas las preguntas.");
+      return;
+    }
+  }
 
-      const porcentaje = (correctas / curso.preguntas.length) * 100;
-      if (porcentaje < 60) {
-        alert("❌ No alcanzaste el 60% requerido para aprobar el curso. Intenta nuevamente.");
-        return;
-      }
+  // Contar correctas
+  let correctas = 0;
+  for(let i = 0; i < curso.preguntas.length; i++) {
+    const resp = document.querySelector(`input[name="pregunta${i}"]:checked`);
+    if (resp.value === curso.preguntas[i].correcta) correctas++;
+  }
 
-      // Generar PDF con jsPDF
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
-        orientation: "landscape",
-        unit: "mm",
-        format: "a4"
-      });
+  const porcentaje = (correctas / curso.preguntas.length) * 100;
+  if (porcentaje < 60) {
+    alert("❌ No alcanzaste el 60% requerido para aprobar el curso. Intenta nuevamente.");
+    return;
+  }
 
-      // Marco exterior
-      doc.setDrawColor(39, 174, 96);
-      doc.setLineWidth(2);
-      doc.rect(10, 10, 277, 190);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4"
+  });
 
-      // Fondo verde header
-      doc.setFillColor(39, 174, 96);
-      doc.rect(10, 10, 277, 30, "F");
+  // Configuración colores y formas
+  doc.setDrawColor(39, 174, 96);
+  doc.setLineWidth(2);
+  doc.rect(10, 10, 277, 190);
 
-      // Logo
-      doc.addImage(logoBase64, "PNG", 245, 12, 40, 25);
+  doc.setFillColor(39, 174, 96);
+  doc.rect(10, 10, 277, 30, "F");
 
-      // Título
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(28);
-      doc.setTextColor(255, 255, 255);
-      doc.text("CERTIFICADO DE APROBACIÓN", 20, 32);
+  // Pega tu logo base64 real aquí (pega tu base64 completo)
+  const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..."; 
 
-      // Texto principal
-      doc.setFontSize(16);
-      doc.setTextColor(51, 51, 51);
-      doc.setFont("helvetica", "normal");
+  // Añadir logo directo (sin crear Image ni esperar)
+  doc.addImage(logoBase64, "PNG", 245, 12, 40, 25);
 
-      let y = 60;
-      const lineHeight = 10;
+  // Texto certificado
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(28);
+  doc.setTextColor(255, 255, 255);
+  doc.text("CERTIFICADO DE APROBACIÓN", 20, 32);
 
-      doc.text("Se certifica que ", 20, y);
-      doc.setFont("helvetica", "bold");
-      doc.text(nombre, 55, y);
-      doc.setFont("helvetica", "normal");
-      doc.text(", trabajador(a) de ", 90, y);
-      doc.setFont("helvetica", "bold");
-      doc.text(empresa, 120, y);
-      y += lineHeight;
+  doc.setFontSize(16);
+  doc.setTextColor(51, 51, 51);
+  doc.setFont("helvetica", "normal");
 
-      doc.setFont("helvetica", "normal");
-      doc.text("ha aprobado satisfactoriamente el curso ", 20, y);
-      doc.setFont("helvetica", "bold");
-      doc.text(`"${curso.nombre}"`, 90, y);
-      y += lineHeight;
+  let y = 60;
+  const lineHeight = 10;
 
-      doc.setFont("helvetica", "normal");
-      doc.text(`con un rendimiento del ${Math.round(porcentaje)}%.`, 20, y);
-      y += lineHeight * 2;
+  doc.text("Se certifica que ", 20, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(nombre, 55, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(", trabajador(a) de ", 90, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(empresa, 120, y);
+  y += lineHeight;
 
-      doc.text("Este certificado acredita que el trabajador y la empresa cumplen con la legislación laboral vigente en Chile.", 20, y);
-      y += lineHeight * 3;
+  doc.setFont("helvetica", "normal");
+  doc.text("ha aprobado satisfactoriamente el curso ", 20, y);
+  doc.setFont("helvetica", "bold");
+  doc.text(`"${curso.nombre}"`, 90, y);
+  y += lineHeight;
 
-      const fecha = new Date().toLocaleDateString();
-      doc.text(`Fecha de emisión: ${fecha}`, 20, y);
+  doc.setFont("helvetica", "normal");
+  doc.text(`con un rendimiento del ${Math.round(porcentaje)}%.`, 20, y);
+  y += lineHeight * 2;
 
-      // Firma simulada
-      y += 30;
-      doc.setDrawColor(0, 0, 0);
-      doc.line(20, y, 90, y);
-      doc.setFontSize(12);
-      doc.text("Firma Responsable", 30, y + 7);
+  doc.text("Este certificado acredita que el trabajador y la empresa cumplen con la legislación laboral vigente en Chile.", 20, y);
+  y += lineHeight * 3;
 
-      doc.save(`${nombre.replace(/\s+/g, "_")}_${cursoID}_certificado.pdf`);
-    });
-  </script>
+  const fecha = new Date().toLocaleDateString();
+  doc.text(`Fecha de emisión: ${fecha}`, 20, y);
+
+  y += 30;
+  doc.setDrawColor(0, 0, 0);
+  doc.line(20, y, 90, y);
+  doc.setFontSize(12);
+  doc.text("Firma Responsable", 30, y + 7);
+
+  // Guardar PDF
+  doc.save(`${nombre.replace(/\s+/g, "_")}_${cursoID}_certificado.pdf`);
+});
+ </script>
 </body>
 </html>
 
