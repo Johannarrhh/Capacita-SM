@@ -64,15 +64,33 @@
     width: 150px;
   }
 </style>
+<script>
+    function evaluar(pregunta, actual, siguiente) {
+      const respuesta = document.querySelector(`input[name="${pregunta}"]:checked`);
+      if (!respuesta) {
+        alert("Debe responder la pregunta antes de continuar.");
+        return;
+      }
+      if (respuesta.value !== "correcta") {
+        alert("Respuesta incorrecta. Revise el contenido y vuelva a intentarlo.");
+        return;
+      }
+      document.getElementById(actual).classList.add("oculto");
+      document.getElementById(siguiente).classList.remove("oculto");
+    }
 
+    function finalizarCurso() {
+      alert("¡Curso finalizado con éxito!");
+    }
       
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
 </head>
 <body>
   <div style="text-align: center;">
     <img id="logo" src="Capacita SM.png" alt="Capacita SM" style="max-width: 120px; margin-bottom: 10px;">
   </div>
-  <h1>CURSO: PREVENCIÓN DE INCENDIOS Y USO DE EXTINTORES </h1>
+ <h1>CURSO: PREVENCIÓN DE INCENDIOS Y USO DE EXTINTORES</h1>
 
   <form id="datosCertificado">
     <label for="nombre">Nombre completo:</label>
@@ -120,74 +138,138 @@
   </form>
 
   <div id="curso">
-  <section id="modulo1">
-    <h2>Módulo 1: Normativa Legal</h2>
-    <p>El Decreto 44 obliga a capacitar en prevención de riesgos. La capacitación es obligatoria y responsabilidad del empleador.</p>
+ <section id="modulo3">
+    <h2>Módulo 1: Definición de Incendio</h2>
+    <p>Un incendio es un fuego que escapa al control humano, con potencial destructivo para personas, estructuras y el medio ambiente.</p>
     <div class="pregunta-block">
-      <p><strong>Pregunta:</strong> ¿Cuál es el objetivo del Decreto 44?</p>
-      <label><input type="radio" name="p1" value="correcta"> Capacitar en prevención de riesgos</label><br>
-      <label><input type="radio" name="p1" value="incorrecta"> Fiscalizar contratos laborales</label><br>
-      <button onclick="evaluar('p1', 'modulo1', 'modulo2')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo2" class="oculto">
-    <h2>Módulo 2: ¿Qué es el fuego?</h2>
-    <p>El fuego necesita calor, combustible y oxígeno. Estos forman el triángulo del fuego.</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta:</strong> ¿Qué elemento no forma parte del triángulo del fuego?</p>
-      <label><input type="radio" name="p2" value="correcta"> Agua</label><br>
-      <label><input type="radio" name="p2" value="incorrecta"> Calor</label><br>
-      <button onclick="evaluar('p2', 'modulo2', 'modulo3')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo3" class="oculto">
-    <h2>Módulo 3: Tipos de Extintores</h2>
-    <p>Extintores tipo ABC sirven para varios tipos de fuego. El de CO₂ es ideal para eléctricos.</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta:</strong> ¿Qué extintor se usa en fuegos eléctricos?</p>
-      <label><input type="radio" name="p3" value="correcta"> CO₂</label><br>
-      <label><input type="radio" name="p3" value="incorrecta"> Agua</label><br>
+      <p><strong>Pregunta de evaluación:</strong> ¿Qué es un incendio?</p>
+      <label><input type="radio" name="p3" value="correcta"> Fuego fuera de control con potencial destructivo</label><br>
+      <label><input type="radio" name="p3" value="incorrecta"> Una chispa en una estufa</label><br>
       <button onclick="evaluar('p3', 'modulo3', 'modulo4')">Siguiente</button>
     </div>
   </section>
 
   <section id="modulo4" class="oculto">
-    <h2>Módulo 4: Uso Correcto - Técnica PASS</h2>
-    <p>PASO: Pasador, Apuntar, Sujetar, Barrer. Siempre a la base del fuego.</p>
+    <h2>Módulo 2: Triángulo del Fuego</h2>
+    <p>Comburente: Generalmente oxígeno.<br>Combustible: Material que puede arder.<br>Energía de activación: Calor o chispa.</p>
     <div class="pregunta-block">
-      <p><strong>Pregunta:</strong> ¿Dónde se apunta el extintor?</p>
-      <label><input type="radio" name="p4" value="correcta"> A la base del fuego</label><br>
-      <label><input type="radio" name="p4" value="incorrecta"> A la parte superior del fuego</label><br>
+      <p><strong>Pregunta de evaluación:</strong> ¿Qué elementos forman el triángulo del fuego?</p>
+      <label><input type="radio" name="p4" value="correcta"> Comburente, combustible y energía de activación</label><br>
+      <label><input type="radio" name="p4" value="incorrecta"> Agua, humo y viento</label><br>
       <button onclick="evaluar('p4', 'modulo4', 'modulo5')">Siguiente</button>
     </div>
   </section>
 
   <section id="modulo5" class="oculto">
-    <h2>Módulo 5: Mantención</h2>
-    <p>Los extintores deben revisarse mensualmente, señalizarse y mantenerse accesibles.</p>
+    <h2>Módulo 3: Tetraedro del Fuego</h2>
+    <p>La reacción química autoalimentada mantiene la combustión activa, liberando calor y generando vapores combustibles.</p>
     <div class="pregunta-block">
-      <p><strong>Pregunta:</strong> ¿Cada cuánto se revisa un extintor?</p>
-      <label><input type="radio" name="p5" value="correcta"> Mensualmente</label><br>
-      <label><input type="radio" name="p5" value="incorrecta"> Anualmente</label><br>
+      <p><strong>Pregunta de evaluación:</strong> ¿Qué permite el tetraedro del fuego?</p>
+      <label><input type="radio" name="p5" value="correcta"> Mantener la combustión mediante reacción química</label><br>
+      <label><input type="radio" name="p5" value="incorrecta"> Evitar que el fuego se encienda</label><br>
       <button onclick="evaluar('p5', 'modulo5', 'modulo6')">Siguiente</button>
     </div>
   </section>
 
   <section id="modulo6" class="oculto">
-    <h2>Módulo 6: Actuar ante un Incendio</h2>
-    <p>Activar alarma, evacuar si es necesario, y usar extintor solo si hay seguridad.</p>
+    <h2>Módulo 4: Clasificación del Fuego</h2>
+    <p>Clase A: Materiales sólidos (madera, papel).<br>Clase B: Líquidos inflamables (petróleo, pinturas).<br>Clase C: Equipos eléctricos energizados.<br>Clase K: Aceites y grasas de cocina.<br>Clase D: Metales combustibles (magnesio, sodio).</p>
     <div class="pregunta-block">
-      <p><strong>Pregunta:</strong> ¿Qué se debe hacer primero en caso de incendio?</p>
-      <label><input type="radio" name="p6" value="correcta"> Activar la alarma</label><br>
-      <label><input type="radio" name="p6" value="incorrecta"> Usar el extintor de inmediato</label><br>
-      <button onclick="finalizarCurso()">Finalizar Curso</button>
+      <p><strong>Pregunta de evaluación:</strong> ¿Qué tipo de fuego pertenece a la clase B?</p>
+      <label><input type="radio" name="p6" value="correcta"> Líquidos inflamables</label><br>
+      <label><input type="radio" name="p6" value="incorrecta"> Papel y madera</label><br>
+      <button onclick="evaluar('p6', 'modulo6', 'modulo7')">Siguiente</button>
     </div>
   </section>
-</div>
 
-  <script>
+  <section id="modulo7" class="oculto">
+    <h2>Módulo 5: Principales Causas de Incendio</h2>
+    <p>Instalaciones eléctricas deficientes.<br>Manejo inadecuado de materiales inflamables.<br>Acumulación de materiales combustibles.<br>Fumar en zonas no autorizadas.</p>
+    <div class="pregunta-block">
+      <p><strong>Pregunta de evaluación:</strong> ¿Cuál es una causa común de incendios?</p>
+      <label><input type="radio" name="p7" value="correcta"> Instalaciones eléctricas deficientes</label><br>
+      <label><input type="radio" name="p7" value="incorrecta"> Pintar las paredes con colores oscuros</label><br>
+      <button onclick="evaluar('p7', 'modulo7', 'modulo8')">Siguiente</button>
+    </div>
+  </section>
+
+  <section id="modulo8" class="oculto">
+    <h2>Módulo 6: Métodos de Extinción</h2>
+    <p>
+      Por enfriamiento: Disminuir calor (agua).<br>
+      Por interrupción de la reacción en cadena: Polvos químicos secos, manta.<br>
+      Por sofocación: Reducir concentración de oxígeno.<br>
+      Por aislación del combustible: Cortar suministro.
+    </p>
+    <div class="pregunta-block">
+      <p><strong>Pregunta de evaluación:</strong> ¿Qué método extingue el fuego reduciendo el calor?</p>
+      <label><input type="radio" name="p8" value="correcta"> Por enfriamiento</label><br>
+      <label><input type="radio" name="p8" value="incorrecta"> Por propagación</label><br>
+      <button onclick="evaluar('p8', 'modulo8', 'modulo9')">Siguiente</button>
+    </div>
+  </section>
+
+  <section id="modulo9" class="oculto">
+    <h2>Módulo 7: Prevención de Incendios</h2>
+    <p>
+      Medidas generales incluyen:<br>
+      No fumar en zonas de riesgo.<br>
+      No sobrecargar enchufes.<br>
+      Mantener orden y limpieza.<br>
+      Revisar instalaciones eléctricas.<br>
+      Capacitar al personal.
+    </p>
+    <div class="pregunta-block">
+      <p><strong>Pregunta de evaluación:</strong> ¿Qué medida ayuda a prevenir incendios?</p>
+      <label><input type="radio" name="p9" value="correcta"> No sobrecargar enchufes</label><br>
+      <label><input type="radio" name="p9" value="incorrecta"> Guardar extintores en bodegas cerradas</label><br>
+      <button onclick="evaluar('p9', 'modulo9', 'modulo10')">Siguiente</button>
+    </div>
+  </section>
+
+  <section id="modulo10" class="oculto">
+    <h2>Módulo 8: Extintores</h2>
+    <p>
+      Tipos y uso:<br>
+      Extintor portátil: Incluye presurizado permanente, de cartucho, y recargable.<br>
+      Agentes extintores: Agua, dióxido de carbono, base de cloruro de calcio, polvo seco.
+    </p>
+    <div class="pregunta-block">
+      <p><strong>Pregunta de evaluación:</strong> ¿Cuál de los siguientes es un agente extintor?</p>
+      <label><input type="radio" name="p10" value="correcta"> Dióxido de carbono</label><br>
+      <label><input type="radio" name="p10" value="incorrecta"> Gas butano</label><br>
+      <button onclick="evaluar('p10', 'modulo10', 'modulo11')">Siguiente</button>
+    </div>
+  </section>
+
+  <section id="modulo11" class="oculto">
+    <h2>Módulo 9: Pasos para Usar un Extintor</h2>
+    <p>
+      Diríjase a la zona del incendio.<br>
+      Retire el pasador o seguro.<br>
+      Accione el gatillo y dirija la descarga hacia la base del fuego en zigzag.
+    </p>
+    <div class="pregunta-block">
+      <p><strong>Pregunta de evaluación:</strong> ¿A dónde se debe dirigir la descarga del extintor?</p>
+      <label><input type="radio" name="p11" value="correcta"> A la base del fuego</label><br>
+      <label><input type="radio" name="p11" value="incorrecta"> A las llamas superiores</label><br>
+      <button onclick="evaluar('p11', 'modulo11', 'modulo12')">Siguiente</button>
+    </div>
+  </section>
+
+  <section id="modulo12" class="oculto">
+    <h2>Módulo 10: Ubicación de Extintores</h2>
+    <p>
+      Deben estar visibles, señalizados y de fácil acceso. La distribución varía según el riesgo del área, asegurando estar cerca de salidas de emergencia.
+    </p>
+    <div class="pregunta-block">
+      <p><strong>Pregunta de evaluación:</strong> ¿Dónde deben ubicarse los extintores?</p>
+      <label><input type="radio" name="p12" value="correcta"> Visibles y cerca de salidas de emergencia</label><br>
+      <label><input type="radio" name="p12" value="incorrecta"> Guardados en oficinas administrativas</label><br>
+      <button onclick="finalizarCurso()">Finalizar Curso</button>
+    </div>
+  </section> 
+    <script>
     function evaluar(pregunta, actual, siguiente) {
       const respuesta = document.querySelector(`input[name="${pregunta}"]:checked`);
       if (!respuesta) {
@@ -247,7 +329,7 @@ function finalizarCurso() {
 
     doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 20, y + 10);
     doc.text("_____________________________", 20, y + 30);
-    doc.text("Firma Responsable", 20, y + 37);
+    doc.text("Firma", 20, y + 37);
 
     doc.save("certificado-extintores.pdf");
   };
