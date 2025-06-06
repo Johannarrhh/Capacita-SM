@@ -202,37 +202,56 @@
       document.getElementById(siguiente).classList.remove("oculto");
     }
 
-    function finalizarCurso() {
-      const nombre = document.getElementById("nombre").value;
-      const rut = document.getElementById("rut").value;
-      const empresa = document.getElementById("empresa").value;
+function finalizarCurso() {
+  const nombre = document.getElementById("nombre").value.trim();
+  const rut = document.getElementById("rut").value.trim();
+  const empresa = document.getElementById("empresa").value;
+  const sucursal = document.getElementById("sucursal").value;
+  const cargo = document.getElementById("cargo").value === "otro"
+    ? document.getElementById("otroCargo").value.trim()
+    : document.getElementById("cargo").value;
 
-      if (!nombre || !rut || !empresa) {
-        alert("Debe completar los datos antes de generar el certificado.");
-        return;
-      }
+  if (!nombre || !rut || !empresa || !sucursal || !cargo) {
+    alert("Debe completar todos los datos antes de generar el certificado.");
+    return;
+  }
 
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-      const logo = new Image();
-      logo.src = 'Capacita SM.png';
-      logo.onload = () => {
-        doc.addImage(logo, 'PNG', 80, 10, 50, 30);
+  const logo = new Image();
+  logo.src = 'Capacita SM.png';
+  logo.onload = () => {
+    // Logo y título
+    doc.addImage(logo, 'PNG', 75, 10, 60, 25);
+    doc.setFontSize(16);
+    doc.setTextColor(76, 124, 70); // verde oscuro
+    doc.text("CERTIFICADO DE PARTICIPACIÓN", 105, 50, { align: "center" });
 
-        doc.setFontSize(14);
-        doc.text("Certificado de Participación", 105, 50, { align: "center" });
-        doc.setFontSize(12);
-        doc.text(`Certificamos que ${nombre}, RUT ${rut},`, 20, 70);
-        doc.text(`ha completado satisfactoriamente el curso 'Uso de Extintores'`, 20, 80);
-        doc.text(`en cumplimiento del Decreto Supremo N°44 del Ministerio del Trabajo y Previsión Social de Chile.`, 20, 90, { maxWidth: 170 });
-        doc.text(`Empresa: ${empresa}`, 20, 110);
-        doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 130);
-        doc.text("Firma Responsable: _________________________", 20, 150);
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    let y = 70;
 
-        doc.save("certificado-extintores.pdf");
-      };
-    }
+    doc.text("Por medio del presente se deja constancia que:", 20, y); y += 10;
+
+    doc.setFont("Helvetica", "bold");
+    doc.text(`${nombre}, RUT ${rut},`, 20, y); y += 10;
+    doc.text(`quien se desempeña como ${cargo},`, 20, y); y += 10;
+    doc.text(`en la empresa ${empresa},`, 20, y); y += 10;
+    doc.text(`sucursal ${sucursal},`, 20, y); y += 15;
+
+    doc.setFont("Helvetica", "normal");
+    const texto = `ha participado y aprobado satisfactoriamente el curso "USO DE EXTINTORES - CUMPLIMIENTO DECRETO 44", cumpliendo con las disposiciones del Decreto Supremo N°44 del Ministerio del Trabajo y Previsión Social de Chile, que exige capacitación en prevención de riesgos laborales.`;
+    const splitText = doc.splitTextToSize(texto, 170);
+    doc.text(splitText, 20, y); y += splitText.length * 10;
+
+    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 20, y + 10);
+    doc.text("_____________________________", 20, y + 30);
+    doc.text("Firma Responsable", 20, y + 37);
+
+    doc.save("certificado-extintores.pdf");
+  };
+}
   </script>
 </body>
 </html>
