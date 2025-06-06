@@ -301,7 +301,11 @@ logo.src = 'Capacita SM.png';
 
 logo.onload = () => {
   // Insertar logo
-  doc.addImage(logo, 'PNG', 75, 10, 50, 25);
+  const pageWidth = doc.internal.pageSize.getWidth();
+const logoWidth = 60;
+const logoX = (pageWidth - logoWidth) / 2;
+
+doc.addImage(logo, 'PNG', logoX, 10, 60, 25);
 
   // Título centrado
   doc.setFont("Helvetica", "bold");
