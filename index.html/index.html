@@ -5,63 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CURSOS</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #27AE60;
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
-    }
-    h1, h2, h3 {
-      text-align: center;
-      color: #01796F;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      margin-top: 10px;
-      font-weight: bold;
-      color: #ffffff;
-    }
-    input, select, textarea {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #333333;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1e824c;
-    }
-    section {
-      background-color: #f9f9f9;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-    }
-    .oculto { display: none; }
-    .pregunta-block {
-      margin-top: 15px;
-      padding: 10px;
-      background-color: #000000;
-      border-radius: 6px;
-    }
-    #logo {
-      display: block;
-      margin: 0 auto 20px auto;
-      width: 150px;
-    }
-  </style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #A3C95A; /* fondo general verde claro */
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  h1, h2, h3 {
+    text-align: center;
+    color: #4C7C46; /* verde oscuro */
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #444444; /* gris oscuro para mayor contraste */
+  }
+  input, select, textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4C7C46; /* verde oscuro */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #3b6538; /* tono más oscuro para hover */
+  }
+  section {
+    background-color: #ffffff; /* blanco para secciones de curso */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .oculto { display: none; }
+  .pregunta-block {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #000000;
+    color: white;
+    border-radius: 6px;
+  }
+  #logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    width: 150px;
+  }
+</style>
+
+      
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -78,7 +82,41 @@
     <input type="text" id="rut" required>
 
     <label for="empresa">Empresa:</label>
-    <input type="text" id="empresa" required>
+    <select id="empresa" required>
+      <option value="">-- Seleccione --</option>
+      <option value="CEBALLOS Y CONCHA SPA RUT 78.278.870-1">CEBALLOS Y CONCHA SPA RUT 78.278.870-1</option>
+      <option value="ENRIQUE CEBALLOS MONTECINOS RUT 8.217.723-K">ENRIQUE CEBALLOS MONTECINOS RUT 8.217.723-K</option>
+    </select>
+
+    <label for="sucursal">Sucursal:</label>
+    <select id="sucursal" required>
+      <option value="">-- Seleccione --</option>
+      <option value="ENRIQUE MOLINA 630, TOMÉ">ENRIQUE MOLINA 630, TOMÉ</option>
+      <option value="NOGUEIRA 1091, TOMÉ">NOGUEIRA 1091, TOMÉ</option>
+      <option value="SANTA MARÍA 2420, CONCEPCIÓN">SANTA MARÍA 2420, CONCEPCIÓN</option>
+    </select>
+
+    <label for="cargo">Cargo:</label>
+    <select id="cargo" onchange="mostrarOtroCargo()" required>
+      <option value="">-- Seleccione --</option>
+      <option value="VENDEDOR(A)">VENDEDOR(A)</option>
+      <option value="CAJERO(A)">CAJERO(A)</option>
+      <option value="JEFE(A) DE SUCURSAL">JEFE(A) DE SUCURSAL</option>
+      <option value="AUXILIAR">AUXILIAR</option>
+      <option value="REPONEDOR">REPONEDOR</option>
+      <option value="CHOFER">CHOFER</option>
+      <option value="AUXILIAR DE REPARTO">AUXILIAR DE REPARTO</option>
+      <option value="PANADERO(A)">PANADERO(A)</option>
+      <option value="PASTELERO(A)">PASTELERO(A)</option>
+      <option value="AYUDANTE DE PANADERÍA">AYUDANTE DE PANADERÍA</option>
+      <option value="AYUDANTE DE PASTELERÍA">AYUDANTE DE PASTELERÍA</option>
+      <option value="otro">OTRO</option>
+    </select>
+
+    <div id="otroCargoDiv" style="display:none;">
+      <label for="otroCargo">Especifique otro cargo:</label>
+      <input type="text" id="otroCargo">
+    </div>
   </form>
 
   <div id="curso">
