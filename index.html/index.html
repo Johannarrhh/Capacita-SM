@@ -311,7 +311,7 @@ let y = 70;
 
 doc.setFont("Helvetica", "normal");
 const texto1 = `De conformidad con el artículo 184 del Código del Trabajo, artículo 4 del DS 44/2024 del Ministerio del Trabajo y Previsión Social, y artículo 3 del DS 594/2000 del Ministerio de Salud, las entidades empleadoras estarán obligadas a tomar todas las medidas necesarias para proteger eficazmente la vida y salud de las personas trabajadoras, para lo cual deberán gestionar los riesgos laborales presentes en el lugar de trabajo, de conformidad a este reglamento y las demás normas de prevención de riesgos laborales que sean aplicables.`;
-const splitTexto1 = doc.splitTextToSize(texto1, 170);
+const splitTexto1 = doc.splitTextToSize(texto1, 100);
 doc.text(splitTexto1, 20, y); 
 y += splitTexto1.length * 10;
 
