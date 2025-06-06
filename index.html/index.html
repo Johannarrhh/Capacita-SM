@@ -308,8 +308,12 @@ const doc = new jsPDF();
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
     let y = 70;
+    doc.setFont("Helvetica", "normal");
+    const texto = `De conformidad con el artículo 184 del Código del Trabajo, artículo 4 del DS 44/2024 del Ministerio del Trabajo y Previsión Social, y artículo 3 del DS 594/2000 del Ministerio de Salud, las entidades empleadoras estarán obligadas a tomar todas las medidas necesarias para proteger eficazmente la vida y salud de las personas trabajadoras, para lo cual deberán gestionar los riesgos laborales presentes en el lugar de trabajo, de conformidad a este reglamento y las demás normas de prevención de riesgos laborales que sean aplicables.`;
+    const splitText = doc.splitTextToSize(texto, 170);
+    doc.text(splitText, 20, y); y += splitText.length * 10;
 
-    doc.text("De conformidad con el artículo 184 del Código del Trabajo, artículo 4 del DS 44/2024 del Ministerio del Trabajo y Previsión Social, y artículo 3 del DS 594/2000 del Ministerio de Salud, las entidades empleadoras estarán obligadas a tomar todas las medidas necesarias para proteger eficazmente la vida y salud de las personas trabajadoras, para lo cual deberán gestionar los riesgos laborales presentes en el lugar de trabajo, de conformidad a este reglamento y las demás normas de prevención de riesgos laborales que sean aplicables.", 20, y); y += 10;
+    doc.text(", 20, y); y += 10;
     doc.text("Se deja constancia que:", 20, y); y += 10;
 
     doc.setFont("Helvetica", "bold");
