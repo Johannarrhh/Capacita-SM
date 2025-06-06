@@ -298,50 +298,56 @@ const { jsPDF } = window.jspdf;
 const doc = new jsPDF();
   const logo = new Image();
   logo.src = 'Capacita SM.png';
-  logo.onload = () => {
-    // Logo y título
-    doc.addImage(logo, 'PNG', 75, 10, 60, 25);
-    doc.setFontSize(16);
-    doc.setTextColor(76, 124, 70); // verde oscuro
-    doc.text("CERTIFICADO DE PARTICIPACIÓN", 105, 50, { align: "center" });
+  logo.onload = () => doc.addImage(logo, 'PNG', 75, 10, 60, 25);
 
-   doc.setFontSize(12);
+// Título del certificado
+doc.setFont("Helvetica", "bold");
+doc.setFontSize(16);
+doc.setTextColor(76, 124, 70); // Verde oscuro
+doc.text("CERTIFICADO DE PARTICIPACIÓN", 105, 50, { align: "center" });
+
+// Texto legal introductorio
+doc.setFontSize(12);
 doc.setTextColor(0, 0, 0);
+doc.setFont("Helvetica", "normal");
 let y = 70;
 
-doc.setFont("Helvetica", "normal");
 const texto1 = `De conformidad con el artículo 184 del Código del Trabajo, artículo 4 del DS 44/2024 del Ministerio del Trabajo y Previsión Social, y artículo 3 del DS 594/2000 del Ministerio de Salud, las entidades empleadoras estarán obligadas a tomar todas las medidas necesarias para proteger eficazmente la vida y salud de las personas trabajadoras, para lo cual deberán gestionar los riesgos laborales presentes en el lugar de trabajo, de conformidad a este reglamento y las demás normas de prevención de riesgos laborales que sean aplicables.`;
-const splitTexto1 = doc.splitTextToSize(texto1, 100);
-doc.text(splitTexto1, 20, y); 
-y += splitTexto1.length * 10;
+const splitTexto1 = doc.splitTextToSize(texto1, 170);
+doc.text(splitTexto1, 20, y);
+y += splitTexto1.length * 8;
 
+// Datos del participante
 doc.setFont("Helvetica", "normal");
-doc.text("Se deja constancia que:", 20, y); 
+doc.text("Se deja constancia que:", 20, y);
 y += 10;
 
 doc.setFont("Helvetica", "bold");
-doc.text(`${nombre}, RUT ${rut},`, 20, y); 
+doc.text(`${nombre}, RUT ${rut},`, 20, y);
 y += 10;
-doc.text(`quien se desempeña como ${cargo},`, 20, y); 
+doc.text(`quien se desempeña como ${cargo},`, 20, y);
 y += 10;
-doc.text(`en la empresa ${empresa},`, 20, y); 
+doc.text(`en la empresa ${empresa},`, 20, y);
 y += 10;
-doc.text(`sucursal ${sucursal},`, 20, y); 
+doc.text(`sucursal ${sucursal},`, 20, y);
 y += 15;
 
+// Descripción del curso
 doc.setFont("Helvetica", "normal");
 const texto2 = `ha participado y aprobado satisfactoriamente el curso "PREVENCIÓN DE INCENDIOS Y USO DE EXTINTORES", que es parte del PROGRAMA DE PREVENCIÓN DE RIESGOS LABORALES CRISOL.`;
 const splitTexto2 = doc.splitTextToSize(texto2, 170);
-doc.text(splitTexto2, 20, y); 
-y += splitTexto2.length * 10;
+doc.text(splitTexto2, 20, y);
+y += splitTexto2.length * 8;
 
-    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 20, y + 10);
-    doc.text("_____________________________", 20, y + 30);
-    doc.text("Firma", 20, y + 37);
+// Pie de página con fecha y firma
+doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 20, y + 10);
+doc.text("_____________________________", 20, y + 30);
+doc.text("Firma Responsable", 20, y + 37);
 
-    doc.save(Nombre.pdf);
+// Guardar PDF
+doc.save(`Certificado_${nombre.replace(/ /g, "_")}.pdf`);
   };
-}
+
   </script>
 </body>
 </html>
