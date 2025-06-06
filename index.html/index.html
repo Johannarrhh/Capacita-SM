@@ -103,8 +103,8 @@
     <label for="empresa">Empresa:</label>
     <select id="empresa" required>
       <option value="">-- Seleccione --</option>
-      <option value="CEBALLOS Y CONCHA SPA RUT 78.278.870-1">CEBALLOS Y CONCHA SPA RUT 78.278.870-1</option>
-      <option value="ENRIQUE CEBALLOS MONTECINOS RUT 8.217.723-K">ENRIQUE CEBALLOS MONTECINOS RUT 8.217.723-K</option>
+      <option value="CEBALLOS Y CONCHA SPA, RUT 78.278.870-1">CEBALLOS Y CONCHA SPA, RUT 78.278.870-1</option>
+      <option value="ENRIQUE CEBALLOS MONTECINOS, RUT 8.217.723-K">ENRIQUE CEBALLOS MONTECINOS, RUT 8.217.723-K</option>
     </select>
 
     <label for="sucursal">Sucursal:</label>
@@ -309,7 +309,8 @@ const doc = new jsPDF();
     doc.setTextColor(0, 0, 0);
     let y = 70;
 
-    doc.text("Por medio del presente se deja constancia que:", 20, y); y += 10;
+    doc.text("De conformidad con el artículo 184 del Código del Trabajo, artículo 4 del DS 44/2024 del Ministerio del Trabajo y Previsión Social, y artículo 3 del DS 594/2000 del Ministerio de Salud, las entidades empleadoras estarán obligadas a tomar todas las medidas necesarias para proteger eficazmente la vida y salud de las personas trabajadoras, para lo cual deberán gestionar los riesgos laborales presentes en el lugar de trabajo, de conformidad a este reglamento y las demás normas de prevención de riesgos laborales que sean aplicables.", 20, y); y += 10;
+    doc.text("Se deja constancia que:", 20, y); y += 10;
 
     doc.setFont("Helvetica", "bold");
     doc.text(`${nombre}, RUT ${rut},`, 20, y); y += 10;
@@ -318,7 +319,7 @@ const doc = new jsPDF();
     doc.text(`sucursal ${sucursal},`, 20, y); y += 15;
 
     doc.setFont("Helvetica", "normal");
-    const texto = `ha participado y aprobado satisfactoriamente el curso "USO DE EXTINTORES - CUMPLIMIENTO DECRETO 44", cumpliendo con las disposiciones del Decreto Supremo N°44 del Ministerio del Trabajo y Previsión Social de Chile, que exige capacitación en prevención de riesgos laborales.`;
+    const texto = `ha participado y aprobado satisfactoriamente el curso "PREVENCIÓN DE INCENDIOS Y USO DE EXTINTORES", que es parte del PROGRAMA DE PREVENCIÓN DE RIESGOS LABORALES CRISOL`;
     const splitText = doc.splitTextToSize(texto, 170);
     doc.text(splitText, 20, y); y += splitText.length * 10;
 
