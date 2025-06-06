@@ -313,7 +313,6 @@ const doc = new jsPDF();
     const splitText = doc.splitTextToSize(texto, 170);
     doc.text(splitText, 20, y); y += splitText.length * 10;
 
-    doc.text(", 20, y); y += 10;
     doc.text("Se deja constancia que:", 20, y); y += 10;
 
     doc.setFont("Helvetica", "bold");
