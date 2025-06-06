@@ -83,8 +83,7 @@
       alert("¡Curso finalizado con éxito!");
     }
       
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-    </script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js"></script>
 </head>
 <body>
   <div style="text-align: center;">
@@ -115,7 +114,6 @@
     </select>
 
     <label for="cargo">Cargo:</label>
-    <select id="cargo" onchange="mostrarOtroCargo()" required>
       <option value="">-- Seleccione --</option>
       <option value="VENDEDOR(A)">VENDEDOR(A)</option>
       <option value="CAJERO(A)">CAJERO(A)</option>
@@ -128,7 +126,6 @@
       <option value="PASTELERO(A)">PASTELERO(A)</option>
       <option value="AYUDANTE DE PANADERÍA">AYUDANTE DE PANADERÍA</option>
       <option value="AYUDANTE DE PASTELERÍA">AYUDANTE DE PASTELERÍA</option>
-      <option value="otro">OTRO</option>
     </select>
 
     <div id="otroCargoDiv" style="display:none;">
@@ -298,7 +295,6 @@ function finalizarCurso() {
     return;
   }
 
-  const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
   const logo = new Image();
