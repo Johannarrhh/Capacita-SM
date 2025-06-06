@@ -83,7 +83,8 @@
       alert("¡Curso finalizado con éxito!");
     }
       
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
 </head>
 <body>
   <div style="text-align: center;">
@@ -292,8 +293,8 @@ function finalizarCurso() {
     return;
   }
 
-  const doc = new jsPDF();
-
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
   const logo = new Image();
   logo.src = 'Capacita SM.png';
   logo.onload = () => {
