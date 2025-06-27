@@ -8,14 +8,14 @@
     <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #A3C95A; /* fondo verde claro */
+        background-color: #A3C95A;
         padding: 20px;
         max-width: 900px;
         margin: auto;
     }
     h1, h2, h3 {
         text-align: center;
-        color: #4C7C46; /* verde oscuro */
+        color: #4C7C46;
     }
     input, select, textarea, button {
         padding: 8px;
@@ -54,45 +54,95 @@
     </style>
 </head>
 <body>
-    <img src="logo.png" alt="Logo Capacita SM" id="logo">
-    <h1>Capacita SM - Plataforma de Capacitación</h1>
+<img src="logo.png" alt="Logo Capacita SM" id="logo">
+<h1>Capacita SM - Plataforma de Capacitación</h1>
 
-    <section>
-        <h2>Acceso para Empresas</h2>
-        <input type="password" id="claveEmpresa" placeholder="Clave de Acceso">
-        <button onclick="accederEmpresa()">Ingresar</button>
-    </section>
+<section>
+    <h2>Registro de Trabajadores</h2>
+    <input type="text" id="nombre" placeholder="Nombre Completo">
+    <input type="text" id="rut" placeholder="RUT">
+    <button onclick="registrarTrabajador()">Registrar</button>
+</section>
 
-    <section id="seccionHistorial">
-        <h2>Historial de Capacitados</h2>
-        <input type="text" id="filtroNombre" placeholder="Filtrar por Nombre">
-        <input type="text" id="filtroCurso" placeholder="Filtrar por Curso">
-        <button onclick="filtrarHistorial()">Filtrar</button>
-        <table>
-            <thead>
-                <tr><th>Nombre</th><th>RUT</th><th>Curso</th><th>Fecha</th><th>Acción</th></tr>
-            </thead>
-            <tbody id="tablaHistorial"></tbody>
-        </table>
-    </section>
+<section>
+    <h2>Acceso a Curso</h2>
+    <input type="text" id="rutAcceso" placeholder="Ingrese su RUT">
+    <button onclick="accederCurso()">Entrar</button>
+</section>
 
-    <section>
-        <h2>Evaluación Final</h2>
-        <button id="mostrarEvaluacion">Iniciar Evaluación Final</button>
-        <div id="evaluacionFinal" style="display:none;"></div>
-        <p id="resultadoFinal"></p>
-    </section>
+<section id="moduloCurso" style="display:none;">
+    <h2>Curso: Uso y Manejo de Extintores</h2>
+    <p id="contenidoModulo"></p>
+    <button onclick="mostrarEvaluacionFinal()">Ir a Evaluación Final</button>
+</section>
+
+<section>
+    <h2>Acceso para Empresas</h2>
+    <input type="password" id="claveEmpresa" placeholder="Clave de Acceso">
+    <button onclick="accederEmpresa()">Ingresar</button>
+</section>
+
+<section id="seccionHistorial">
+    <h2>Historial de Capacitados</h2>
+    <input type="text" id="filtroNombre" placeholder="Filtrar por Nombre">
+    <input type="text" id="filtroCurso" placeholder="Filtrar por Curso">
+    <button onclick="filtrarHistorial()">Filtrar</button>
+    <table>
+        <thead>
+            <tr><th>Nombre</th><th>RUT</th><th>Curso</th><th>Fecha</th><th>Acción</th></tr>
+        </thead>
+        <tbody id="tablaHistorial"></tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Evaluación Final</h2>
+    <div id="evaluacionFinal" style="display:none;"></div>
+    <p id="resultadoFinal"></p>
+</section>
 
 <script>
+let trabajadores = [];
 let historial = [];
+const preguntasFinal = [
+    ["¿Dónde se debe apuntar al usar el extintor?", "base"],
+    ["¿Qué gas contiene un extintor de CO2?", "dioxido de carbono"],
+    ["¿Cuál es el color de los extintores de CO2?", "negro"],
+    ["¿Qué elemento NO pertenece al triángulo del fuego?", "metal"],
+    ["¿Qué tipo de fuego apaga un extintor de Clase K?", "aceites"],
+    ["¿Es necesario capacitarse antes de usar un extintor?", "si"],
+    ["¿Dónde debe ubicarse un extintor?", "visible"],
+    ["¿Debo leer las instrucciones del extintor?", "si"],
+    ["¿Se debe revisar el extintor periódicamente?", "si"],
+    ["¿Se debe usar el extintor sin el seguro colocado?", "no"]
+];
 
-function accederEmpresa() {
-    const clave = document.getElementById('claveEmpresa').value;
-    if (clave === "empresa123") {
-        document.getElementById('seccionHistorial').style.display = "block";
+function registrarTrabajador() {
+    const nombre = document.getElementById('nombre').value;
+    const rut = document.getElementById('rut').value;
+    trabajadores.push({nombre, rut});
+    alert("Trabajador registrado");
+}
+
+function accederCurso() {
+    const rut = document.getElementById('rutAcceso').value;
+    const trabajador = trabajadores.find(t => t.rut === rut);
+    if (trabajador) {
+        document.getElementById('moduloCurso').style.display = "block";
+        document.getElementById('contenidoModulo').innerText = "Módulo 1: Uso y Manejo de Extintores."
     } else {
-        alert("Clave incorrecta");
+        alert("Trabajador no registrado");
     }
+}
+
+function mostrarEvaluacionFinal() {
+    const contenedor = document.getElementById('evaluacionFinal');
+    contenedor.style.display = "block";
+    contenedor.innerHTML = "";
+    preguntasFinal.forEach((preg, index) => {
+        contenedor.innerHTML += `${preg[0]}<br><input type='text' id='final${index}'><br>`;
+    });
+    contenedor.innerHTML += `<button onclick='finalizarEvaluacion()'>Enviar Evaluación</button>`;
 }
 
 function finalizarEvaluacion() {
@@ -102,27 +152,25 @@ function finalizarEvaluacion() {
         const correcta = preg[1].toLowerCase();
         if (resp === correcta) correctas++;
     });
-
     const resultado = document.getElementById('resultadoFinal');
     if (correctas >= 6) {
-        resultado.textContent = `¡Felicidades! Has aprobado el curso con ${correctas}/10 respuestas correctas.`;
-        resultado.style.color = "green";
-
+        resultado.textContent = `¡Felicidades! Has aprobado con ${correctas}/10 correctas.`;
         const trabajador = trabajadores[trabajadores.length - 1];
         const fecha = new Date().toLocaleString();
-
-        historial.push({
-            nombre: trabajador.nombre,
-            rut: trabajador.rut,
-            curso: "Uso y Manejo de Extintores",
-            fecha
-        });
-
+        historial.push({nombre: trabajador.nombre, rut: trabajador.rut, curso:"Uso y Manejo de Extintores", fecha});
         actualizarHistorial();
         generarCertificado(trabajador);
     } else {
-        resultado.textContent = `Debes repetir la evaluación. Solo obtuviste ${correctas}/10 respuestas correctas.`;
-        resultado.style.color = "red";
+        resultado.textContent = "Debes repetir la evaluación.";
+    }
+}
+
+function accederEmpresa() {
+    const clave = document.getElementById('claveEmpresa').value;
+    if (clave === "empresa123") {
+        document.getElementById('seccionHistorial').style.display = "block";
+    } else {
+        alert("Clave incorrecta");
     }
 }
 
@@ -178,9 +226,3 @@ function generarCertificadoPorDatos(nombre, rut) {
 </script>
 </body>
 </html>
-
-
-
-
-
-
