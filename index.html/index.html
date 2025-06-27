@@ -107,8 +107,8 @@
 </section>
 
 <script>
-let trabajadores = [];
-let historial = [];
+let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
+let historial = JSON.parse(localStorage.getItem("historial")) || [];
 const preguntasFinal = [
     ["¿Dónde se debe apuntar al usar el extintor?", "base"],
     ["¿Qué gas contiene un extintor de CO2?", "dioxido de carbono"],
@@ -121,6 +121,78 @@ const preguntasFinal = [
     ["¿Se debe revisar el extintor periódicamente?", "si"],
     ["¿Se debe usar el extintor sin el seguro colocado?", "no"]
 ];
+actualizarHistorial();
+
+function registrarTrabajador() {
+    const nombre = document.getElementById('nombre').value;
+    const rut = document.getElementById('rut').value;
+    const cargo = document.getElementById('cargo').value;
+    const centro = document.getElementById('centro').value;
+    const fechaIngreso = document.getElementById('fechaIngreso').value;
+    trabajadores.push({nombre, rut, cargo, centro, fechaIngreso});
+    localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+    actualizarHistorial();
+    alert("Trabajador registrado");
+}
+
+function actualizarHistorial() {
+    const tabla = document.getElementById('tablaHistorial');
+    tabla.innerHTML = "";
+    historial.forEach(item => {
+        const fila = `<tr>
+            <td>${item.nombre}</td>
+            <td>${item.rut}</td>
+            <td>${item.cargo}</td>
+            <td>${item.centro}</td>
+            <td>${item.fechaIngreso}</td>
+            <td>${item.curso}</td>
+            <td>${item.fecha}</td>
+            <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar</button></td>
+        </tr>`;
+        tabla.innerHTML += fila;
+    });
+    localStorage.setItem("historial", JSON.stringify(historial));
+}
+
+function finalizarEvaluacion() {
+    let correctas = 0;
+    preguntasFinal.forEach((preg, index) => {
+        const resp = document.getElementById(`final${index}`).value.trim().toLowerCase();
+        const correcta = preg[1].toLowerCase();
+        if (resp === correcta) correctas++;
+    });
+    const resultado = document.getElementById('resultadoFinal');
+    if (correctas >= 6) {
+        resultado.textContent = `¡Felicidades! Has aprobado el curso.`;
+        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value);
+        const fecha = new Date().toLocaleString();
+        historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
+        localStorage.setItem("historial", JSON.stringify(historial));
+        actualizarHistorial();
+        generarCertificado(trabajador);
+    } else {
+        resultado.textContent = "Debes repetir la evaluación.";
+    }
+}
+
+function exportarHistorialExcel() {
+    let csv = "Nombre,RUT,Cargo,Centro,Fecha Ingreso,Curso,Fecha Aprobación\n";
+    historial.forEach(h => {
+        csv += `${h.nombre},${h.rut},${h.cargo},${h.centro},${h.fechaIngreso},${h.curso},${h.fecha}\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "historial_capacitados.csv";
+    link.click();
+}
+
+function irInicio() {
+    location.reload();
+}
+</script>
+<button onclick="exportarHistorialExcel()">Exportar Historial a Excel</button>
+<button onclick="irInicio()">Inicio</button>
 
 function mostrarTrabajador() {
     document.getElementById('menuPrincipal').style.display = 'none';
@@ -133,11 +205,11 @@ function mostrarEmpresa() {
 }
 
 function registrarTrabajador() {
-    const nombre = document.getElementById('nombre').value;
+    const nombre = documment.getElementById('centro').value;
+    const fechaIngresoent.getElementById('nombre').value;
     const rut = document.getElementById('rut').value;
     const cargo = document.getElementById('cargo').value;
-    const centro = document.getElementById('centro').value;
-    const fechaIngreso = document.getElementById('fechaIngreso').value;
+    const centro = docu = document.getElementById('fechaIngreso').value;
     trabajadores.push({nombre, rut, cargo, centro, fechaIngreso});
     actualizarHistorial();
     alert("Trabajador registrado");
