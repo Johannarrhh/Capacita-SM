@@ -1,375 +1,181 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CURSOS</title>
-  <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #A3C95A; /* fondo general verde claro */
-    padding: 20px;
-    max-width: 900px;
-    margin: auto;
-  }
-  h1, h2, h3 {
-    text-align: center;
-    color: #4C7C46; /* verde oscuro */
-  }
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  label {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #A3C95A; /* gris oscuro para mayor contraste */
-  }
-  input, select, textarea {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  button {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #4C7C46; /* verde oscuro */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #4C7C46; /* tono más oscuro para hover */
-  }
-  section {
-    background-color: #ffffff; /* blanco para secciones de curso */
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  .oculto { display: none; }
-  .pregunta-block {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #4C7C46;
-    color: white;
-    border-radius: 6px;
-  }
-  #logo {
-    display: block;
-    margin: 0 auto 20px auto;
-    width: 150px;
-  }
-</style>
-<script>
-    function evaluar(pregunta, actual, siguiente) {
-      const respuesta = document.querySelector(`input[name="${pregunta}"]:checked`);
-      if (!respuesta) {
-        alert("Debe responder la pregunta antes de continuar.");
-        return;
-      }
-      if (respuesta.value !== "correcta") {
-        alert("Respuesta incorrecta. Revise el contenido y vuelva a intentarlo.");
-        return;
-      }
-      document.getElementById(actual).classList.add("oculto");
-      document.getElementById(siguiente).classList.remove("oculto");
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacita SM - Plataforma de Capacitación</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #A3C95A; /* fondo verde claro */
+        padding: 20px;
+        max-width: 900px;
+        margin: auto;
     }
-
-    function finalizarCurso() {
-      alert("¡Curso finalizado con éxito!");
+    h1, h2, h3 {
+        text-align: center;
+        color: #4C7C46; /* verde oscuro */
     }
-  </script>
-      
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  
+    input, select, textarea, button {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-top: 5px;
+    }
+    button {
+        background-color: #4C7C46;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #4C7C46;
+    }
+    section {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+    #seccionHistorial {
+        display: none;
+    }
+    #logo {
+        display: block;
+        margin: 0 auto 20px auto;
+        width: 150px;
+    }
+    </style>
 </head>
 <body>
-  <div style="text-align: center;">
-    <img id="logo" src="Capacita SM.png" alt="Capacita SM" style="max-width: 120px; margin-bottom: 10px;">
-  </div>
- <h1>CURSO: PREVENCIÓN DE INCENDIOS Y USO DE EXTINTORES</h1>
+    <img src="logo.png" alt="Logo Capacita SM" id="logo">
+    <h1>Capacita SM - Plataforma de Capacitación</h1>
 
-  <form id="datosCertificado">
-    <label for="nombre">Nombre completo:</label>
-    <input type="text" id="nombre" required>
+    <section>
+        <h2>Acceso para Empresas</h2>
+        <input type="password" id="claveEmpresa" placeholder="Clave de Acceso">
+        <button onclick="accederEmpresa()">Ingresar</button>
+    </section>
 
-    <label for="rut">RUT:</label>
-    <input type="text" id="rut" required>
+    <section id="seccionHistorial">
+        <h2>Historial de Capacitados</h2>
+        <input type="text" id="filtroNombre" placeholder="Filtrar por Nombre">
+        <input type="text" id="filtroCurso" placeholder="Filtrar por Curso">
+        <button onclick="filtrarHistorial()">Filtrar</button>
+        <table>
+            <thead>
+                <tr><th>Nombre</th><th>RUT</th><th>Curso</th><th>Fecha</th><th>Acción</th></tr>
+            </thead>
+            <tbody id="tablaHistorial"></tbody>
+        </table>
+    </section>
 
-    <label for="empresa">Empresa:</label>
-    <select id="empresa" required>
-      <option value="">-- Seleccione --</option>
-      <option value="CEBALLOS Y CONCHA SPA, RUT 78.278.870-1">CEBALLOS Y CONCHA SPA, RUT 78.278.870-1</option>
-      <option value="ENRIQUE CEBALLOS MONTECINOS, RUT 8.217.723-K">ENRIQUE CEBALLOS MONTECINOS, RUT 8.217.723-K</option>
-    </select>
+    <section>
+        <h2>Evaluación Final</h2>
+        <button id="mostrarEvaluacion">Iniciar Evaluación Final</button>
+        <div id="evaluacionFinal" style="display:none;"></div>
+        <p id="resultadoFinal"></p>
+    </section>
 
-    <label for="sucursal">Sucursal:</label>
-    <select id="sucursal" required>
-      <option value="">-- Seleccione --</option>
-      <option value="ENRIQUE MOLINA 630, TOMÉ">ENRIQUE MOLINA 630, TOMÉ</option>
-      <option value="NOGUEIRA 1091, TOMÉ">NOGUEIRA 1091, TOMÉ</option>
-      <option value="SANTA MARÍA 2420, CONCEPCIÓN">SANTA MARÍA 2420, CONCEPCIÓN</option>
-    </select>
+<script>
+let historial = [];
 
-  <label for="cargo">Cargo:</label>
-<select id="cargo" required>
-  <option value="">-- Seleccione --</option>
-  <option value="VENDEDOR(A)">VENDEDOR(A)</option>
-  <option value="CAJERO(A)">CAJERO(A)</option>
-  <option value="JEFE(A) DE SUCURSAL">JEFE(A) DE SUCURSAL</option>
-  <option value="AUXILIAR">AUXILIAR</option>
-  <option value="REPONEDOR">REPONEDOR</option>
-  <option value="CHOFER">CHOFER</option>
-  <option value="AUXILIAR DE REPARTO">AUXILIAR DE REPARTO</option>
-  <option value="PANADERO(A)">PANADERO(A)</option>
-  <option value="PASTELERO(A)">PASTELERO(A)</option>
-  <option value="AYUDANTE DE PANADERÍA">AYUDANTE DE PANADERÍA</option>
-  <option value="AYUDANTE DE PASTELERÍA">AYUDANTE DE PASTELERÍA</option>
-</select>
-
-  </form>
-
-  <div id="curso">
- <section id="modulo3">
-    <h2>Módulo 1: Definición de Incendio</h2>
-    <p>Un incendio es un fuego que escapa al control humano, con potencial destructivo para personas, estructuras y el medio ambiente.</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Qué es un incendio?</p>
-      <label><input type="radio" name="p3" value="correcta"> Fuego fuera de control con potencial destructivo</label><br>
-      <label><input type="radio" name="p3" value="incorrecta"> Una chispa en una estufa</label><br>
-      <button onclick="evaluar('p3', 'modulo3', 'modulo4')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo4" class="oculto">
-    <h2>Módulo 2: Triángulo del Fuego</h2>
-    <p>Comburente: Generalmente oxígeno.<br>Combustible: Material que puede arder.<br>Energía de activación: Calor o chispa.</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Qué elementos forman el triángulo del fuego?</p>
-      <label><input type="radio" name="p4" value="correcta"> Comburente, combustible y energía de activación</label><br>
-      <label><input type="radio" name="p4" value="incorrecta"> Agua, humo y viento</label><br>
-      <button onclick="evaluar('p4', 'modulo4', 'modulo5')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo5" class="oculto">
-    <h2>Módulo 3: Tetraedro del Fuego</h2>
-    <p>La reacción química autoalimentada mantiene la combustión activa, liberando calor y generando vapores combustibles.</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Qué permite el tetraedro del fuego?</p>
-      <label><input type="radio" name="p5" value="correcta"> Mantener la combustión mediante reacción química</label><br>
-      <label><input type="radio" name="p5" value="incorrecta"> Evitar que el fuego se encienda</label><br>
-      <button onclick="evaluar('p5', 'modulo5', 'modulo6')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo6" class="oculto">
-    <h2>Módulo 4: Clasificación del Fuego</h2>
-    <p>Clase A: Materiales sólidos (madera, papel).<br>Clase B: Líquidos inflamables (petróleo, pinturas).<br>Clase C: Equipos eléctricos energizados.<br>Clase K: Aceites y grasas de cocina.<br>Clase D: Metales combustibles (magnesio, sodio).</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Qué tipo de fuego pertenece a la clase B?</p>
-      <label><input type="radio" name="p6" value="correcta"> Líquidos inflamables</label><br>
-      <label><input type="radio" name="p6" value="incorrecta"> Papel y madera</label><br>
-      <button onclick="evaluar('p6', 'modulo6', 'modulo7')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo7" class="oculto">
-    <h2>Módulo 5: Principales Causas de Incendio</h2>
-    <p>Instalaciones eléctricas deficientes.<br>Manejo inadecuado de materiales inflamables.<br>Acumulación de materiales combustibles.<br>Fumar en zonas no autorizadas.</p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Cuál es una causa común de incendios?</p>
-      <label><input type="radio" name="p7" value="correcta"> Instalaciones eléctricas deficientes</label><br>
-      <label><input type="radio" name="p7" value="incorrecta"> Pintar las paredes con colores oscuros</label><br>
-      <button onclick="evaluar('p7', 'modulo7', 'modulo8')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo8" class="oculto">
-    <h2>Módulo 6: Métodos de Extinción</h2>
-    <p>
-      Por enfriamiento: Disminuir calor (agua).<br>
-      Por interrupción de la reacción en cadena: Polvos químicos secos, manta.<br>
-      Por sofocación: Reducir concentración de oxígeno.<br>
-      Por aislación del combustible: Cortar suministro.
-    </p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Qué método extingue el fuego reduciendo el calor?</p>
-      <label><input type="radio" name="p8" value="correcta"> Por enfriamiento</label><br>
-      <label><input type="radio" name="p8" value="incorrecta"> Por propagación</label><br>
-      <button onclick="evaluar('p8', 'modulo8', 'modulo9')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo9" class="oculto">
-    <h2>Módulo 7: Prevención de Incendios</h2>
-    <p>
-      Medidas generales incluyen:<br>
-      No fumar en zonas de riesgo.<br>
-      No sobrecargar enchufes.<br>
-      Mantener orden y limpieza.<br>
-      Revisar instalaciones eléctricas.<br>
-      Capacitar al personal.
-    </p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Qué medida ayuda a prevenir incendios?</p>
-      <label><input type="radio" name="p9" value="correcta"> No sobrecargar enchufes</label><br>
-      <label><input type="radio" name="p9" value="incorrecta"> Guardar extintores en bodegas cerradas</label><br>
-      <button onclick="evaluar('p9', 'modulo9', 'modulo10')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo10" class="oculto">
-    <h2>Módulo 8: Extintores</h2>
-    <p>
-      Tipos y uso:<br>
-      Extintor portátil: Incluye presurizado permanente, de cartucho, y recargable.<br>
-      Agentes extintores: Agua, dióxido de carbono, base de cloruro de calcio, polvo seco.
-    </p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Cuál de los siguientes es un agente extintor?</p>
-      <label><input type="radio" name="p10" value="correcta"> Dióxido de carbono</label><br>
-      <label><input type="radio" name="p10" value="incorrecta"> Gas butano</label><br>
-      <button onclick="evaluar('p10', 'modulo10', 'modulo11')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo11" class="oculto">
-    <h2>Módulo 9: Pasos para Usar un Extintor</h2>
-    <p>
-      Diríjase a la zona del incendio.<br>
-      Retire el pasador o seguro.<br>
-      Accione el gatillo y dirija la descarga hacia la base del fuego en zigzag.
-    </p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿A dónde se debe dirigir la descarga del extintor?</p>
-      <label><input type="radio" name="p11" value="correcta"> A la base del fuego</label><br>
-      <label><input type="radio" name="p11" value="incorrecta"> A las llamas superiores</label><br>
-      <button onclick="evaluar('p11', 'modulo11', 'modulo12')">Siguiente</button>
-    </div>
-  </section>
-
-  <section id="modulo12" class="oculto">
-    <h2>Módulo 10: Ubicación de Extintores</h2>
-    <p>
-      Deben estar visibles, señalizados y de fácil acceso. La distribución varía según el riesgo del área, asegurando estar cerca de salidas de emergencia.
-    </p>
-    <div class="pregunta-block">
-      <p><strong>Pregunta de evaluación:</strong> ¿Dónde deben ubicarse los extintores?</p>
-      <label><input type="radio" name="p12" value="correcta"> Visibles y cerca de salidas de emergencia</label><br>
-      <label><input type="radio" name="p12" value="incorrecta"> Guardados en oficinas administrativas</label><br>
-      <button onclick="finalizarCurso()">Finalizar Curso</button>
-    </div>
-  </section> 
-    <script>
-    function evaluar(pregunta, actual, siguiente) {
-      const respuesta = document.querySelector(`input[name="${pregunta}"]:checked`);
-      if (!respuesta) {
-        alert("Debe responder la pregunta antes de continuar.");
-        return;
-      }
-      if (respuesta.value !== "correcta") {
-        alert("Respuesta incorrecta. Revise el contenido y vuelva a intentarlo.");
-        return;
-      }
-      document.getElementById(actual).classList.add("oculto");
-      document.getElementById(siguiente).classList.remove("oculto");
+function accederEmpresa() {
+    const clave = document.getElementById('claveEmpresa').value;
+    if (clave === "empresa123") {
+        document.getElementById('seccionHistorial').style.display = "block";
+    } else {
+        alert("Clave incorrecta");
     }
+}
 
-function finalizarCurso() {
-  const nombre = document.getElementById("nombre").value.trim();
-  const rut = document.getElementById("rut").value.trim();
-  const empresa = document.getElementById("empresa").value;
-  const sucursal = document.getElementById("sucursal").value;
-  const cargo = document.getElementById("cargo").value === "otro"
-    ? document.getElementById("otroCargo").value.trim()
-    : document.getElementById("cargo").value;
+function finalizarEvaluacion() {
+    let correctas = 0;
+    preguntasFinal.forEach((preg, index) => {
+        const resp = document.getElementById(`final${index}`).value.trim().toLowerCase();
+        const correcta = preg[1].toLowerCase();
+        if (resp === correcta) correctas++;
+    });
 
-  if (!nombre || !rut || !empresa || !sucursal || !cargo) {
-    alert("Debe completar todos los datos antes de generar el certificado.");
-    return;
-  }
-const { jsPDF } = window.jspdf;
-const doc = new jsPDF();
+    const resultado = document.getElementById('resultadoFinal');
+    if (correctas >= 6) {
+        resultado.textContent = `¡Felicidades! Has aprobado el curso con ${correctas}/10 respuestas correctas.`;
+        resultado.style.color = "green";
 
-const logo = new Image();
-logo.src = 'Capacita SM.png';
+        const trabajador = trabajadores[trabajadores.length - 1];
+        const fecha = new Date().toLocaleString();
 
-logo.onload = () => {
-  // Insertar logo
-  const pageWidth = doc.internal.pageSize.getWidth();
-const logoWidth = 60;
-const logoX = (pageWidth - logoWidth) / 2;
+        historial.push({
+            nombre: trabajador.nombre,
+            rut: trabajador.rut,
+            curso: "Uso y Manejo de Extintores",
+            fecha
+        });
 
-doc.addImage(logo, 'PNG', logoX, 10, 60, 25);
+        actualizarHistorial();
+        generarCertificado(trabajador);
+    } else {
+        resultado.textContent = `Debes repetir la evaluación. Solo obtuviste ${correctas}/10 respuestas correctas.`;
+        resultado.style.color = "red";
+    }
+}
 
-  // Título centrado
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(16);
-  doc.setTextColor(76, 124, 70); // Verde oscuro
-  doc.text("CERTIFICADO DE PARTICIPACIÓN", 105, 50, { align: "center" });
+function actualizarHistorial() {
+    const tabla = document.getElementById('tablaHistorial');
+    tabla.innerHTML = "";
+    historial.forEach(item => {
+        const fila = `<tr>
+            <td>${item.nombre}</td>
+            <td>${item.rut}</td>
+            <td>${item.curso}</td>
+            <td>${item.fecha}</td>
+            <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar Certificado</button></td>
+        </tr>`;
+        tabla.innerHTML += fila;
+    });
+}
 
-  // Texto legal (justificado manual)
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
-  doc.setFont("Helvetica", "normal");
-  let y = 70;
+function filtrarHistorial() {
+    const nombreFiltro = document.getElementById('filtroNombre').value.toLowerCase();
+    const cursoFiltro = document.getElementById('filtroCurso').value.toLowerCase();
+    const tabla = document.getElementById('tablaHistorial');
+    tabla.innerHTML = "";
+    historial.filter(h => h.nombre.toLowerCase().includes(nombreFiltro) && h.curso.toLowerCase().includes(cursoFiltro))
+        .forEach(item => {
+            const fila = `<tr>
+                <td>${item.nombre}</td>
+                <td>${item.rut}</td>
+                <td>${item.curso}</td>
+                <td>${item.fecha}</td>
+                <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar Certificado</button></td>
+            </tr>`;
+            tabla.innerHTML += fila;
+        });
+}
 
-  const texto1 = `De conformidad con el artículo 184 del Código del Trabajo, artículo 4 del DS 44/2024 del Ministerio del Trabajo y Previsión Social, y artículo 3 del DS 594/2000 del Ministerio de Salud, las entidades empleadoras estarán obligadas a tomar todas las medidas necesarias para proteger eficazmente la vida y salud de las personas trabajadoras, para lo cual deberán gestionar los riesgos laborales presentes en el lugar de trabajo, de conformidad a este reglamento y las demás normas de prevención de riesgos laborales que sean aplicables.`;
-  const splitTexto1 = doc.splitTextToSize(texto1, 170);
-  splitTexto1.forEach(linea => {
-    doc.text(linea, 20, y);
-    y += 8;
-  });
+function generarCertificado(trabajador) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("CERTIFICADO DE PARTICIPACIÓN", 20, 30);
+    doc.setFontSize(12);
+    doc.text(`La empresa certifica que ${trabajador.nombre}, RUT ${trabajador.rut}`, 20, 50);
+    doc.text("Ha participado y aprobado el curso: Uso y Manejo de Extintores", 20, 60);
+    doc.text("Fecha: " + new Date().toLocaleDateString(), 20, 70);
+    doc.text("Capacita SM Academy", 20, 80);
+    doc.save("certificado.pdf");
+}
 
-  // Texto de introducción
-  doc.text("Se deja constancia que:", 20, y);
-  y += 10;
-
-  // Datos del participante (centrado)
-  doc.setFont("Helvetica", "bold");
-  
-  const datos = [
-    `${nombre}, RUT ${rut},`,
-    `quien se desempeña como ${cargo},`,
-    `en la empresa ${empresa},`,
-    `sucursal ${sucursal},`
-  ];
-
-  datos.forEach(linea => {
-    const x = (pageWidth - doc.getTextWidth(linea)) / 2;
-    doc.text(linea, x, y);
-    y += 10;
-  });
-
-  y += 5;
-
-  // Texto final (centrado)
-  doc.setFont("Helvetica", "normal");
-  const texto2 = `ha participado y aprobado satisfactoriamente el curso "PREVENCIÓN DE INCENDIOS Y USO DE EXTINTORES", que es parte del PROGRAMA DE PREVENCIÓN DE RIESGOS LABORALES CRISOL.`;
-  const splitTexto2 = doc.splitTextToSize(texto2, 170);
-  splitTexto2.forEach(linea => {
-    const x = (pageWidth - doc.getTextWidth(linea)) / 2;
-    doc.text(linea, x, y);
-    y += 8;
-  });
-
-  // Pie de firma
-  y += 10;
-  doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 20, y + 10);
-  doc.text("_____________________________", 20, y + 30);
-  doc.text("Firma Responsable", 20, y + 37);
-
-  // Descargar
-  doc.save(`Certificado_${nombre.replace(/ /g, "_")}.pdf`);
-};
-  }
-
- </script>
+function generarCertificadoPorDatos(nombre, rut) {
+    generarCertificado({nombre, rut});
+}
+</script>
 </body>
 </html>
 
