@@ -38,12 +38,13 @@
         margin-bottom: 30px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        padding: 5px;
+    #menuPrincipal button {
+        width: 45%;
+        margin: 10px 2.5%;
+        padding: 15px;
+        font-size: 16px;
     }
-    #seccionHistorial {
+    #seccionTrabajador, #seccionEmpresa, #seccionHistorial, #moduloCurso, #evaluacionFinal {
         display: none;
     }
     #logo {
@@ -57,47 +58,51 @@
 <img src="logo.png" alt="Logo Capacita SM" id="logo">
 <h1>Capacita SM - Plataforma de Capacitación</h1>
 
-<section>
-    <h2>Registro de Trabajadores</h2>
-    <input type="text" id="nombre" placeholder="Nombre Completo">
-    <input type="text" id="rut" placeholder="RUT">
-    <button onclick="registrarTrabajador()">Registrar</button>
+<section id="menuPrincipal">
+    <h2>Acceso Plataforma</h2>
+    <button onclick="mostrarTrabajador()">Acceso Trabajador</button>
+    <button onclick="mostrarEmpresa()">Acceso Empresa</button>
 </section>
 
-<section>
-    <h2>Acceso a Curso</h2>
+<section id="seccionTrabajador">
+    <h2>Acceso Trabajador</h2>
     <input type="text" id="rutAcceso" placeholder="Ingrese su RUT">
     <button onclick="accederCurso()">Entrar</button>
 </section>
 
-<section id="moduloCurso" style="display:none;">
+<section id="moduloCurso">
     <h2>Curso: Uso y Manejo de Extintores</h2>
     <p id="contenidoModulo"></p>
     <button onclick="mostrarEvaluacionFinal()">Ir a Evaluación Final</button>
 </section>
 
-<section>
-    <h2>Acceso para Empresas</h2>
+<section id="seccionEmpresa">
+    <h2>Acceso Empresa</h2>
     <input type="password" id="claveEmpresa" placeholder="Clave de Acceso">
     <button onclick="accederEmpresa()">Ingresar</button>
 </section>
 
 <section id="seccionHistorial">
-    <h2>Historial de Capacitados</h2>
-    <input type="text" id="filtroNombre" placeholder="Filtrar por Nombre">
-    <input type="text" id="filtroCurso" placeholder="Filtrar por Curso">
-    <button onclick="filtrarHistorial()">Filtrar</button>
-    <table>
+    <h2>Registro de Trabajadores</h2>
+    <input type="text" id="nombre" placeholder="Nombre Completo">
+    <input type="text" id="rut" placeholder="RUT">
+    <input type="text" id="cargo" placeholder="Cargo">
+    <input type="text" id="centro" placeholder="Centro de Negocios">
+    <input type="date" id="fechaIngreso" placeholder="Fecha de Ingreso">
+    <button onclick="registrarTrabajador()">Registrar</button>
+
+    <h3>Historial de Capacitados</h3>
+    <table border="1">
         <thead>
-            <tr><th>Nombre</th><th>RUT</th><th>Curso</th><th>Fecha</th><th>Acción</th></tr>
+            <tr><th>Nombre</th><th>RUT</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Curso</th><th>Fecha Aprobación</th><th>Certificado</th></tr>
         </thead>
         <tbody id="tablaHistorial"></tbody>
     </table>
 </section>
 
-<section>
+<section id="evaluacionFinal">
     <h2>Evaluación Final</h2>
-    <div id="evaluacionFinal" style="display:none;"></div>
+    <div id="preguntasFinal"></div>
     <p id="resultadoFinal"></p>
 </section>
 
@@ -117,10 +122,24 @@ const preguntasFinal = [
     ["¿Se debe usar el extintor sin el seguro colocado?", "no"]
 ];
 
+function mostrarTrabajador() {
+    document.getElementById('menuPrincipal').style.display = 'none';
+    document.getElementById('seccionTrabajador').style.display = 'block';
+}
+
+function mostrarEmpresa() {
+    document.getElementById('menuPrincipal').style.display = 'none';
+    document.getElementById('seccionEmpresa').style.display = 'block';
+}
+
 function registrarTrabajador() {
     const nombre = document.getElementById('nombre').value;
     const rut = document.getElementById('rut').value;
-    trabajadores.push({nombre, rut});
+    const cargo = document.getElementById('cargo').value;
+    const centro = document.getElementById('centro').value;
+    const fechaIngreso = document.getElementById('fechaIngreso').value;
+    trabajadores.push({nombre, rut, cargo, centro, fechaIngreso});
+    actualizarHistorial();
     alert("Trabajador registrado");
 }
 
@@ -128,16 +147,18 @@ function accederCurso() {
     const rut = document.getElementById('rutAcceso').value;
     const trabajador = trabajadores.find(t => t.rut === rut);
     if (trabajador) {
-        document.getElementById('moduloCurso').style.display = "block";
-        document.getElementById('contenidoModulo').innerText = "Módulo 1: Uso y Manejo de Extintores."
+        document.getElementById('seccionTrabajador').style.display = 'none';
+        document.getElementById('moduloCurso').style.display = 'block';
+        document.getElementById('contenidoModulo').innerText = "Módulo 1: Uso y Manejo de Extintores.";
     } else {
         alert("Trabajador no registrado");
     }
 }
 
 function mostrarEvaluacionFinal() {
-    const contenedor = document.getElementById('evaluacionFinal');
-    contenedor.style.display = "block";
+    document.getElementById('moduloCurso').style.display = 'none';
+    document.getElementById('evaluacionFinal').style.display = 'block';
+    const contenedor = document.getElementById('preguntasFinal');
     contenedor.innerHTML = "";
     preguntasFinal.forEach((preg, index) => {
         contenedor.innerHTML += `${preg[0]}<br><input type='text' id='final${index}'><br>`;
@@ -154,10 +175,10 @@ function finalizarEvaluacion() {
     });
     const resultado = document.getElementById('resultadoFinal');
     if (correctas >= 6) {
-        resultado.textContent = `¡Felicidades! Has aprobado con ${correctas}/10 correctas.`;
-        const trabajador = trabajadores[trabajadores.length - 1];
+        resultado.textContent = `¡Felicidades! Has aprobado el curso.`;
+        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value);
         const fecha = new Date().toLocaleString();
-        historial.push({nombre: trabajador.nombre, rut: trabajador.rut, curso:"Uso y Manejo de Extintores", fecha});
+        historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
         actualizarHistorial();
         generarCertificado(trabajador);
     } else {
@@ -168,7 +189,8 @@ function finalizarEvaluacion() {
 function accederEmpresa() {
     const clave = document.getElementById('claveEmpresa').value;
     if (clave === "empresa123") {
-        document.getElementById('seccionHistorial').style.display = "block";
+        document.getElementById('seccionEmpresa').style.display = 'none';
+        document.getElementById('seccionHistorial').style.display = 'block';
     } else {
         alert("Clave incorrecta");
     }
@@ -181,30 +203,15 @@ function actualizarHistorial() {
         const fila = `<tr>
             <td>${item.nombre}</td>
             <td>${item.rut}</td>
+            <td>${item.cargo}</td>
+            <td>${item.centro}</td>
+            <td>${item.fechaIngreso}</td>
             <td>${item.curso}</td>
             <td>${item.fecha}</td>
-            <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar Certificado</button></td>
+            <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar</button></td>
         </tr>`;
         tabla.innerHTML += fila;
     });
-}
-
-function filtrarHistorial() {
-    const nombreFiltro = document.getElementById('filtroNombre').value.toLowerCase();
-    const cursoFiltro = document.getElementById('filtroCurso').value.toLowerCase();
-    const tabla = document.getElementById('tablaHistorial');
-    tabla.innerHTML = "";
-    historial.filter(h => h.nombre.toLowerCase().includes(nombreFiltro) && h.curso.toLowerCase().includes(cursoFiltro))
-        .forEach(item => {
-            const fila = `<tr>
-                <td>${item.nombre}</td>
-                <td>${item.rut}</td>
-                <td>${item.curso}</td>
-                <td>${item.fecha}</td>
-                <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar Certificado</button></td>
-            </tr>`;
-            tabla.innerHTML += fila;
-        });
 }
 
 function generarCertificado(trabajador) {
@@ -221,8 +228,10 @@ function generarCertificado(trabajador) {
 }
 
 function generarCertificadoPorDatos(nombre, rut) {
-    generarCertificado({nombre, rut});
+    const trabajador = trabajadores.find(t => t.rut === rut);
+    generarCertificado(trabajador);
 }
 </script>
 </body>
 </html>
+
