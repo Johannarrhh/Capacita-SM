@@ -68,7 +68,7 @@ body {
 <body>
 <section id="menuPrincipal">
     <h2>Acceso</h2>
-    <button onclick="mostrarTrabajador()">Trabajador</button>
+    <button onclick="mostrarTrabajador()">Trabajadores</button>
     <button onclick="mostrarEmpresa()">Empresas</button>
 </section>
 
@@ -122,14 +122,22 @@ body {
 </section>
 
 <script>
-let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
-let historial = JSON.parse(localStorage.getItem("historial")) || [];
-const preguntasFinal = [
-    ["¿Los extintores deben estar en un lugar visible?", "verdadero"],
-    ["¿Los extintores no necesitan mantención?", "falso"],
-    ["¿Se debe apuntar a la base del fuego?", "verdadero"],
-];
-
+function volverMenu() {
+    document.querySelectorAll('#seccionTrabajador, #mosaicoCursos, #moduloCurso, #evaluacionFinal, #seccionEmpresa, #seccionHistorial').forEach(sec => sec.style.display = 'none');
+    document.getElementById('menuPrincipal').style.display = 'flex';
+}
+function volverTrabajador() {
+    document.getElementById('mosaicoCursos').style.display = 'none';
+    document.getElementById('seccionTrabajador').style.display = 'block';
+}
+function volverCursos() {
+    document.getElementById('moduloCurso').style.display = 'none';
+    document.getElementById('mosaicoCursos').style.display = 'block';
+}
+function volverModulo() {
+    document.getElementById('evaluacionFinal').style.display = 'none';
+    document.getElementById('moduloCurso').style.display = 'block';
+}
 function mostrarTrabajador() {
     document.getElementById('menuPrincipal').style.display = 'none';
     document.getElementById('seccionTrabajador').style.display = 'block';
@@ -246,6 +254,14 @@ function generarCertificadoPorDatos(nombre, rut) {
     const trabajador = trabajadores.find(t => t.rut === rut);
     generarCertificado(trabajador);
 }
+let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
+let historial = JSON.parse(localStorage.getItem("historial")) || [];
+const preguntasFinal = [
+    ["¿Los extintores deben estar en un lugar visible?", "verdadero"],
+    ["¿Los extintores no necesitan mantención?", "falso"],
+    ["¿Se debe apuntar a la base del fuego?", "verdadero"],
+];
 </script>
+
 </body>
 </html>
