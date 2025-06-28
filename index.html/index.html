@@ -63,6 +63,141 @@ body {
     border-radius: 6px;
     cursor: pointer;
 }
+.boton-volver {
+    margin-top: 15px;
+    background-color: #A3C95A;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.boton-volver:hover {
+    background-color: #4C7C46;
+}
+</style>
+</head>
+<body>
+<section id="menuPrincipal">
+    <h2>Acceso</h2>
+    <button onclick="mostrarTrabajador()">Trabajadores</button>
+    <button onclick="mostrarEmpresa()">Empresas</button>
+</section>
+
+<section id="seccionTrabajador">
+    <h2>Ingrese su RUT</h2>
+    <input type="text" id="rutAcceso" placeholder="RUT">
+    <button onclick="accederTrabajador()">Entrar</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+</section>
+
+<section id="mosaicoCursos">
+    <h2>Cursos Disponibles</h2>
+    <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
+    <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
+</section>
+
+<section id="moduloCurso">
+    <h2>Módulo 1: Uso y Manejo de Extintores</h2>
+    <p>Contenido del curso...</p>
+    <h3>Preguntas (Verdadero/Falso)</h3>
+    <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
+    <p>Los extintores no requieren mantención. <input type="text" id="p2"></p>
+    <p>Se debe apuntar a la base del fuego. <input type="text" id="p3"></p>
+    <button onclick="finalizarModulo()">Finalizar Módulo</button>
+    <button class="boton-volver" onclick="volverCursos()">Volver</button>
+</section>
+
+<section id="evaluacionFinal">
+    <h2>Evaluación Final</h2>
+    <div id="preguntasFinal"></div>
+    <button onclick="finalizarEvaluacion()">Enviar Evaluación</button>
+    <p id="resultadoFinal"></p>
+    <button class="boton-volver" onclick="volverModulo()">Volver</button>
+</section>
+
+<section id="seccionEmpresa">
+    <h2>Datos del Trabajador</h2>
+    <input type="text" id="nombre" placeholder="Nombre Completo">
+    <input type="text" id="rut" placeholder="RUT">
+    <input type="text" id="cargo" placeholder="Cargo">
+    <input type="text" id="centro" placeholder="Centro de Negocios">
+    <input type="date" id="fechaIngreso">
+    <button onclick="registrarTrabajador()">Registrar</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+</section>
+
+<section id="seccionHistorial">
+    <h2>Historial de Trabajadores Aprobados</h2>
+    <table border="1">
+        <thead>
+            <tr><th>Nombre</th><th>RUT</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Curso</th><th>Fecha Aprobación</th><th>Certificado</th></tr>
+        </thead>
+        <tbody id="tablaHistorial"></tbody>
+    </table>
+    <button onclick="exportarHistorialExcel()">Exportar a Excel</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+</section>
+</body>
+</html>
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('fondo.png') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+#menuPrincipal {
+    background-color: rgba(255,255,255,0.95);
+    padding: 30px;
+    border-radius: 10px;
+    margin: 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+}
+#menuPrincipal h2 {
+    color: #4C7C46;
+    margin-bottom: 20px;
+}
+#menuPrincipal button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #4C7C46;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+#menuPrincipal button:hover {
+    background-color: #3B6138;
+}
+#seccionTrabajador, #seccionEmpresa, #seccionHistorial, #moduloCurso, #evaluacionFinal, #mosaicoCursos {
+    display: none;
+    background: rgba(255,255,255,0.95);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+}
+.curso-tile {
+    background: #A3C95A;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 150px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
