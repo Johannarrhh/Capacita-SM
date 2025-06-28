@@ -135,52 +135,71 @@ body {
 </section>
 
 <script>
+let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
+let historial = JSON.parse(localStorage.getItem("historial")) || [];
+const preguntasFinal = [
+    ["¿Los extintores deben estar en un lugar visible?", "verdadero"],
+    ["¿Los extintores no necesitan mantención?", "falso"],
+    ["¿Se debe apuntar a la base del fuego?", "verdadero"],
+];
+
+function ocultarTodo() {
+    document.getElementById('menuPrincipal').style.display = 'none';
+    document.getElementById('seccionTrabajador').style.display = 'none';
+    document.getElementById('mosaicoCursos').style.display = 'none';
+    document.getElementById('moduloCurso').style.display = 'none';
+    document.getElementById('evaluacionFinal').style.display = 'none';
+    document.getElementById('seccionEmpresa').style.display = 'none';
+    document.getElementById('seccionHistorial').style.display = 'none';
+}
+
 function volverMenu() {
-    document.querySelectorAll('#seccionTrabajador, #mosaicoCursos, #moduloCurso, #evaluacionFinal, #seccionEmpresa, #seccionHistorial').forEach(sec => sec.style.display = 'none');
+    ocultarTodo();
     document.getElementById('menuPrincipal').style.display = 'flex';
 }
 function volverTrabajador() {
-    document.getElementById('mosaicoCursos').style.display = 'none';
+    ocultarTodo();
     document.getElementById('seccionTrabajador').style.display = 'block';
 }
 function volverCursos() {
-    document.getElementById('moduloCurso').style.display = 'none';
+    ocultarTodo();
     document.getElementById('mosaicoCursos').style.display = 'block';
 }
 function volverModulo() {
-    document.getElementById('evaluacionFinal').style.display = 'none';
+    ocultarTodo();
     document.getElementById('moduloCurso').style.display = 'block';
 }
+
 function mostrarTrabajador() {
-    document.getElementById('menuPrincipal').style.display = 'none';
+    ocultarTodo();
     document.getElementById('seccionTrabajador').style.display = 'block';
 }
 function mostrarEmpresa() {
-    document.getElementById('menuPrincipal').style.display = 'none';
+    ocultarTodo();
     document.getElementById('seccionEmpresa').style.display = 'block';
     document.getElementById('seccionHistorial').style.display = 'block';
     actualizarHistorial();
 }
 function accederTrabajador() {
-    const rut = document.getElementById('rutAcceso').value;
+    const rut = document.getElementById('rutAcceso').value.trim();
     const trabajador = trabajadores.find(t => t.rut === rut);
     if (trabajador) {
-        document.getElementById('seccionTrabajador').style.display = 'none';
+        ocultarTodo();
         document.getElementById('mosaicoCursos').style.display = 'block';
     } else {
         alert("Trabajador no habilitado");
     }
 }
 function verCurso() {
-    document.getElementById('mosaicoCursos').style.display = 'none';
+    ocultarTodo();
     document.getElementById('moduloCurso').style.display = 'block';
 }
 function finalizarModulo() {
-    const p1 = document.getElementById('p1').value.toLowerCase();
-    const p2 = document.getElementById('p2').value.toLowerCase();
-    const p3 = document.getElementById('p3').value.toLowerCase();
+    const p1 = document.getElementById('p1').value.trim().toLowerCase();
+    const p2 = document.getElementById('p2').value.trim().toLowerCase();
+    const p3 = document.getElementById('p3').value.trim().toLowerCase();
     if (p1 === "verdadero" && p2 === "falso" && p3 === "verdadero") {
-        document.getElementById('moduloCurso').style.display = 'none';
+        ocultarTodo();
         document.getElementById('evaluacionFinal').style.display = 'block';
         cargarEvaluacionFinal();
     } else {
@@ -203,7 +222,7 @@ function finalizarEvaluacion() {
     const resultado = document.getElementById('resultadoFinal');
     if (correctas >= 3) {
         resultado.textContent = `¡Felicidades! Has aprobado el curso.`;
-        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value);
+        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value.trim());
         const fecha = new Date().toLocaleString();
         historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
         localStorage.setItem("historial", JSON.stringify(historial));
@@ -213,11 +232,15 @@ function finalizarEvaluacion() {
     }
 }
 function registrarTrabajador() {
-    const nombre = document.getElementById('nombre').value;
-    const rut = document.getElementById('rut').value;
-    const cargo = document.getElementById('cargo').value;
-    const centro = document.getElementById('centro').value;
+    const nombre = document.getElementById('nombre').value.trim();
+    const rut = document.getElementById('rut').value.trim();
+    const cargo = document.getElementById('cargo').value.trim();
+    const centro = document.getElementById('centro').value.trim();
     const fechaIngreso = document.getElementById('fechaIngreso').value;
+    if (!nombre || !rut || !cargo || !centro || !fechaIngreso) {
+        alert("Complete todos los campos");
+        return;
+    }
     trabajadores.push({nombre, rut, cargo, centro, fechaIngreso});
     localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
     actualizarHistorial();
@@ -267,13 +290,6 @@ function generarCertificadoPorDatos(nombre, rut) {
     const trabajador = trabajadores.find(t => t.rut === rut);
     generarCertificado(trabajador);
 }
-let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
-let historial = JSON.parse(localStorage.getItem("historial")) || [];
-const preguntasFinal = [
-    ["¿Los extintores deben estar en un lugar visible?", "verdadero"],
-    ["¿Los extintores no necesitan mantención?", "falso"],
-    ["¿Se debe apuntar a la base del fuego?", "verdadero"],
-];
 </script>
 
 </body>
