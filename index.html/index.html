@@ -10,9 +10,13 @@ body {
     font-family: Arial, sans-serif;
     background: url('fondo.png') no-repeat center center fixed;
     background-size: cover;
-    padding: 20px;
-    max-width: 900px;
-    margin: auto;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 h1, h2, h3 {
     text-align: center;
@@ -30,15 +34,21 @@ button {
     cursor: pointer;
 }
 section {
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(255,255,255,0.95);
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-align: center;
+}
+#menuPrincipal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 #menuPrincipal button {
-    width: 45%;
-    margin: 10px 2.5%;
+    width: 200px;
+    margin: 10px 0;
     padding: 15px;
     font-size: 16px;
 }
@@ -47,7 +57,7 @@ section {
 }
 #logo {
     display: block;
-    margin: 0 auto 20px auto;
+    margin: 20px auto 10px auto;
     width: 150px;
 }
 </style>
@@ -61,6 +71,7 @@ section {
     <button onclick="mostrarTrabajador()">Acceso Trabajador</button>
     <button onclick="mostrarEmpresa()">Acceso Empresa</button>
 </section>
+
 
 <section id="seccionTrabajador">
     <h2>Acceso Trabajador</h2>
