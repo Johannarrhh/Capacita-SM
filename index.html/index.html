@@ -75,6 +75,19 @@ body {
 .boton-volver:hover {
     background-color: #4C7C46;
 }
+
+.boton-volver {
+    margin-top: 15px;
+    background-color: #A3C95A;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.boton-volver:hover {
+    background-color: #4C7C46;
+}
 </style>
 </head>
 <body>
@@ -91,19 +104,26 @@ body {
     <button onclick="accederTrabajador()">Entrar</button>
 </section>
 
+<section id="seccionTrabajador">
+    <h2>Ingrese su RUT</h2>
+    <input type="text" id="rutAcceso" placeholder="RUT">
+    <button onclick="accederTrabajador()">Entrar</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+</section>
+
 <section id="mosaicoCursos">
     <h2>Cursos Disponibles</h2>
     <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
+    <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
 </section>
 
 <section id="moduloCurso">
     <h2>Módulo 1: Uso y Manejo de Extintores</h2>
-    <p>Contenido del curso...</p>
-    <h3>Preguntas (Verdadero/Falso)</h3>
     <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
     <p>Los extintores no requieren mantención. <input type="text" id="p2"></p>
     <p>Se debe apuntar a la base del fuego. <input type="text" id="p3"></p>
     <button onclick="finalizarModulo()">Finalizar Módulo</button>
+    <button class="boton-volver" onclick="volverCursos()">Volver</button>
 </section>
 
 <section id="evaluacionFinal">
@@ -111,6 +131,7 @@ body {
     <div id="preguntasFinal"></div>
     <button onclick="finalizarEvaluacion()">Enviar Evaluación</button>
     <p id="resultadoFinal"></p>
+    <button class="boton-volver" onclick="volverModulo()">Volver</button>
 </section>
 
 <section id="seccionEmpresa">
@@ -121,6 +142,7 @@ body {
     <input type="text" id="centro" placeholder="Centro de Negocios">
     <input type="date" id="fechaIngreso">
     <button onclick="registrarTrabajador()">Registrar</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
 
 <section id="seccionHistorial">
@@ -132,7 +154,9 @@ body {
         <tbody id="tablaHistorial"></tbody>
     </table>
     <button onclick="exportarHistorialExcel()">Exportar a Excel</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
+
 
 <script>
 let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
