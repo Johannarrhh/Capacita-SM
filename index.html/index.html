@@ -46,75 +46,89 @@ body {
 #menuPrincipal button:hover {
     background-color: #3B6138;
 }
+#seccionTrabajador, #seccionEmpresa, #seccionHistorial, #moduloCurso, #evaluacionFinal, #mosaicoCursos {
+    display: none;
+    background: rgba(255,255,255,0.95);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+}
+.curso-tile {
+    background: #A3C95A;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 150px;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
 <section id="menuPrincipal">
     <h2>Acceso</h2>
-    <button onclick="mostrarTrabajador()">Trabajador</button>
-    <button onclick="mostrarEmpresa()">Empresa</button>
+    <button onclick="mostrarTrabajador()">Acceso Trabajador</button>
+    <button onclick="mostrarEmpresa()">Acceso Empresa</button>
 </section>
-</body>
-</html>
+
 <section id="seccionTrabajador">
-    <h2>Acceso Trabajador</h2>
-    <input type="text" id="rutAcceso" placeholder="Ingrese su RUT">
-    <button onclick="accederCurso()">Entrar</button>
+    <h2>Ingrese su RUT</h2>
+    <input type="text" id="rutAcceso" placeholder="RUT">
+    <button onclick="accederTrabajador()">Entrar</button>
+</section>
+
+<section id="mosaicoCursos">
+    <h2>Cursos Disponibles</h2>
+    <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
 </section>
 
 <section id="moduloCurso">
-    <h2>Curso: Uso y Manejo de Extintores</h2>
-    <p id="contenidoModulo">Módulo 1: Uso y Manejo de Extintores.</p>
-    <button onclick="mostrarEvaluacionFinal()">Ir a Evaluación Final</button>
+    <h2>Módulo 1: Uso y Manejo de Extintores</h2>
+    <p>Contenido del curso...</p>
+    <h3>Preguntas (Verdadero/Falso)</h3>
+    <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
+    <p>Los extintores no requieren mantención. <input type="text" id="p2"></p>
+    <p>Se debe apuntar a la base del fuego. <input type="text" id="p3"></p>
+    <button onclick="finalizarModulo()">Finalizar Módulo</button>
+</section>
+
+<section id="evaluacionFinal">
+    <h2>Evaluación Final</h2>
+    <div id="preguntasFinal"></div>
+    <button onclick="finalizarEvaluacion()">Enviar Evaluación</button>
+    <p id="resultadoFinal"></p>
 </section>
 
 <section id="seccionEmpresa">
-    <h2>Acceso Empresa</h2>
-    <input type="password" id="claveEmpresa" placeholder="Clave de Acceso">
-    <button onclick="accederEmpresa()">Ingresar</button>
-</section>
-
-<section id="seccionHistorial">
-    <h2>Registro de Trabajadores</h2>
+    <h2>Datos del Trabajador</h2>
     <input type="text" id="nombre" placeholder="Nombre Completo">
     <input type="text" id="rut" placeholder="RUT">
     <input type="text" id="cargo" placeholder="Cargo">
     <input type="text" id="centro" placeholder="Centro de Negocios">
     <input type="date" id="fechaIngreso">
     <button onclick="registrarTrabajador()">Registrar</button>
-    <h3>Historial de Capacitados</h3>
+</section>
+
+<section id="seccionHistorial">
+    <h2>Historial de Trabajadores Aprobados</h2>
     <table border="1">
         <thead>
             <tr><th>Nombre</th><th>RUT</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Curso</th><th>Fecha Aprobación</th><th>Certificado</th></tr>
         </thead>
         <tbody id="tablaHistorial"></tbody>
     </table>
-    <button onclick="exportarHistorialExcel()">Exportar Historial a Excel</button>
-    <button onclick="irInicio()">Inicio</button>
-</section>
-
-<section id="evaluacionFinal">
-    <h2>Evaluación Final</h2>
-    <div id="preguntasFinal"></div>
-    <p id="resultadoFinal"></p>
+    <button onclick="exportarHistorialExcel()">Exportar a Excel</button>
 </section>
 
 <script>
 let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
 let historial = JSON.parse(localStorage.getItem("historial")) || [];
 const preguntasFinal = [
-    ["¿Dónde se debe apuntar al usar el extintor?", "base"],
-    ["¿Qué gas contiene un extintor de CO2?", "dioxido de carbono"],
-    ["¿Cuál es el color de los extintores de CO2?", "negro"],
-    ["¿Qué elemento NO pertenece al triángulo del fuego?", "metal"],
-    ["¿Qué tipo de fuego apaga un extintor de Clase K?", "aceites"],
-    ["¿Es necesario capacitarse antes de usar un extintor?", "si"],
-    ["¿Dónde debe ubicarse un extintor?", "visible"],
-    ["¿Debo leer las instrucciones del extintor?", "si"],
-    ["¿Se debe revisar el extintor periódicamente?", "si"],
-    ["¿Se debe usar el extintor sin el seguro colocado?", "no"]
+    ["¿Los extintores deben estar en un lugar visible?", "verdadero"],
+    ["¿Los extintores no necesitan mantención?", "falso"],
+    ["¿Se debe apuntar a la base del fuego?", "verdadero"],
 ];
-actualizarHistorial();
 
 function mostrarTrabajador() {
     document.getElementById('menuPrincipal').style.display = 'none';
@@ -123,6 +137,59 @@ function mostrarTrabajador() {
 function mostrarEmpresa() {
     document.getElementById('menuPrincipal').style.display = 'none';
     document.getElementById('seccionEmpresa').style.display = 'block';
+    document.getElementById('seccionHistorial').style.display = 'block';
+    actualizarHistorial();
+}
+function accederTrabajador() {
+    const rut = document.getElementById('rutAcceso').value;
+    const trabajador = trabajadores.find(t => t.rut === rut);
+    if (trabajador) {
+        document.getElementById('seccionTrabajador').style.display = 'none';
+        document.getElementById('mosaicoCursos').style.display = 'block';
+    } else {
+        alert("Trabajador no habilitado");
+    }
+}
+function verCurso() {
+    document.getElementById('mosaicoCursos').style.display = 'none';
+    document.getElementById('moduloCurso').style.display = 'block';
+}
+function finalizarModulo() {
+    const p1 = document.getElementById('p1').value.toLowerCase();
+    const p2 = document.getElementById('p2').value.toLowerCase();
+    const p3 = document.getElementById('p3').value.toLowerCase();
+    if (p1 === "verdadero" && p2 === "falso" && p3 === "verdadero") {
+        document.getElementById('moduloCurso').style.display = 'none';
+        document.getElementById('evaluacionFinal').style.display = 'block';
+        cargarEvaluacionFinal();
+    } else {
+        alert("Debe responder correctamente para continuar.");
+    }
+}
+function cargarEvaluacionFinal() {
+    const contenedor = document.getElementById('preguntasFinal');
+    contenedor.innerHTML = "";
+    preguntasFinal.forEach((preg, index) => {
+        contenedor.innerHTML += `${preg[0]}<br><input type='text' id='final${index}'><br>`;
+    });
+}
+function finalizarEvaluacion() {
+    let correctas = 0;
+    preguntasFinal.forEach((preg, index) => {
+        const resp = document.getElementById(`final${index}`).value.trim().toLowerCase();
+        if (resp === preg[1].toLowerCase()) correctas++;
+    });
+    const resultado = document.getElementById('resultadoFinal');
+    if (correctas >= 3) {
+        resultado.textContent = `¡Felicidades! Has aprobado el curso.`;
+        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value);
+        const fecha = new Date().toLocaleString();
+        historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
+        localStorage.setItem("historial", JSON.stringify(historial));
+        actualizarHistorial();
+    } else {
+        resultado.textContent = "Debes repetir la evaluación.";
+    }
 }
 function registrarTrabajador() {
     const nombre = document.getElementById('nombre').value;
@@ -134,54 +201,6 @@ function registrarTrabajador() {
     localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
     actualizarHistorial();
     alert("Trabajador registrado");
-}
-function accederCurso() {
-    const rut = document.getElementById('rutAcceso').value;
-    const trabajador = trabajadores.find(t => t.rut === rut);
-    if (trabajador) {
-        document.getElementById('seccionTrabajador').style.display = 'none';
-        document.getElementById('moduloCurso').style.display = 'block';
-    } else {
-        alert("Trabajador no registrado");
-    }
-}
-function mostrarEvaluacionFinal() {
-    document.getElementById('moduloCurso').style.display = 'none';
-    document.getElementById('evaluacionFinal').style.display = 'block';
-    const contenedor = document.getElementById('preguntasFinal');
-    contenedor.innerHTML = "";
-    preguntasFinal.forEach((preg, index) => {
-        contenedor.innerHTML += `${preg[0]}<br><input type='text' id='final${index}'><br>`;
-    });
-    contenedor.innerHTML += `<button onclick='finalizarEvaluacion()'>Enviar Evaluación</button>`;
-}
-function finalizarEvaluacion() {
-    let correctas = 0;
-    preguntasFinal.forEach((preg, index) => {
-        const resp = document.getElementById(`final${index}`).value.trim().toLowerCase();
-        if (resp === preg[1].toLowerCase()) correctas++;
-    });
-    const resultado = document.getElementById('resultadoFinal');
-    if (correctas >= 6) {
-        resultado.textContent = `¡Felicidades! Has aprobado el curso.`;
-        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value);
-        const fecha = new Date().toLocaleString();
-        historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
-        localStorage.setItem("historial", JSON.stringify(historial));
-        actualizarHistorial();
-        generarCertificado(trabajador);
-    } else {
-        resultado.textContent = "Debes repetir la evaluación.";
-    }
-}
-function accederEmpresa() {
-    const clave = document.getElementById('claveEmpresa').value;
-    if (clave === "empresa123") {
-        document.getElementById('seccionEmpresa').style.display = 'none';
-        document.getElementById('seccionHistorial').style.display = 'block';
-    } else {
-        alert("Clave incorrecta");
-    }
 }
 function actualizarHistorial() {
     const tabla = document.getElementById('tablaHistorial');
@@ -200,6 +219,17 @@ function actualizarHistorial() {
         tabla.innerHTML += fila;
     });
 }
+function exportarHistorialExcel() {
+    let csv = "Nombre,RUT,Cargo,Centro,Fecha Ingreso,Curso,Fecha Aprobación\n";
+    historial.forEach(h => {
+        csv += `${h.nombre},${h.rut},${h.cargo},${h.centro},${h.fechaIngreso},${h.curso},${h.fecha}\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "historial_capacitados.csv";
+    link.click();
+}
 function generarCertificado(trabajador) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -215,20 +245,6 @@ function generarCertificado(trabajador) {
 function generarCertificadoPorDatos(nombre, rut) {
     const trabajador = trabajadores.find(t => t.rut === rut);
     generarCertificado(trabajador);
-}
-function exportarHistorialExcel() {
-    let csv = "Nombre,RUT,Cargo,Centro,Fecha Ingreso,Curso,Fecha Aprobación\n";
-    historial.forEach(h => {
-        csv += `${h.nombre},${h.rut},${h.cargo},${h.centro},${h.fechaIngreso},${h.curso},${h.fecha}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "historial_capacitados.csv";
-    link.click();
-}
-function irInicio() {
-    location.reload();
 }
 </script>
 </body>
