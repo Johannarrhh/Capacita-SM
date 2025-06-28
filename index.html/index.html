@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Capacita SM - Plataforma de Capacitación</title>
+<title>Acceso - Capacita SM</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 body {
@@ -14,64 +14,47 @@ body {
     padding: 0;
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-}
-h1, h2, h3 {
-    text-align: center;
-    color: #4C7C46;
-}
-input, button {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 5px;
-}
-button {
-    background-color: #4C7C46;
-    color: white;
-    cursor: pointer;
-}
-section {
-    background-color: rgba(255,255,255,0.95);
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    text-align: center;
+    justify-content: flex-start;
 }
 #menuPrincipal {
+    background-color: rgba(255,255,255,0.95);
+    padding: 30px;
+    border-radius: 10px;
+    margin: 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 250px;
+}
+#menuPrincipal h2 {
+    color: #4C7C46;
+    margin-bottom: 20px;
 }
 #menuPrincipal button {
-    width: 200px;
+    width: 100%;
     margin: 10px 0;
-    padding: 15px;
+    padding: 12px;
     font-size: 16px;
+    background-color: #4C7C46;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
 }
-#seccionTrabajador, #seccionEmpresa, #seccionHistorial, #moduloCurso, #evaluacionFinal {
-    display: none;
-}
-#logo {
-    display: block;
-    margin: 20px auto 10px auto;
-    width: 150px;
+#menuPrincipal button:hover {
+    background-color: #3B6138;
 }
 </style>
 </head>
 <body>
-<img src="logo.png" alt="Logo Capacita SM" id="logo">
-<h1>Capacita SM - Plataforma de Capacitación</h1>
-
 <section id="menuPrincipal">
-    <h2>Acceso Plataforma</h2>
-    <button onclick="mostrarTrabajador()">Acceso Trabajador</button>
-    <button onclick="mostrarEmpresa()">Acceso Empresa</button>
+    <h2>Acceso</h2>
+    <button onclick="mostrarTrabajador()">Trabajador</button>
+    <button onclick="mostrarEmpresa()">Empresa</button>
 </section>
-
+</body>
 
 <section id="seccionTrabajador">
     <h2>Acceso Trabajador</h2>
