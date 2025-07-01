@@ -120,13 +120,21 @@ html, body {
 <section id="menuPrincipal">
     <h2>Acceso</h2>
     <button onclick="mostrarTrabajador()">Trabajadores</button>
-    <button onclick="mostrarEmpresa()">Empresas</button>
+    <button onclick="mostrarLoginEmpresa()">Empresas</button>
 </section>
 
 <section id="seccionTrabajador" class="seccion">
     <h2>Ingrese su RUT</h2>
     <input type="text" id="rutAcceso" placeholder="RUT">
     <button onclick="accederTrabajador()">Entrar</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+</section>
+
+<section id="loginEmpresa" class="seccion">
+    <h2>Acceso Empresas</h2>
+    <input type="text" id="usuarioEmpresa" placeholder="Usuario">
+    <input type="password" id="claveEmpresa" placeholder="Contraseña">
+    <button onclick="accederEmpresa()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
 
@@ -153,7 +161,6 @@ html, body {
     <button class="boton-volver" onclick="volverModulo()">Volver</button>
 </section>
 
-<!-- Panel Empresa SOLO visible al acceder como empresa -->
 <div id="panelEmpresa">
     <div id="menuLateral">
         <h3>Datos Empresa</h3>
@@ -189,6 +196,9 @@ html, body {
 </div>
 
 <script>
+const usuarioValido = "empresa";
+const claveValida = "1234";
+
 let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
 let historial = JSON.parse(localStorage.getItem("historial")) || [];
 const preguntasFinal = [
@@ -211,22 +221,20 @@ function mostrarTrabajador() {
     ocultarTodo();
     document.getElementById('seccionTrabajador').style.display = 'block';
 }
-function volverTrabajador() {
+function mostrarLoginEmpresa() {
     ocultarTodo();
-    document.getElementById('seccionTrabajador').style.display = 'block';
+    document.getElementById('loginEmpresa').style.display = 'block';
 }
-function volverCursos() {
-    ocultarTodo();
-    document.getElementById('mosaicoCursos').style.display = 'block';
-}
-function volverModulo() {
-    ocultarTodo();
-    document.getElementById('moduloCurso').style.display = 'block';
-}
-function mostrarEmpresa() {
-    ocultarTodo();
-    document.getElementById('panelEmpresa').style.display = 'flex';
-    mostrarSeccionEmpresa('seccionIngreso');
+function accederEmpresa() {
+    const usuario = document.getElementById('usuarioEmpresa').value.trim();
+    const clave = document.getElementById('claveEmpresa').value.trim();
+    if (usuario === usuarioValido && clave === claveValida) {
+        ocultarTodo();
+        document.getElementById('panelEmpresa').style.display = 'flex';
+        mostrarSeccionEmpresa('seccionIngreso');
+    } else {
+        alert("Usuario o contraseña incorrectos");
+    }
 }
 function mostrarSeccionEmpresa(id) {
     document.querySelectorAll('#contenidoEmpresa .seccion').forEach(sec => sec.style.display = "none");
@@ -242,7 +250,19 @@ function accederTrabajador() {
         alert("Trabajador no habilitado");
     }
 }
+function volverTrabajador() {
+    ocultarTodo();
+    document.getElementById('seccionTrabajador').style.display = 'block';
+}
 function verCurso() {
+    ocultarTodo();
+    document.getElementById('moduloCurso').style.display = 'block';
+}
+function volverCursos() {
+    ocultarTodo();
+    document.getElementById('mosaicoCursos').style.display = 'block';
+}
+function volverModulo() {
     ocultarTodo();
     document.getElementById('moduloCurso').style.display = 'block';
 }
@@ -310,4 +330,3 @@ function exportarHistorialExcel() {
 
 </body>
 </html>
-
