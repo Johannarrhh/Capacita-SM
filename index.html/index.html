@@ -12,22 +12,9 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-}
-
-body {
     font-family: Arial, sans-serif;
-    background: url('fondo.png') no-repeat center center;
+    background: url('fondo.png') no-repeat center center fixed;
     background-size: cover;
-    background-attachment: fixed;
-}
-
-.contenedor-central {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
 }
 
 @media (max-width: 768px) {
@@ -36,12 +23,12 @@ body {
     }
 }
 
-
 #menuPrincipal, .seccion {
     background-color: rgba(255,255,255,0.95);
     padding: 20px;
     border-radius: 10px;
-    margin: 20px;
+    margin: 20px auto;
+    max-width: 300px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     text-align: center;
 }
@@ -73,15 +60,61 @@ body {
     cursor: pointer;
 }
 
-.seccion {
+.seccion, #panelEmpresa {
     display: none;
+}
+
+#panelEmpresa {
+    display: flex;
+    height: 100vh;
+}
+
+#menuLateral {
+    width: 250px;
+    background-color: rgba(255,255,255,0.95);
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+#menuLateral h3 {
+    color: #4C7C46;
+    margin-bottom: 10px;
+}
+
+#menuLateral p {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+#menuLateral button {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #4C7C46;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#menuLateral button:hover {
+    background-color: #3B6138;
+}
+
+#contenidoEmpresa {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: rgba(255,255,255,0.9);
+    margin: 20px;
+    border-radius: 10px;
+    overflow-y: auto;
 }
 </style>
 </head>
 
 <body>
-
-<div class="contenedor-central">
 
 <section id="menuPrincipal">
     <h2>Acceso</h2>
@@ -119,29 +152,39 @@ body {
     <button class="boton-volver" onclick="volverModulo()">Volver</button>
 </section>
 
-<section id="seccionEmpresa" class="seccion">
-    <h2>Ingreso de Trabajadores</h2>
-    <input type="text" id="nombre" placeholder="Nombre Completo">
-    <input type="text" id="rut" placeholder="RUT">
-    <input type="text" id="cargo" placeholder="Cargo">
-    <input type="text" id="centro" placeholder="Centro de Negocios">
-    <input type="date" id="fechaIngreso">
-    <button onclick="registrarTrabajador()">Registrar</button>
-    <button class="boton-volver" onclick="volverMenu()">Volver</button>
-</section>
+<!-- Panel Empresa Completo -->
+<div id="panelEmpresa">
+    <div id="menuLateral">
+        <h3>Datos Empresa</h3>
+        <p>Nombre: Empresa XYZ</p>
+        <p>RUT: 12.345.678-9</p>
+        <button onclick="mostrarSeccionEmpresa('seccionIngreso')">Ingreso de Trabajadores</button>
+        <button onclick="mostrarSeccionEmpresa('seccionHistorial')">Historial</button>
+        <button onclick="volverMenu()">Volver</button>
+    </div>
 
-<section id="seccionHistorial" class="seccion">
-    <h3>Historial</h3>
-    <table border="1">
-        <thead>
-            <tr><th>Nombre</th><th>RUT</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Curso</th><th>Fecha Aprobación</th><th>Certificado</th></tr>
-        </thead>
-        <tbody id="tablaHistorial"></tbody>
-    </table>
-    <button onclick="exportarHistorialExcel()">Exportar a Excel</button>
-    <button class="boton-volver" onclick="volverMenu()">Volver</button>
-</section>
+    <div id="contenidoEmpresa">
+        <div id="seccionIngreso" class="seccion">
+            <h2>Ingreso de Trabajadores</h2>
+            <input type="text" id="nombre" placeholder="Nombre Completo">
+            <input type="text" id="rut" placeholder="RUT">
+            <input type="text" id="cargo" placeholder="Cargo">
+            <input type="text" id="centro" placeholder="Centro de Negocios">
+            <input type="date" id="fechaIngreso">
+            <button onclick="registrarTrabajador()">Registrar</button>
+        </div>
 
+        <div id="seccionHistorial" class="seccion">
+            <h2>Historial</h2>
+            <table border="1">
+                <thead>
+                    <tr><th>Nombre</th><th>RUT</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Curso</th><th>Fecha Aprobación</th><th>Certificado</th></tr>
+                </thead>
+                <tbody id="tablaHistorial"></tbody>
+            </table>
+            <button onclick="exportarHistorialExcel()">Exportar a Excel</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -156,11 +199,16 @@ const preguntasFinal = [
 function ocultarTodo() {
     document.querySelectorAll(".seccion").forEach(sec => sec.style.display = "none");
     document.getElementById('menuPrincipal').style.display = "none";
+    document.getElementById('panelEmpresa').style.display = "none";
 }
 
 function volverMenu() {
     ocultarTodo();
     document.getElementById('menuPrincipal').style.display = 'block';
+}
+function mostrarTrabajador() {
+    ocultarTodo();
+    document.getElementById('seccionTrabajador').style.display = 'block';
 }
 function volverTrabajador() {
     ocultarTodo();
@@ -174,16 +222,14 @@ function volverModulo() {
     ocultarTodo();
     document.getElementById('moduloCurso').style.display = 'block';
 }
-
-function mostrarTrabajador() {
-    ocultarTodo();
-    document.getElementById('seccionTrabajador').style.display = 'block';
-}
 function mostrarEmpresa() {
     ocultarTodo();
-    document.getElementById('seccionEmpresa').style.display = 'block';
-    document.getElementById('seccionHistorial').style.display = 'block';
-    actualizarHistorial();
+    document.getElementById('panelEmpresa').style.display = 'flex';
+    mostrarSeccionEmpresa('seccionIngreso');
+}
+function mostrarSeccionEmpresa(id) {
+    document.querySelectorAll('#contenidoEmpresa .seccion').forEach(sec => sec.style.display = "none");
+    document.getElementById(id).style.display = "block";
 }
 function accederTrabajador() {
     const rut = document.getElementById('rutAcceso').value.trim();
@@ -231,7 +277,6 @@ function finalizarEvaluacion() {
         const fecha = new Date().toLocaleString();
         historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
         localStorage.setItem("historial", JSON.stringify(historial));
-        actualizarHistorial();
     } else {
         resultado.textContent = "Debes repetir la evaluación.";
     }
@@ -248,24 +293,6 @@ function registrarTrabajador() {
     }
     trabajadores.push({nombre, rut, cargo, centro, fechaIngreso});
     localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
-    actualizarHistorial();
-    alert("Trabajador registrado");
-}
-function actualizarHistorial() {
-    const tabla = document.getElementById('tablaHistorial');
-    tabla.innerHTML = "";
-    historial.forEach(item => {
-        tabla.innerHTML += `<tr>
-            <td>${item.nombre}</td>
-            <td>${item.rut}</td>
-            <td>${item.cargo}</td>
-            <td>${item.centro}</td>
-            <td>${item.fechaIngreso}</td>
-            <td>${item.curso}</td>
-            <td>${item.fecha}</td>
-            <td><button onclick='generarCertificadoPorDatos("${item.nombre}","${item.rut}")'>Descargar</button></td>
-        </tr>`;
-    });
 }
 function exportarHistorialExcel() {
     let csv = "Nombre,RUT,Cargo,Centro,Fecha Ingreso,Curso,Fecha Aprobación\n";
@@ -277,22 +304,6 @@ function exportarHistorialExcel() {
     link.href = URL.createObjectURL(blob);
     link.download = "historial_capacitados.csv";
     link.click();
-}
-function generarCertificado(trabajador) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("CERTIFICADO DE PARTICIPACIÓN", 20, 30);
-    doc.setFontSize(12);
-    doc.text(`La empresa certifica que ${trabajador.nombre}, RUT ${trabajador.rut}`, 20, 50);
-    doc.text("Ha participado y aprobado el curso: Uso y Manejo de Extintores", 20, 60);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 70);
-    doc.text("Capacita SM Academy", 20, 80);
-    doc.save("certificado.pdf");
-}
-function generarCertificadoPorDatos(nombre, rut) {
-    const trabajador = trabajadores.find(t => t.rut === rut);
-    generarCertificado(trabajador);
 }
 </script>
 
