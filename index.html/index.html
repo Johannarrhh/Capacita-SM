@@ -48,13 +48,37 @@ table td input { width: 100%; border: none; background: transparent; }
     <button onclick="accederTrabajador()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
-<section id="mosaicoCursos" class="seccion" style="display:none">
+    <section id="mosaicoCursos" class="seccion" style="display:none">
     <h2>Cursos Disponibles</h2>
-    <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
+    
+    <div class="curso-tile" onclick="verCurso('Uso y Manejo de Extintores')">Uso y Manejo de Extintores</div>
+    <div class="curso-tile" onclick="verCurso('EPP - Uso y Mantención')">EPP - Uso y Mantención</div>
+    <div class="curso-tile" onclick="verCurso('Procedimientos de Trabajo Seguro')">Procedimientos de Trabajo Seguro</div>
+    <div class="curso-tile" onclick="verCurso('Manejo Seguro de Herramientas')">Manejo Seguro de Herramientas</div>
+    <div class="curso-tile" onclick="verCurso('Manejo Seguro de Material Cortopunzante')">Manejo Seguro de Material Cortopunzante</div>
+    <div class="curso-tile" onclick="verCurso('Prevención de Riesgos Eléctricos')">Prevención de Riesgos Eléctricos</div>
+    <div class="curso-tile" onclick="verCurso('Manejo Manual de Cargas')">Manejo Manual de Cargas</div>
+    <div class="curso-tile" onclick="verCurso('Prácticas Seguras en Labores de Aseo')">Prácticas Seguras en Labores de Aseo</div>
+    <div class="curso-tile" onclick="verCurso('Manipulación Higiénica de Alimentos')">Manipulación Higiénica de Alimentos</div>
+    <div class="curso-tile" onclick="verCurso('Seguridad en Máquinas Panadería')">Seguridad en Máquinas Panadería</div>
+    <div class="curso-tile" onclick="verCurso('Comportamientos Seguros en Cocinas y Restaurant')">Comportamientos Seguros en Cocinas y Restaurant</div>
+    <div class="curso-tile" onclick="verCurso('Trayecto Seguro')">Trayecto Seguro</div>
+    <div class="curso-tile" onclick="verCurso('Prevención y Respuesta a Incendios')">Prevención y Respuesta a Incendios</div>
+    <div class="curso-tile" onclick="verCurso('Seguridad Frente a Incendios')">Seguridad Frente a Incendios</div>
+    <div class="curso-tile" onclick="verCurso('Gestión de Riesgos de Desastres')">Gestión de Riesgos de Desastres</div>
+    <div class="curso-tile" onclick="verCurso('Protocolo PREXOR - Exposición a Ruido')">Protocolo PREXOR - Exposición a Ruido</div>
+    <div class="curso-tile" onclick="verCurso('Manejo Post Exposición a Sangre')">Manejo Post Exposición a Sangre</div>
+    <div class="curso-tile" onclick="verCurso('Prevención Acoso Laboral y Sexual')">Prevención Acoso Laboral y Sexual</div>
+    <div class="curso-tile" onclick="verCurso('Violencia y Acoso en el Trabajo')">Violencia y Acoso en el Trabajo</div>
+    <div class="curso-tile" onclick="verCurso('Primeros Auxilios Psicológicos')">Primeros Auxilios Psicológicos</div>
+    <div class="curso-tile" onclick="verCurso('Seguridad en Asaltos - Comercio')">Seguridad en Asaltos - Comercio</div>
+    <div class="curso-tile" onclick="verCurso('Seguridad para Reponedores Fiambrerías')">Seguridad para Reponedores Fiambrerías</div>
+
     <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
 </section>
+
 <section id="moduloCurso" class="seccion" style="display:none">
-    <h2>Módulo 1: Uso y Manejo de Extintores</h2>
+    <h2 id="tituloCurso">Módulo</h2>
     <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
     <p>Los extintores no requieren mantención. <input type="text" id="p2"></p>
     <p>Se debe apuntar a la base del fuego. <input type="text" id="p3"></p>
@@ -103,7 +127,7 @@ function mostrarTrabajador(){ocultarTodo();document.getElementById('seccionTraba
 function mostrarLoginEmpresa(){ocultarTodo();document.getElementById('loginEmpresa').style.display='block';}
 function accederTrabajador(){const r=document.getElementById('rutAcceso').value.trim();if(trabajadores.find(t=>t.rut===r)){ocultarTodo();document.getElementById('mosaicoCursos').style.display='block';}else{alert("RUT no registrado");}}
 function volverTrabajador(){mostrarTrabajador();}
-function verCurso(){ocultarTodo();document.getElementById('moduloCurso').style.display='block';}
+function verCurso(nombre) { ocultarTodo();document.getElementById('moduloCurso').style.display = 'block';document.getElementById('tituloCurso').textContent = nombre;}
 function volverCursos(){document.getElementById('mosaicoCursos').style.display='block';}
 function volverModulo(){document.getElementById('moduloCurso').style.display='block';}
 function finalizarModulo(){const p1=document.getElementById('p1').value.trim().toLowerCase(),p2=document.getElementById('p2').value.trim().toLowerCase(),p3=document.getElementById('p3').value.trim().toLowerCase();if(p1=="verdadero"&&p2=="falso"&&p3=="verdadero"){ocultarTodo();document.getElementById('evaluacionFinal').style.display='block';cargarEvaluacionFinal();}else{alert("Respuestas incorrectas");}}
