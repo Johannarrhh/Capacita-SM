@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acceso - Capacita SM</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+<title>Gestión de Trabajadores - Capacita SM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 html, body {
     margin: 0;
@@ -49,23 +48,8 @@ html, body {
     background-color: #3B6138;
 }
 
-.curso-tile {
-    background: #A3C95A;
-    padding: 10px;
-    margin: 10px;
-    display: inline-block;
-    width: 150px;
-    text-align: center;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.seccion, #panelEmpresa {
-    display: none;
-}
-
 #panelEmpresa {
-    display: flex;
+    display: none;
     height: 100vh;
     width: 100%;
 }
@@ -81,16 +65,10 @@ html, body {
 
 #menuLateral h3 {
     color: #4C7C46;
-    margin-bottom: 10px;
-}
-
-#menuLateral p {
-    margin: 5px 0;
-    font-weight: bold;
 }
 
 #menuLateral button {
-    margin-top: 15px;
+    margin-top: 10px;
     padding: 10px;
     background-color: #4C7C46;
     color: white;
@@ -112,6 +90,23 @@ html, body {
     border-radius: 10px;
     overflow-y: auto;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table td input {
+    width: 100%;
+    border: none;
+    background: transparent;
+}
 </style>
 </head>
 
@@ -119,15 +114,7 @@ html, body {
 
 <section id="menuPrincipal">
     <h2>Acceso</h2>
-    <button onclick="mostrarTrabajador()">Trabajadores</button>
     <button onclick="mostrarLoginEmpresa()">Empresas</button>
-</section>
-
-<section id="seccionTrabajador" class="seccion">
-    <h2>Ingrese su RUT</h2>
-    <input type="text" id="rutAcceso" placeholder="RUT">
-    <button onclick="accederTrabajador()">Entrar</button>
-    <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
 
 <section id="loginEmpresa" class="seccion">
@@ -138,75 +125,44 @@ html, body {
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
 
-<section id="mosaicoCursos" class="seccion">
-    <h2>Cursos Disponibles</h2>
-    <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
-    <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
-</section>
-
-<section id="moduloCurso" class="seccion">
-    <h2>Módulo 1: Uso y Manejo de Extintores</h2>
-    <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
-    <p>Los extintores no requieren mantención. <input type="text" id="p2"></p>
-    <p>Se debe apuntar a la base del fuego. <input type="text" id="p3"></p>
-    <button onclick="finalizarModulo()">Finalizar Módulo</button>
-    <button class="boton-volver" onclick="volverCursos()">Volver</button>
-</section>
-
-<section id="evaluacionFinal" class="seccion">
-    <h2>Evaluación Final</h2>
-    <div id="preguntasFinal"></div>
-    <button onclick="finalizarEvaluacion()">Enviar Evaluación</button>
-    <p id="resultadoFinal"></p>
-    <button class="boton-volver" onclick="volverModulo()">Volver</button>
-</section>
-
-<div id="panelEmpresa" style="display: none;">
+<div id="panelEmpresa">
     <div id="menuLateral">
-        <h3>Datos Empresa</h3>
-        <p>Nombre: Empresa XYZ</p>
+        <h3>Empresa XYZ</h3>
         <p>RUT: 12.345.678-9</p>
-        <button onclick="mostrarSeccionEmpresa('seccionIngreso')">Ingreso de Trabajadores</button>
-        <button onclick="mostrarSeccionEmpresa('seccionHistorial')">Historial</button>
-        <button onclick="volverMenu()">Volver</button>
+        <button onclick="mostrarSeccionEmpresa('seccionIngreso')">Gestión de Trabajadores</button>
+        <button onclick="exportarTrabajadores()">Exportar a Excel</button>
+        <button onclick="document.getElementById('importador').click()">Importar CSV o Excel</button>
+        <input type="file" id="importador" accept=".csv,.xlsx" style="display:none" onchange="importarTrabajadores(this)">
+        <button onclick="volverMenu()">Cerrar Sesión</button>
     </div>
 
     <div id="contenidoEmpresa">
         <div id="seccionIngreso" class="seccion">
-            <h2>Ingreso de Trabajadores</h2>
+            <h2>Gestión de Trabajadores</h2>
+
+            <h3>Agregar Trabajador</h3>
             <input type="text" id="nombre" placeholder="Nombre Completo">
             <input type="text" id="rut" placeholder="RUT">
             <input type="text" id="cargo" placeholder="Cargo">
-            <input type="text" id="centro" placeholder="Centro de Negocios">
+            <input type="text" id="centro" placeholder="Centro de Trabajo">
             <input type="date" id="fechaIngreso">
-            <button onclick="registrarTrabajador()">Registrar</button>
-        </div>
+            <button onclick="registrarTrabajador()">Agregar</button>
 
-        <div id="seccionHistorial" class="seccion">
-            <h2>Historial</h2>
-            <table border="1">
+            <h3>Listado de Trabajadores</h3>
+            <table>
                 <thead>
-                    <tr><th>Nombre</th><th>RUT</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Curso</th><th>Fecha Aprobación</th><th>Certificado</th></tr>
+                    <tr><th>RUT</th><th>Nombre</th><th>Cargo</th><th>Centro</th><th>Fecha Ingreso</th><th>Eliminar</th></tr>
                 </thead>
-                <tbody id="tablaHistorial"></tbody>
+                <tbody id="tablaTrabajadores"></tbody>
             </table>
-            <button onclick="exportarHistorialExcel()">Exportar a Excel</button>
         </div>
     </div>
 </div>
 
-
 <script>
 const usuarioValido = "empresa";
 const claveValida = "1234";
-
 let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
-let historial = JSON.parse(localStorage.getItem("historial")) || [];
-const preguntasFinal = [
-    ["¿Los extintores deben estar en un lugar visible?", "si"],
-    ["¿Los extintores no necesitan mantención?", "no"],
-    ["¿Se debe apuntar a la base del fuego?", "si"]
-];
 
 function ocultarTodo() {
     document.querySelectorAll(".seccion").forEach(sec => sec.style.display = "none");
@@ -218,14 +174,12 @@ function volverMenu() {
     ocultarTodo();
     document.getElementById('menuPrincipal').style.display = 'block';
 }
-function mostrarTrabajador() {
-    ocultarTodo();
-    document.getElementById('seccionTrabajador').style.display = 'block';
-}
+
 function mostrarLoginEmpresa() {
     ocultarTodo();
     document.getElementById('loginEmpresa').style.display = 'block';
 }
+
 function accederEmpresa() {
     const usuario = document.getElementById('usuarioEmpresa').value.trim();
     const clave = document.getElementById('claveEmpresa').value.trim();
@@ -233,99 +187,134 @@ function accederEmpresa() {
         ocultarTodo();
         document.getElementById('panelEmpresa').style.display = 'flex';
         mostrarSeccionEmpresa('seccionIngreso');
+        actualizarTablaTrabajadores();
     } else {
         alert("Usuario o contraseña incorrectos");
     }
 }
+
 function mostrarSeccionEmpresa(id) {
     document.querySelectorAll('#contenidoEmpresa .seccion').forEach(sec => sec.style.display = "none");
     document.getElementById(id).style.display = "block";
 }
-function accederTrabajador() {
-    const rut = document.getElementById('rutAcceso').value.trim();
-    const trabajador = trabajadores.find(t => t.rut === rut);
-    if (trabajador) {
-        ocultarTodo();
-        document.getElementById('mosaicoCursos').style.display = 'block';
-    } else {
-        alert("Trabajador no habilitado");
-    }
-}
-function volverTrabajador() {
-    ocultarTodo();
-    document.getElementById('seccionTrabajador').style.display = 'block';
-}
-function verCurso() {
-    ocultarTodo();
-    document.getElementById('moduloCurso').style.display = 'block';
-}
-function volverCursos() {
-    ocultarTodo();
-    document.getElementById('mosaicoCursos').style.display = 'block';
-}
-function volverModulo() {
-    ocultarTodo();
-    document.getElementById('moduloCurso').style.display = 'block';
-}
-function finalizarModulo() {
-    const p1 = document.getElementById('p1').value.trim().toLowerCase();
-    const p2 = document.getElementById('p2').value.trim().toLowerCase();
-    const p3 = document.getElementById('p3').value.trim().toLowerCase();
-    if (p1 === "verdadero" && p2 === "falso" && p3 === "verdadero") {
-        ocultarTodo();
-        document.getElementById('evaluacionFinal').style.display = 'block';
-        cargarEvaluacionFinal();
-    } else {
-        alert("Debe responder correctamente para continuar.");
-    }
-}
-function cargarEvaluacionFinal() {
-    const contenedor = document.getElementById('preguntasFinal');
-    contenedor.innerHTML = "";
-    preguntasFinal.forEach((preg, index) => {
-        contenedor.innerHTML += `${preg[0]}<br><input type='text' id='final${index}'><br>`;
-    });
-}
-function finalizarEvaluacion() {
-    let correctas = 0;
-    preguntasFinal.forEach((preg, index) => {
-        const resp = document.getElementById(`final${index}`).value.trim().toLowerCase();
-        if (resp === preg[1]) correctas++;
-    });
-    const resultado = document.getElementById('resultadoFinal');
-    if (correctas >= 3) {
-        resultado.textContent = "¡Felicidades! Has aprobado el curso.";
-        const trabajador = trabajadores.find(t => t.rut === document.getElementById('rutAcceso').value.trim());
-        const fecha = new Date().toLocaleString();
-        historial.push({...trabajador, curso:"Uso y Manejo de Extintores", fecha});
-        localStorage.setItem("historial", JSON.stringify(historial));
-    } else {
-        resultado.textContent = "Debes repetir la evaluación.";
-    }
-}
+
 function registrarTrabajador() {
     const nombre = document.getElementById('nombre').value.trim();
     const rut = document.getElementById('rut').value.trim();
     const cargo = document.getElementById('cargo').value.trim();
     const centro = document.getElementById('centro').value.trim();
     const fechaIngreso = document.getElementById('fechaIngreso').value;
+
     if (!nombre || !rut || !cargo || !centro || !fechaIngreso) {
         alert("Complete todos los campos");
         return;
     }
-    trabajadores.push({nombre, rut, cargo, centro, fechaIngreso});
+
+    trabajadores.push({ nombre, rut, cargo, centro, fechaIngreso });
+    localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+
+    limpiarCamposIngreso();
+    actualizarTablaTrabajadores();
+}
+
+function actualizarTablaTrabajadores() {
+    const tabla = document.getElementById('tablaTrabajadores');
+    tabla.innerHTML = "";
+    trabajadores.forEach((t, index) => {
+        tabla.innerHTML += `<tr>
+            <td><input value="${t.rut}" onchange="editarTrabajador(${index}, 'rut', this.value)"></td>
+            <td><input value="${t.nombre}" onchange="editarTrabajador(${index}, 'nombre', this.value)"></td>
+            <td><input value="${t.cargo}" onchange="editarTrabajador(${index}, 'cargo', this.value)"></td>
+            <td><input value="${t.centro}" onchange="editarTrabajador(${index}, 'centro', this.value)"></td>
+            <td><input type="date" value="${t.fechaIngreso}" onchange="editarTrabajador(${index}, 'fechaIngreso', this.value)"></td>
+            <td><button onclick="eliminarTrabajador(${index})">Eliminar</button></td>
+        </tr>`;
+    });
+}
+
+function editarTrabajador(index, campo, valor) {
+    trabajadores[index][campo] = valor;
     localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
 }
-function exportarHistorialExcel() {
-    let csv = "Nombre,RUT,Cargo,Centro,Fecha Ingreso,Curso,Fecha Aprobación\n";
-    historial.forEach(h => {
-        csv += `${h.nombre},${h.rut},${h.cargo},${h.centro},${h.fechaIngreso},${h.curso},${h.fecha}\n`;
+
+function eliminarTrabajador(index) {
+    if (confirm("¿Está seguro de eliminar este trabajador?")) {
+        trabajadores.splice(index, 1);
+        localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+        actualizarTablaTrabajadores();
+    }
+}
+
+function exportarTrabajadores() {
+    let csv = "RUT,Nombre,Cargo,Centro,Fecha Ingreso\n";
+    trabajadores.forEach(t => {
+        csv += `${t.rut},${t.nombre},${t.cargo},${t.centro},${t.fechaIngreso}\n`;
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "historial_capacitados.csv";
+    link.download = "listado_trabajadores.csv";
     link.click();
+}
+
+function importarTrabajadores(input) {
+    const archivo = input.files[0];
+    if (!archivo) return;
+
+    const lector = new FileReader();
+    lector.onload = function(e) {
+        const nombreArchivo = archivo.name.toLowerCase();
+        
+        if (nombreArchivo.endsWith(".csv")) {
+            const contenido = e.target.result;
+            const lineas = contenido.split('\n').map(l => l.trim()).filter(l => l);
+
+            if (lineas[0].toLowerCase().includes("rut") && lineas[0].toLowerCase().includes("nombre")) {
+                lineas.shift();
+            }
+
+            lineas.forEach(linea => {
+                const [rut, nombre, cargo, centro, fechaIngreso] = linea.split(',');
+                if (rut && nombre && cargo && centro && fechaIngreso) {
+                    trabajadores.push({ rut, nombre, cargo, centro, fechaIngreso });
+                }
+            });
+
+        } else if (nombreArchivo.endsWith(".xlsx")) {
+            const workbook = XLSX.read(e.target.result, { type: 'binary' });
+            const hoja = workbook.Sheets[workbook.SheetNames[0]];
+            const datos = XLSX.utils.sheet_to_json(hoja);
+
+            datos.forEach(d => {
+                if (d.RUT && d.Nombre && d.Cargo && d.Centro && d['Fecha Ingreso']) {
+                    trabajadores.push({
+                        rut: d.RUT, nombre: d.Nombre, cargo: d.Cargo,
+                        centro: d.Centro, fechaIngreso: d['Fecha Ingreso']
+                    });
+                }
+            });
+        }
+
+        localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+        actualizarTablaTrabajadores();
+        alert("Importación completada");
+    };
+
+    if (archivo.name.endsWith(".xlsx")) {
+        lector.readAsBinaryString(archivo);
+    } else {
+        lector.readAsText(archivo);
+    }
+
+    input.value = "";
+}
+
+function limpiarCamposIngreso() {
+    document.getElementById('nombre').value = "";
+    document.getElementById('rut').value = "";
+    document.getElementById('cargo').value = "";
+    document.getElementById('centro').value = "";
+    document.getElementById('fechaIngreso').value = "";
 }
 </script>
 
