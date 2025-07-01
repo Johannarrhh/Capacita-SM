@@ -37,31 +37,22 @@ table td input { width: 100%; border: none; background: transparent; }
 </style>
 </head>
 <body>
-
 <section id="menuPrincipal">
     <h2>ACCESO</h2>
     <button onclick="mostrarTrabajador()">Trabajadores</button>
     <button onclick="mostrarLoginEmpresa()">Empresas</button>
 </section>
-
 <section id="seccionTrabajador" class="seccion" style="display:none">
     <h2>Ingrese su RUT</h2>
     <input type="text" id="rutAcceso" placeholder="RUT">
     <button onclick="accederTrabajador()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
-
 <section id="mosaicoCursos" class="seccion" style="display:none">
     <h2>Cursos Disponibles</h2>
-    <div id="cursos">
-        <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
-        <div class="curso-tile" onclick="seleccionarCurso('EPP - Uso y Mantención')">EPP - Uso y Mantención</div>
-        <div class="curso-tile" onclick="seleccionarCurso('Procedimientos de Trabajo Seguro')">Procedimientos de Trabajo Seguro</div>
-        <!-- Agrega aquí los demás cursos de manera similar -->
-    </div>
+    <div class="curso-tile" onclick="verCurso()">Uso y Manejo de Extintores</div>
     <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
 </section>
-
 <section id="moduloCurso" class="seccion" style="display:none">
     <h2>Módulo 1: Uso y Manejo de Extintores</h2>
     <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
@@ -70,7 +61,6 @@ table td input { width: 100%; border: none; background: transparent; }
     <button onclick="finalizarModulo()">Finalizar Módulo</button>
     <button class="boton-volver" onclick="volverCursos()">Volver</button>
 </section>
-
 <section id="evaluacionFinal" class="seccion" style="display:none">
     <h2>Evaluación Final</h2>
     <div id="preguntasFinal"></div>
@@ -78,7 +68,6 @@ table td input { width: 100%; border: none; background: transparent; }
     <p id="resultadoFinal"></p>
     <button class="boton-volver" onclick="volverModulo()">Volver</button>
 </section>
-
 <section id="loginEmpresa" class="seccion" style="display:none">
     <h2>Acceso Empresas</h2>
     <input type="text" id="usuarioEmpresa" placeholder="Usuario">
@@ -86,7 +75,6 @@ table td input { width: 100%; border: none; background: transparent; }
     <button onclick="accederEmpresa()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
-
 <div id="panelEmpresa">
     <div id="menuLateral">
         <h3>Empresa XYZ</h3>
@@ -99,42 +87,39 @@ table td input { width: 100%; border: none; background: transparent; }
     </div>
     <div id="contenidoEmpresa">
         <h2>Listado de Trabajadores</h2>
-        <input type="text" id="nombre" placeholder="Nombre">
-        <input type="text" id="rut" placeholder="RUT">
-        <input type="text" id="cargo" placeholder="Cargo">
-        <input type="text" id="centro" placeholder="Centro">
-        <input type="date" id="fechaIngreso">
+        <input type="text" id="nombre"><input type="text" id="rut"><input type="text" id="cargo">
+        <input type="text" id="centro"><input type="date" id="fechaIngreso">
         <button onclick="registrarTrabajador()">Agregar</button>
         <table><thead><tr><th>RUT</th><th>Nombre</th><th>Cargo</th><th>Centro</th><th>Fecha</th><th>Eliminar</th></tr></thead>
         <tbody id="tablaTrabajadores"></tbody></table>
     </div>
 </div>
-
 <script>
 const usuarioValido = "empresa", claveValida = "1234";
 let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
-
-function ocultarTodo(){ document.querySelectorAll(".seccion").forEach(s=>s.style.display="none"); document.getElementById('menuPrincipal').style.display="none"; document.getElementById('panelEmpresa').style.display="none"; }
-function volverMenu(){ ocultarTodo(); document.getElementById('menuPrincipal').style.display='block'; }
-function mostrarTrabajador(){ ocultarTodo(); document.getElementById('seccionTrabajador').style.display='block'; }
-function mostrarLoginEmpresa(){ ocultarTodo(); document.getElementById('loginEmpresa').style.display='block'; }
-function accederTrabajador(){ const r = document.getElementById('rutAcceso').value.trim(); if(trabajadores.find(t => t.rut === r)){ ocultarTodo(); document.getElementById('mosaicoCursos').style.display='block'; } else { alert("RUT no registrado"); } }
-function volverTrabajador(){ mostrarTrabajador(); }
-function verCurso(){ ocultarTodo(); document.getElementById('moduloCurso').style.display='block'; }
-function volverCursos(){ document.getElementById('mosaicoCursos').style.display='block'; }
-function volverModulo(){ document.getElementById('moduloCurso').style.display='block'; }
-function finalizarModulo(){ const p1 = document.getElementById('p1').value.trim().toLowerCase(), p2 = document.getElementById('p2').value.trim().toLowerCase(), p3 = document.getElementById('p3').value.trim().toLowerCase(); if(p1==="verdadero" && p2==="falso" && p3==="verdadero"){ ocultarTodo(); document.getElementById('evaluacionFinal').style.display='block'; cargarEvaluacionFinal(); } else { alert("Respuestas incorrectas"); } }
-function cargarEvaluacionFinal(){ const c = document.getElementById('preguntasFinal'); c.innerHTML = ""; [["¿Extintores visibles?","si"],["¿No necesitan mantención?","no"],["¿Apuntar a base del fuego?","si"]].forEach((p,i)=>{ c.innerHTML += `${p[0]}<br><input id='final${i}'><br>`; }); }
-function finalizarEvaluacion(){ let c = 0; [["¿Extintores visibles?","si"],["¿No necesitan mantención?","no"],["¿Apuntar a base del fuego?","si"]].forEach((p,i)=>{ if(document.getElementById(`final${i}`).value.trim().toLowerCase() === p[1]) c++; }); document.getElementById('resultadoFinal').textContent = c >= 3 ? "¡Aprobado!" : "Debe repetir"; }
-function accederEmpresa(){ if(document.getElementById('usuarioEmpresa').value.trim() === usuarioValido && document.getElementById('claveEmpresa').value.trim() === claveValida){ ocultarTodo(); document.getElementById('panelEmpresa').style.display='flex'; actualizarTabla(); } else { alert("Credenciales incorrectas"); } }
-function mostrarSeccionEmpresa(){ actualizarTabla(); }
-function registrarTrabajador(){ const n=document.getElementById('nombre').value.trim(), r=document.getElementById('rut').value.trim(), c=document.getElementById('cargo').value.trim(), ce=document.getElementById('centro').value.trim(), f=document.getElementById('fechaIngreso').value; if(n && r && c && ce && f){ trabajadores.push({nombre:n,rut:r,cargo:c,centro:ce,fechaIngreso:f}); localStorage.setItem("trabajadores",JSON.stringify(trabajadores)); actualizarTabla(); } else { alert("Complete todos los campos"); } }
-function actualizarTabla(){ const t = document.getElementById('tablaTrabajadores'); t.innerHTML = ""; trabajadores.forEach((tr,i)=>{ t.innerHTML += `<tr><td>${tr.rut}</td><td>${tr.nombre}</td><td>${tr.cargo}</td><td>${tr.centro}</td><td>${tr.fechaIngreso}</td><td><button onclick='eliminarTrabajador(${i})'>Eliminar</button></td></tr>`; }); }
-function eliminarTrabajador(i){ if(confirm("Eliminar trabajador?")){ trabajadores.splice(i,1); localStorage.setItem("trabajadores",JSON.stringify(trabajadores)); actualizarTabla(); } }
-function exportarTrabajadores(){ let c = "RUT,Nombre,Cargo,Centro,Fecha Ingreso\n"; trabajadores.forEach(t=>{ c += `${t.rut},${t.nombre},${t.cargo},${t.centro},${t.fechaIngreso}\n`; }); const b = new Blob([c], {type:'text/csv'}), l = document.createElement("a"); l.href = URL.createObjectURL(b); l.download = "trabajadores.csv"; l.click(); }
-function importarTrabajadores(inp){ const f = inp.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { if(f.name.endsWith(".csv")){ e.target.result.split('\\n').forEach(l=>{ const [d1,d2,d3,d4,d5] = l.split(','); if(d1&&d2&&d3&&d4&&d5) trabajadores.push({rut:d1,nombre:d2,cargo:d3,centro:d4,fechaIngreso:d5}); }); } else { const wb = XLSX.read(e.target.result, {type:'binary'}); XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]).forEach(d=>{ if(d.RUT && d.Nombre) trabajadores.push({rut:d.RUT,nombre:d.Nombre,cargo:d.Cargo,centro:d.Centro,fechaIngreso:d['Fecha Ingreso']}); }); } localStorage.setItem("trabajadores", JSON.stringify(trabajadores)); actualizarTabla(); }; if(f.name.endsWith(".xlsx")) r.readAsBinaryString(f); else r.readAsText(f); inp.value = ""; }
-function seleccionarCurso(nombreCurso){ alert(\"Has seleccionado el curso: \" + nombreCurso); }
+function ocultarTodo(){document.querySelectorAll(".seccion").forEach(s=>s.style.display="none"); document.getElementById('menuPrincipal').style.display="none"; document.getElementById('panelEmpresa').style.display="none";}
+function volverMenu(){ocultarTodo();document.getElementById('menuPrincipal').style.display='block';}
+function mostrarTrabajador(){ocultarTodo();document.getElementById('seccionTrabajador').style.display='block';}
+function mostrarLoginEmpresa(){ocultarTodo();document.getElementById('loginEmpresa').style.display='block';}
+function accederTrabajador(){const r=document.getElementById('rutAcceso').value.trim();if(trabajadores.find(t=>t.rut===r)){ocultarTodo();document.getElementById('mosaicoCursos').style.display='block';}else{alert("RUT no registrado");}}
+function volverTrabajador(){mostrarTrabajador();}
+function verCurso(){ocultarTodo();document.getElementById('moduloCurso').style.display='block';}
+function volverCursos(){document.getElementById('mosaicoCursos').style.display='block';}
+function volverModulo(){document.getElementById('moduloCurso').style.display='block';}
+function finalizarModulo(){const p1=document.getElementById('p1').value.trim().toLowerCase(),p2=document.getElementById('p2').value.trim().toLowerCase(),p3=document.getElementById('p3').value.trim().toLowerCase();if(p1=="verdadero"&&p2=="falso"&&p3=="verdadero"){ocultarTodo();document.getElementById('evaluacionFinal').style.display='block';cargarEvaluacionFinal();}else{alert("Respuestas incorrectas");}}
+function cargarEvaluacionFinal(){const c=document.getElementById('preguntasFinal');c.innerHTML="";[["¿Extintores visibles?","si"],["¿No necesitan mantención?","no"],["¿Apuntar a base del fuego?","si"]].forEach((p,i)=>{c.innerHTML+=`${p[0]}<br><input id='final${i}'><br>`;});}
+function finalizarEvaluacion(){let c=0;[["¿Extintores visibles?","si"],["¿No necesitan mantención?","no"],["¿Apuntar a base del fuego?","si"]].forEach((p,i)=>{if(document.getElementById(`final${i}`).value.trim().toLowerCase()===p[1])c++;});document.getElementById('resultadoFinal').textContent=c>=3?"¡Aprobado!":"Debe repetir";}
+function accederEmpresa(){if(document.getElementById('usuarioEmpresa').value.trim()===usuarioValido&&document.getElementById('claveEmpresa').value.trim()===claveValida){ocultarTodo();document.getElementById('panelEmpresa').style.display='flex';actualizarTabla();}else{alert("Credenciales incorrectas");}}
+function mostrarSeccionEmpresa(){actualizarTabla();}
+function registrarTrabajador(){const n=document.getElementById('nombre').value.trim(),r=document.getElementById('rut').value.trim(),c=document.getElementById('cargo').value.trim(),ce=document.getElementById('centro').value.trim(),f=document.getElementById('fechaIngreso').value;if(n&&r&&c&&ce&&f){trabajadores.push({nombre:n,rut:r,cargo:c,centro:ce,fechaIngreso:f});localStorage.setItem("trabajadores",JSON.stringify(trabajadores));actualizarTabla();}else{alert("Complete todos los campos");}}
+function actualizarTabla(){const t=document.getElementById('tablaTrabajadores');t.innerHTML="";trabajadores.forEach((tr,i)=>{t.innerHTML+=`<tr><td>${tr.rut}</td><td>${tr.nombre}</td><td>${tr.cargo}</td><td>${tr.centro}</td><td>${tr.fechaIngreso}</td><td><button onclick='eliminarTrabajador(${i})'>Eliminar</button></td></tr>`;});}
+function eliminarTrabajador(i){if(confirm("Eliminar trabajador?")){trabajadores.splice(i,1);localStorage.setItem("trabajadores",JSON.stringify(trabajadores));actualizarTabla();}}
+function exportarTrabajadores(){let c="RUT,Nombre,Cargo,Centro,Fecha Ingreso\n";trabajadores.forEach(t=>{c+=`${t.rut},${t.nombre},${t.cargo},${t.centro},${t.fechaIngreso}\n`;});const b=new Blob([c],{type:'text/csv'}),l=document.createElement("a");l.href=URL.createObjectURL(b);l.download="trabajadores.csv";l.click();}
+function importarTrabajadores(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{if(f.name.endsWith(".csv")){e.target.result.split('\n').forEach(l=>{const[d1,d2,d3,d4,d5]=l.split(',');if(d1&&d2&&d3&&d4&&d5)trabajadores.push({rut:d1,nombre:d2,cargo:d3,centro:d4,fechaIngreso:d5});});}else{const wb=XLSX.read(e.target.result,{type:'binary'});XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]).forEach(d=>{if(d.RUT&&d.Nombre)trabajadores.push({rut:d.RUT,nombre:d.Nombre,cargo:d.Cargo,centro:d.Centro,fechaIngreso:d['Fecha Ingreso']});});}localStorage.setItem("trabajadores",JSON.stringify(trabajadores));actualizarTabla();};if(f.name.endsWith(".xlsx"))r.readAsBinaryString(f);else r.readAsText(f);inp.value="";}
 </script>
+</body>
+</html>
+
 
 </body>
 </html>
