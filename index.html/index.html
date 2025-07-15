@@ -43,7 +43,7 @@ table td input { width: 100%; border: none; background: transparent; }
     
     <div id="gridCursos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px;">
         
-        <div class="curso-tile" onclick="verCurso('Uso y Manejo de Extintores')">Uso y Manejo de Extintores</div>
+        <div class="curso-tile" onclick="verCurso('Prevención de Incendios y Uso de Extintores')">Prevención de Incendios y Uso de Extintores</div>
         <div class="curso-tile" onclick="verCurso('EPP - Uso y Mantención')">EPP - Uso y Mantención</div>
         <div class="curso-tile" onclick="verCurso('Procedimientos de Trabajo Seguro')">Procedimientos de Trabajo Seguro</div>
         <div class="curso-tile" onclick="verCurso('Manejo Seguro de Herramientas')">Manejo Seguro de Herramientas</div>
@@ -70,20 +70,113 @@ table td input { width: 100%; border: none; background: transparent; }
 </section>
 
 <section id="moduloCurso" class="seccion" style="display:none">
-    <h2 id="tituloCurso">Módulo</h2>
-    <p>Los extintores deben estar visibles. <input type="text" id="p1"></p>
-    <p>Los extintores no requieren mantención. <input type="text" id="p2"></p>
-    <p>Se debe apuntar a la base del fuego. <input type="text" id="p3"></p>
-    <button onclick="finalizarModulo()">Finalizar Módulo</button>
-    <button class="boton-volver" onclick="volverCursos()">Volver</button>
+  <h2 style="text-align:center; padding: 20px;">Curso: Prevención de Incendios y Uso de Extintores</h2>
+  <div id="contenedorModulos"></div>
 </section>
-<section id="evaluacionFinal" class="seccion" style="display:none">
-    <h2>Evaluación Final</h2>
-    <div id="preguntasFinal"></div>
-    <button onclick="finalizarEvaluacion()">Enviar Evaluación</button>
-    <p id="resultadoFinal"></p>
-    <button class="boton-volver" onclick="volverModulo()">Volver</button>
-</section>
+
+<script>
+const modulos = [
+  { tipo: 'texto', contenido: '<strong>¿Qué aprenderemos?</strong><br>Los fundamentos básicos de la prevención de incendios.<br>Cómo identificar los métodos de prevención y extinción de incendios.<br>Las técnicas de extinción mediante el uso de extintores.<br>Los distintos tipos de extintores, sus agentes, rotulación y mantenimiento.' },
+  { tipo: 'texto', contenido: '<strong>1. Declaración de Igualdad de Género</strong><br>Durante este curso usaremos un lenguaje no sexista. Sin embargo, emplearemos el masculino genérico por claridad.' },
+  { tipo: 'texto', contenido: '<strong>2. ¿Qué es el fuego?</strong><br>Es una reacción química. Es un proceso exotérmico. Es una manifestación visual de la combustión.<br><br><strong>¿Qué es un incendio?</strong><br>Fuego de grandes proporciones que destruye cosas.' },
+  { tipo: 'eval', pregunta: '¿Cuál es la definición correcta de fuego?', opciones: ['Un fuego de grandes proporciones que arde de forma fortuita o provocada.', 'Reacción química de oxidación violenta de una materia combustible.', 'Suceso no deseado por la ocurrencia de un fuego no controlado que se propaga.', 'Inflamación cuando entran en contacto combustibles sólidos, líquidos y gaseosos.'], correcta: 1 },
+  { tipo: 'texto', contenido: '<strong>3. Normativa Aplicable</strong><br>Decreto Supremo N°594:<br>Artículos 44, 45, 47, 48, 49.' },
+  { tipo: 'eval', pregunta: 'Según la normativa, ¿qué medida debe implementarse en todo lugar de trabajo para la prevención de incendios?', opciones: ['Inspeccionar las instalaciones a través de un programa preestablecido.', 'Contar con extintores de incendio adecuados.', 'Implementar medidas para controlar las cargas combustibles y las fuentes de calor.', 'Todas son correctas.'], correcta: 3 },
+  { tipo: 'texto', contenido: '<strong>4. Normas Chilenas Aplicables</strong><br>NCh 2111, NCh 1429, NCh 933, NCh 1433, NCh 934.' },
+  { tipo: 'eval', pregunta: 'La norma chilena NCh1429.Of1992 Mod.1995 está referida a:', opciones: ['Ubicación y señalización de los extintores', 'Prevención de incendios', 'Protección contra incendios', 'Extintores portátiles'], correcta: 3 },
+  { tipo: 'texto', contenido: '<strong>5. Triángulo del Fuego</strong><br>Comburente, calor, combustible. Ejemplos de cada uno.' },
+  { tipo: 'eval', pregunta: '¿Qué es el comburente en el triángulo del fuego?', opciones: ['Un cuerpo sólido, líquido o gaseoso susceptible de arder.', 'Elemento que no arde, pero hace arder un combustible.', 'Una sustancia líquida, sólida o gaseosa que apaga el fuego.', 'Una reacción química entre un cuerpo combustible y un comburente.'], correcta: 1 },
+  { tipo: 'texto', contenido: '<strong>6. Tetraedro del Fuego y Transferencia de Calor</strong><br>Se suma la reacción en cadena. Formas: conducción, radiación y convección.' },
+  { tipo: 'eval', pregunta: '¿Cuál de las alternativas se identifica con transferencia del calor que ocurre cuando dos cuerpos están en contacto?', opciones: ['Compatibilidad', 'Radiación', 'Conducción', 'Convección'], correcta: 2 },
+  { tipo: 'texto', contenido: '<strong>12. Principales Causas de Incendio (Parte 1)</strong><br>Conexiones eléctricas deficientes: enchufes no certificados, cables deteriorados, cortocircuitos, líneas recargadas.' },
+  { tipo: 'eval', pregunta: '¿Cuál de las siguientes alternativas se relaciona como una de las principales causas de incendio asociada a conexiones eléctricas deficientes?', opciones: ['Exceso de basura en el área de trabajo.', 'Enchufes no certificados y cables deteriorados.', 'Almacenaje inadecuado de materiales inflamables.', 'Fumar en lugares prohibidos.'], correcta: 1 },
+  { tipo: 'texto', contenido: '<strong>13. Principales Causas de Incendio (Parte 2)</strong><br>Mal manejo de cilindros de gas: alterar conexiones, manipulación incorrecta.' },
+  { tipo: 'eval', pregunta: '¿Cuál de las siguientes causas implica el mal manejo de cilindros de gas?', opciones: ['Conexiones eléctricas deficientes.', 'Manejo inadecuado de materiales inflamables.', 'Exposición de materiales a fuentes de calor.', 'Alterar conexiones de gas y manipulación de cilindros a gas.'], correcta: 3 },
+  { tipo: 'texto', contenido: '<strong>14. Métodos de Extinción del Fuego (Parte 1)</strong><br>Por enfriamiento: disminuir el calor (ej: agua sobre madera).' },
+  { tipo: 'eval', pregunta: 'Es uno de los métodos de extinción mediante el uso de agua o su mezcla con aditivos, se refiere a:', opciones: ['Extinción por sofocación.', 'Extinción por enfriamiento.', 'Extinción por aislación.', 'Extinción por inhibición.'], correcta: 1 },
+  { tipo: 'texto', contenido: '<strong>15. Métodos de Extinción del Fuego (Parte 2)</strong><br>Por sofocación: eliminación del oxígeno (ej: tapar sartén ardiendo).' },
+  { tipo: 'eval', pregunta: '¿Cuál de los siguientes métodos de extinción actúa bajando la concentración o eliminación del oxígeno?', opciones: ['Por enfriamiento.', 'Por aislación del combustible.', 'Por inhibición de la reacción en cadena.', 'Por sofocación.'], correcta: 3 },
+  { tipo: 'texto', contenido: '<strong>16. Prevención de Incendios</strong><br>Medidas generales: no fumar en zonas riesgosas, no sobrecargar tomas, mantener orden, no bloquear salidas, etc.' },
+  { tipo: 'eval', pregunta: '¿Cuál de las siguientes medidas se recomiendan para prevenir incendios en los centros de trabajo?', opciones: ['Mantener orden y aseo en los centros de trabajo.', 'Encender fuegos y fumar en zonas de alto riesgo de incendio.', 'Obstaculizar las salidas de emergencia.', 'Sobrecargar.'], correcta: 0 },
+  { tipo: 'texto', contenido: '<strong>18-19. Tipos de Extintores</strong><br>Portátiles, por agente extintor: polvo seco, CO₂, agua, etc.' },
+  { tipo: 'eval', pregunta: '¿Cuál de los siguientes agentes se utiliza en un extintor de polvo seco?', opciones: ['Agua.', 'Cloruro de calcio.', 'Dióxido de carbono (CO₂).', 'Bicarbonato de potasio y sodio.'], correcta: 3 },
+  { tipo: 'texto', contenido: '<strong>20. Partes del Extintor y Uso</strong><br>Pasos para uso seguro del extintor.' },
+  { tipo: 'texto', contenido: '<strong>21. Instrucciones Generales + Imagen</strong><br>(Aquí se puede insertar una imagen ilustrativa si se desea)' },
+  { tipo: 'texto', contenido: '<strong>22. Norma Chilena N°1433</strong><br>Altura mínima: 20 cm. Altura máxima: 1,30 m desde el suelo.' },
+  { tipo: 'eval', pregunta: 'Según la Norma Chilena N° 1433, ¿A qué altura mínima se deben colocar los extintores?', opciones: ['1 metro.', '50 cm.', '1.30 metros.', '20 cm.'], correcta: 3 },
+  { tipo: 'texto', contenido: '<strong>23. Mantención y Rotulación</strong><br>DS N° 594 Art. 51, requisitos de rotulación: etiqueta visible, tipo de agente, clase de fuego, pictogramas.' },
+  { tipo: 'eval', pregunta: '¿Cuál de las siguientes normas establece los requisitos de rotulación que deben cumplir los extintores portátiles?', opciones: ['Decreto N° 369.', 'Norma Chilena N° 2111.', 'Norma Chilena N° 1430.', 'Decreto supremo N° 594.'], correcta: 2 },
+  { tipo: 'final', mensaje: 'Has aprobado el curso: Prevención de Incendios y Uso de Extintores.' }
+];
+
+let actual = 0;
+const contenedor = document.getElementById('contenedorModulos');
+
+function mostrarModulo(index) {
+  contenedor.innerHTML = '';
+  const m = modulos[index];
+  const div = document.createElement('div');
+  div.className = 'modulo active';
+
+  if (m.tipo === 'texto') {
+    div.innerHTML = `<p>${m.contenido}</p>`;
+  } else if (m.tipo === 'eval') {
+    div.innerHTML = `<div class='pregunta'><strong>${m.pregunta}</strong></div>`;
+    m.opciones.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.textContent = opt;
+      b.onclick = () => {
+        if (i === m.correcta) {
+          alert('Respuesta correcta');
+          avanzar();
+        } else {
+          alert('Respuesta incorrecta. Intente nuevamente.');
+        }
+      };
+      div.appendChild(b);
+    });
+  } else if (m.tipo === 'final') {
+    div.innerHTML = `<p>${m.mensaje}</p>`;
+    const b = document.createElement('button');
+    b.textContent = 'Generar certificado';
+    b.onclick = generarCertificado;
+    div.appendChild(b);
+  }
+
+  if (index > 0 && m.tipo !== 'eval') {
+    const b = document.createElement('button');
+    b.textContent = 'Atrás';
+    b.onclick = () => avanzar(-1);
+    div.appendChild(b);
+  }
+
+  if (m.tipo === 'texto' && index < modulos.length - 1) {
+    const b = document.createElement('button');
+    b.textContent = 'Siguiente';
+    b.onclick = () => avanzar();
+    div.appendChild(b);
+  }
+
+  contenedor.appendChild(div);
+}
+
+function avanzar(delta = 1) {
+  actual += delta;
+  mostrarModulo(actual);
+}
+
+function generarCertificado() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text('Certificado de Aprobación', 20, 30);
+  doc.setFontSize(12);
+  doc.text('Has aprobado el curso: Prevención de Incendios y Uso de Extintores.', 20, 50);
+  doc.save('certificado_prevencion.pdf');
+}
+
+mostrarModulo(actual);
+</script>
 <section id="loginEmpresa" class="seccion" style="display:none">
     <h2>Acceso Empresas</h2>
     <input type="text" id="usuarioEmpresa" placeholder="Usuario">
