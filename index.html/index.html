@@ -66,9 +66,31 @@ button:hover {
   background-color: var(--azul-claro);
 }
 
-/* Menú principal */
 #menuPrincipal {
-  max-width: 400px;
+    padding: 30px 20px;
+}
+
+#menuPrincipal h2 {
+    margin-bottom: 25px;
+    color: #2E5EAA; /* Azul corporativo */
+    font-size: 24px;
+}
+
+#menuPrincipal button {
+    background-color: #2E5EAA; /* Azul corporativo */
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#menuPrincipal button:hover {
+    background-color: #3B7FDC; /* Azul claro para hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 /* Mosaico de cursos */
@@ -261,10 +283,12 @@ input[type="date"] {
 <body>
 
 <!-- Menú Principal -->
-<section id="menuPrincipal" class="seccion">    
+<section id="menuPrincipal" class="seccion" style="text-align: center;">
     <h2>ACCESO</h2>
-    <button onclick="mostrarTrabajador()">Trabajadores</button>
-    <button onclick="mostrarLoginEmpresa()">Empresas</button>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; max-width: 300px; margin: 0 auto;">
+        <button onclick="mostrarTrabajador()" style="width: 200px;">Trabajadores</button>
+        <button onclick="mostrarLoginEmpresa()" style="width: 200px;">Empresas</button>
+    </div>
 </section>
 
 <!-- Sección Trabajador -->
