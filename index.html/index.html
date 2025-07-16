@@ -3,46 +3,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Capacita SM - Acceso</title>
+<title>Capacita SM - Prevención de Incendios</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-html, body {margin: 0; padding: 0; width: 100%; height: 100%; font-family: Arial, sans-serif;background: url('fondo.png') no-repeat center center fixed; background-size: cover;}
-@media (max-width: 768px) { body { background-attachment: scroll; } }
-#menuPrincipal, .seccion {background: rgba(255,255,255,0.95); padding: 20px; border-radius: 10px;margin: 20px auto; max-width: 300px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);text-align: center;}
-#menuPrincipal button, .boton-volver {width: 100%; margin: 10px 0; padding: 12px; font-size: 16px;background: #4C7C46; color: white; border: none; border-radius: 6px; cursor: pointer;}
-#menuPrincipal button:hover, .boton-volver:hover { background: #3B6138; }
-#mosaicoCursos { display: none; max-width: 1200px; margin: 20px auto; padding: 10px; }
-#tituloCursos { background: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-#gridCursos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-.curso-tile { background: #fff; padding: 20px; text-align: center; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; align-items: center; }
-.curso-tile:hover { transform: translateY(-5px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: #A3C95A; color: white; }
-button { background: #4C7C46; color: white; border: none; padding: 10px 20px; margin-top: 30px; border-radius: 6px; cursor: pointer; }
-button:hover { background: #3B6138; }
-#panelEmpresa { display: none; height: 100vh; width: 100%; }
-#menuLateral { width: 250px; background: rgba(255,255,255,0.95); padding: 20px;box-shadow: 2px 0 5px rgba(0,0,0,0.3); display: flex; flex-direction: column;}
-#contenidoEmpresa { flex-grow: 1; padding: 30px; background: rgba(255,255,255,0.9); margin: 20px; border-radius: 10px; overflow-y: auto; }
-table { width: 100%; border-collapse: collapse; }
-table th, table td { padding: 8px; text-align: left; border: 1px solid #ddd; }
-table td input { width: 100%; border: none; background: transparent; }
+:root {
+  --azul-capacita: #2E5EAA;
+  --azul-claro: #3B7FDC;
+  --gris-oscuro: #333333;
+  --verde-sm: #4C7C46;
+  --dorado: #FFD700;
+}
+
+html, body {
+  margin: 0; 
+  padding: 0; 
+  width: 100%; 
+  height: 100%; 
+  font-family: Arial, sans-serif;
+  background: url('fondo.png') no-repeat center center fixed; 
+  background-size: cover;
+}
+
+@media (max-width: 768px) { 
+  body { 
+    background-attachment: scroll; 
+  } 
+}
+
+/* Estilos generales */
+.seccion {
+  background: rgba(255,255,255,0.95); 
+  padding: 20px; 
+  border-radius: 10px;
+  margin: 20px auto; 
+  max-width: 800px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  color: var(--azul-capacita);
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eaecef;
+}
+
+button {
+  background-color: var(--azul-capacita);
+  color: white; 
+  border: none; 
+  padding: 12px 20px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  font-size: 16px;
+  margin: 10px 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--azul-claro);
+}
+
+/* Menú principal */
+#menuPrincipal {
+  max-width: 400px;
+}
+
+/* Mosaico de cursos */
+#mosaicoCursos { 
+  display: none; 
+  max-width: 1200px; 
+  background: transparent; 
+  box-shadow: none;
+}
+
+#gridCursos { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.curso-tile { 
+  background: #fff; 
+  padding: 20px; 
+  text-align: center; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+  cursor: pointer; 
+  transition: all 0.3s;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  border: 2px solid var(--azul-capacita);
+}
+
+.curso-tile:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+  background: var(--azul-capacita); 
+  color: white; 
+}
+
+/* Módulo del curso */
+#contenedorModulos {
+  padding: 25px;
+}
+
+h3 {
+  color: var(--azul-capacita);
+  border-bottom: 2px solid var(--verde-sm);
+  padding-bottom: 8px;
+  margin-top: 25px;
+}
+
+h4 {
+  color: var(--azul-capacita);
+  margin-top: 20px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+strong {
+  color: var(--azul-capacita);
+}
+
+.pregunta {
+  font-weight: bold; 
+  margin: 20px 0 15px 0; 
+  color: var(--azul-capacita); 
+  font-size: 18px;
+}
+
+.opciones-eval {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.opcion-btn {
+  text-align: left;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.opcion-btn:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}
+
+.botones-navegacion {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.final-curso {
+  text-align: center;
+  padding: 30px;
+}
+
+.final-curso h3 {
+  color: var(--verde-sm);
+  border-bottom: none;
+  font-size: 24px;
+}
+
+/* Panel de empresa */
+#panelEmpresa { 
+  display: none; 
+  height: 100vh; 
+  width: 100%; 
+}
+
+#menuLateral { 
+  width: 250px; 
+  background: rgba(255,255,255,0.95); 
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.3); 
+  display: flex; 
+  flex-direction: column;
+}
+
+#contenidoEmpresa { 
+  flex-grow: 1; 
+  padding: 30px; 
+  background: rgba(255,255,255,0.9); 
+  margin: 20px; 
+  border-radius: 10px; 
+  overflow-y: auto; 
+}
+
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 20px;
+}
+
+table th, table td { 
+  padding: 12px; 
+  text-align: left; 
+  border: 1px solid #ddd; 
+}
+
+table th {
+  background-color: var(--azul-capacita);
+  color: white;
+}
+
+table td input { 
+  width: 100%; 
+  border: none; 
+  background: transparent; 
+}
+
+/* Formularios */
+input[type="text"], 
+input[type="password"], 
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #gridCursos {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  #panelEmpresa {
+    flex-direction: column;
+  }
+  
+  #menuLateral {
+    width: 100%;
+  }
+}
 </style>
 </head>
 <body>
-<section id="menuPrincipal">    
+
+<!-- Menú Principal -->
+<section id="menuPrincipal" class="seccion">    
     <h2>ACCESO</h2>
     <button onclick="mostrarTrabajador()">Trabajadores</button>
     <button onclick="mostrarLoginEmpresa()">Empresas</button>
 </section>
+
+<!-- Sección Trabajador -->
 <section id="seccionTrabajador" class="seccion" style="display:none">
     <h2>Ingrese su RUT</h2>
     <input type="text" id="rutAcceso" placeholder="RUT">
     <button onclick="accederTrabajador()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
 </section>
-   <section id="mosaicoCursos" class="seccion" style="display:none; max-width: 100%; background: transparent; box-shadow: none;">
-    <h2 style="background: rgba(255,255,255,0.95); padding: 15px; border-radius: 10px; display: inline-block;">Capacitaciones </h2>
+
+<!-- Mosaico de Cursos -->
+<section id="mosaicoCursos" class="seccion" style="display:none">
+    <h2>Capacitaciones</h2>
     
-    <div id="gridCursos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px;">
-        
+    <div id="gridCursos">
         <div class="curso-tile" onclick="verCurso('Prevención de Incendios y Uso de Extintores')">Prevención de Incendios y Uso de Extintores</div>
         <div class="curso-tile" onclick="verCurso('EPP - Uso y Mantención')">EPP - Uso y Mantención</div>
         <div class="curso-tile" onclick="verCurso('Procedimientos de Trabajo Seguro')">Procedimientos de Trabajo Seguro</div>
@@ -65,96 +302,587 @@ table td input { width: 100%; border: none; background: transparent; }
         <div class="curso-tile" onclick="verCurso('Primeros Auxilios Psicológicos')">Primeros Auxilios Psicológicos</div>
         <div class="curso-tile" onclick="verCurso('Seguridad en Asaltos - Comercio')">Seguridad en Asaltos - Comercio</div>
         <div class="curso-tile" onclick="verCurso('Seguridad para Reponedores Fiambrerías')">Seguridad para Reponedores Fiambrerías</div>
+    </div>
     
     <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
 </section>
 
+<!-- Módulo del Curso -->
 <section id="moduloCurso" class="seccion" style="display:none">
-  <h2 style="text-align:center; padding: 20px;">Curso: Prevención de Incendios y Uso de Extintores</h2>
+  <h2>Curso: <span id="tituloCurso"></span></h2>
   <div id="contenedorModulos"></div>
 </section>
 
+<!-- Login Empresa -->
+<section id="loginEmpresa" class="seccion" style="display:none">
+    <h2>Acceso Empresas</h2>
+    <input type="text" id="usuarioEmpresa" placeholder="Usuario">
+    <input type="password" id="claveEmpresa" placeholder="Contraseña">
+    <button onclick="accederEmpresa()">Entrar</button>
+    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+</section>
+
+<!-- Panel Empresa -->
+<div id="panelEmpresa">
+    <div id="menuLateral">
+        <h3>Empresa XYZ</h3>
+        <p>RUT: 12.345.678-9</p>
+        <button onclick="mostrarSeccionEmpresa()">Gestión de Trabajadores</button>
+        <button onclick="exportarTrabajadores()">Exportar</button>
+        <button onclick="document.getElementById('importador').click()">Importar</button>
+        <input type="file" id="importador" accept=".csv,.xlsx" style="display:none" onchange="importarTrabajadores(this)">
+        <button onclick="volverMenu()">Cerrar Sesión</button>
+    </div>
+    <div id="contenidoEmpresa">
+        <h2>Listado de Trabajadores</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
+            <input type="text" id="nombre" placeholder="Nombre">
+            <input type="text" id="rut" placeholder="RUT">
+            <input type="text" id="cargo" placeholder="Cargo">
+            <input type="text" id="centro" placeholder="Centro">
+            <input type="date" id="fechaIngreso">
+        </div>
+        <button onclick="registrarTrabajador()">Agregar Trabajador</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>RUT</th>
+                    <th>Nombre</th>
+                    <th>Cargo</th>
+                    <th>Centro</th>
+                    <th>Fecha Ingreso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaTrabajadores"></tbody>
+        </table>
+    </div>
+</div>
+
 <script>
+// Variables globales
+const usuarioValido = "empresa";
+const claveValida = "1234";
+let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
+let actual = 0;
+
+// Módulos del curso "Prevención de Incendios y Uso de Extintores"
 const modulos = [
-  { tipo: 'texto', contenido: '<strong>¿Qué aprenderemos?</strong><br>Los fundamentos básicos de la prevención de incendios.<br>Cómo identificar los métodos de prevención y extinción de incendios.<br>Las técnicas de extinción mediante el uso de extintores.<br>Los distintos tipos de extintores, sus agentes, rotulación y mantenimiento.' },
-  { tipo: 'texto', contenido: '<strong>Declaración de Igualdad de Género</strong><br>Durante este curso usaremos un lenguaje no sexista. Sin embargo, emplearemos el masculino genérico por claridad.' },
-  { tipo: 'texto', contenido: '<strong>¿Qué es el fuego?</strong><br>Es una reacción química. Es un proceso exotérmico. Es una manifestación visual de la combustión.<br><br><strong>¿Qué es un incendio?</strong><br>Fuego de grandes proporciones que destruye cosas.' },
-  { tipo: 'eval', pregunta: '¿Cuál es la definición correcta de fuego?', opciones: ['Un fuego de grandes proporciones que arde de forma fortuita o provocada.', 'Reacción química de oxidación violenta de una materia combustible.', 'Suceso no deseado por la ocurrencia de un fuego no controlado que se propaga.', 'Inflamación cuando entran en contacto combustibles sólidos, líquidos y gaseosos.'], correcta: 1 },
-  { tipo: 'texto', contenido: '<strong>Normativa Aplicable</strong><br>Decreto Supremo N°594:<br>Artículos 44, 45, 47, 48, 49.' },
-  { tipo: 'eval', pregunta: 'Según la normativa, ¿qué medida debe implementarse en todo lugar de trabajo para la prevención de incendios?', opciones: ['Inspeccionar las instalaciones a través de un programa preestablecido.', 'Contar con extintores de incendio adecuados.', 'Implementar medidas para controlar las cargas combustibles y las fuentes de calor.', 'Todas son correctas.'], correcta: 3 },
-  { tipo: 'texto', contenido: '<strong>Normas Chilenas Aplicables</strong><br>NCh 2111, NCh 1429, NCh 933, NCh 1433, NCh 934.' },
-  { tipo: 'eval', pregunta: 'La norma chilena NCh1429.Of1992 Mod.1995 está referida a:', opciones: ['Ubicación y señalización de los extintores', 'Prevención de incendios', 'Protección contra incendios', 'Extintores portátiles'], correcta: 3 },
-  { tipo: 'texto', contenido: '<strong>Triángulo del Fuego</strong><br>Comburente, calor, combustible. Ejemplos de cada uno.' },
-  { tipo: 'eval', pregunta: '¿Qué es el comburente en el triángulo del fuego?', opciones: ['Un cuerpo sólido, líquido o gaseoso susceptible de arder.', 'Elemento que no arde, pero hace arder un combustible.', 'Una sustancia líquida, sólida o gaseosa que apaga el fuego.', 'Una reacción química entre un cuerpo combustible y un comburente.'], correcta: 1 },
-  { tipo: 'texto', contenido: '<strong>Tetraedro del Fuego y Transferencia de Calor</strong><br>Se suma la reacción en cadena. Formas: conducción, radiación y convección.' },
-  { tipo: 'eval', pregunta: '¿Cuál de las alternativas se identifica con transferencia del calor que ocurre cuando dos cuerpos están en contacto?', opciones: ['Compatibilidad', 'Radiación', 'Conducción', 'Convección'], correcta: 2 },
-  { tipo: 'texto', contenido: '<strong>Principales Causas de Incendio (Parte 1)</strong><br>Conexiones eléctricas deficientes: enchufes no certificados, cables deteriorados, cortocircuitos, líneas recargadas.' },
-  { tipo: 'eval', pregunta: '¿Cuál de las siguientes alternativas se relaciona como una de las principales causas de incendio asociada a conexiones eléctricas deficientes?', opciones: ['Exceso de basura en el área de trabajo.', 'Enchufes no certificados y cables deteriorados.', 'Almacenaje inadecuado de materiales inflamables.', 'Fumar en lugares prohibidos.'], correcta: 1 },
-  { tipo: 'texto', contenido: '<strong>Principales Causas de Incendio (Parte 2)</strong><br>Mal manejo de cilindros de gas: alterar conexiones, manipulación incorrecta.' },
-  { tipo: 'eval', pregunta: '¿Cuál de las siguientes causas implica el mal manejo de cilindros de gas?', opciones: ['Conexiones eléctricas deficientes.', 'Manejo inadecuado de materiales inflamables.', 'Exposición de materiales a fuentes de calor.', 'Alterar conexiones de gas y manipulación de cilindros a gas.'], correcta: 3 },
-  { tipo: 'texto', contenido: '<strong>Métodos de Extinción del Fuego (Parte 1)</strong><br>Por enfriamiento: disminuir el calor (ej: agua sobre madera).' },
-  { tipo: 'eval', pregunta: 'Es uno de los métodos de extinción mediante el uso de agua o su mezcla con aditivos, se refiere a:', opciones: ['Extinción por sofocación.', 'Extinción por enfriamiento.', 'Extinción por aislación.', 'Extinción por inhibición.'], correcta: 1 },
-  { tipo: 'texto', contenido: '<strong> Métodos de Extinción del Fuego (Parte 2)</strong><br>Por sofocación: eliminación del oxígeno (ej: tapar sartén ardiendo).' },
-  { tipo: 'eval', pregunta: '¿Cuál de los siguientes métodos de extinción actúa bajando la concentración o eliminación del oxígeno?', opciones: ['Por enfriamiento.', 'Por aislación del combustible.', 'Por inhibición de la reacción en cadena.', 'Por sofocación.'], correcta: 3 },
-  { tipo: 'texto', contenido: '<strong>Prevención de Incendios</strong><br>Medidas generales: no fumar en zonas riesgosas, no sobrecargar tomas, mantener orden, no bloquear salidas, etc.' },
-  { tipo: 'eval', pregunta: '¿Cuál de las siguientes medidas se recomiendan para prevenir incendios en los centros de trabajo?', opciones: ['Mantener orden y aseo en los centros de trabajo.', 'Encender fuegos y fumar en zonas de alto riesgo de incendio.', 'Obstaculizar las salidas de emergencia.', 'Sobrecargar.'], correcta: 0 },
-  { tipo: 'texto', contenido: '<strong>Tipos de Extintores</strong><br>Portátiles, por agente extintor: polvo seco, CO₂, agua, etc.' },
-  { tipo: 'eval', pregunta: '¿Cuál de los siguientes agentes se utiliza en un extintor de polvo seco?', opciones: ['Agua.', 'Cloruro de calcio.', 'Dióxido de carbono (CO₂).', 'Bicarbonato de potasio y sodio.'], correcta: 3 },
-  { tipo: 'texto', contenido: '<strong>Partes del Extintor y Uso</strong><br>Pasos para uso seguro del extintor.' },
-  { tipo: 'texto', contenido: '<strong>Instrucciones Generales + Imagen</strong><br>(Aquí se puede insertar una imagen ilustrativa si se desea)' },
-  { tipo: 'texto', contenido: '<strong>Norma Chilena N°1433</strong><br>Altura mínima: 20 cm. Altura máxima: 1,30 m desde el suelo.' },
-  { tipo: 'eval', pregunta: 'Según la Norma Chilena N° 1433, ¿A qué altura mínima se deben colocar los extintores?', opciones: ['1 metro.', '50 cm.', '1.30 metros.', '20 cm.'], correcta: 3 },
-  { tipo: 'texto', contenido: '<strong>Mantención y Rotulación</strong><br>DS N° 594 Art. 51, requisitos de rotulación: etiqueta visible, tipo de agente, clase de fuego, pictogramas.' },
-  { tipo: 'eval', pregunta: '¿Cuál de las siguientes normas establece los requisitos de rotulación que deben cumplir los extintores portátiles?', opciones: ['Decreto N° 369.', 'Norma Chilena N° 2111.', 'Norma Chilena N° 1430.', 'Decreto supremo N° 594.'], correcta: 2 },
-  { tipo: 'final', mensaje: 'Has aprobado el curso: Prevención de Incendios y Uso de Extintores.' }
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>¿Qué aprenderemos?</h3>
+      <ul>
+        <li>Los <strong>fundamentos básicos</strong> de la prevención de incendios.</li>
+        <li>Cómo identificar los <strong>métodos de prevención</strong> y extinción de incendios.</li>
+        <li>Las <strong>técnicas de extinción</strong> mediante el uso de extintores.</li>
+        <li>Los distintos <strong>tipos de extintores</strong>, sus agentes, rotulación y mantenimiento.</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>1. Declaración de Igualdad de Género</h3>
+      <p>Durante este curso usaremos un lenguaje no sexista. Sin embargo, emplearemos el masculino genérico por claridad.</p>
+    `
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>2. ¿Qué es el fuego?</h3>
+      <ul>
+        <li>Es una <strong>reacción química</strong>.</li>
+        <li>Es un <strong>proceso exotérmico</strong>.</li>
+        <li>Es una <strong>manifestación visual</strong> de la combustión.</li>
+      </ul>
+      <h4>¿Qué es un incendio?</h4>
+      <p>Fuego de grandes proporciones que destruye cosas.</p>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál es la definición correcta de fuego?', 
+    opciones: [
+      'Un fuego de grandes proporciones que arde de forma fortuita o provocada.',
+      'Reacción química de oxidación violenta de una materia combustible.',
+      'Suceso no deseado por la ocurrencia de un fuego no controlado que se propaga.',
+      'Inflamación cuando entran en contacto combustibles sólidos, líquidos y gaseosos.'
+    ], 
+    correcta: 1 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>3. Normativa Aplicable</h3>
+      <p><strong>Decreto Supremo N°594:</strong></p>
+      <ul>
+        <li>Artículo 44: Medidas generales de prevención</li>
+        <li>Artículo 45: Sistemas de alarma y detección</li>
+        <li>Artículo 47: Extintores portátiles</li>
+        <li>Artículo 48: Mantención de equipos</li>
+        <li>Artículo 49: Señalización</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: 'Según la normativa, ¿qué medida debe implementarse en todo lugar de trabajo para la prevención de incendios?', 
+    opciones: [
+      'Inspeccionar las instalaciones a través de un programa preestablecido.',
+      'Contar con extintores de incendio adecuados.',
+      'Implementar medidas para controlar las cargas combustibles y las fuentes de calor.',
+      'Todas son correctas.'
+    ], 
+    correcta: 3 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>4. Normas Chilenas Aplicables</h3>
+      <ul>
+        <li><strong>NCh 2111:</strong> Protección contra incendios</li>
+        <li><strong>NCh 1429:</strong> Extintores portátiles</li>
+        <li><strong>NCh 933:</strong> Señalización</li>
+        <li><strong>NCh 1433:</strong> Instalación de extintores</li>
+        <li><strong>NCh 934:</strong> Mantención de extintores</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: 'La norma chilena NCh1429.Of1992 Mod.1995 está referida a:', 
+    opciones: [
+      'Ubicación y señalización de los extintores',
+      'Prevención de incendios',
+      'Protección contra incendios',
+      'Extintores portátiles'
+    ], 
+    correcta: 3 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>5. Triángulo del Fuego</h3>
+      <p>El fuego requiere tres elementos para existir:</p>
+      <ul>
+        <li><strong>Comburente:</strong> Oxígeno (generalmente del aire)</li>
+        <li><strong>Calor:</strong> Energía de activación</li>
+        <li><strong>Combustible:</strong> Material que puede arder</li>
+      </ul>
+      <h4>Ejemplos:</h4>
+      <ul>
+        <li><strong>Combustible:</strong> Madera, papel, gasolina</li>
+        <li><strong>Comburente:</strong> Oxígeno del aire (21%)</li>
+        <li><strong>Calor:</strong> Llama, chispa, superficie caliente</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Qué es el comburente en el triángulo del fuego?', 
+    opciones: [
+      'Un cuerpo sólido, líquido o gaseoso susceptible de arder.',
+      'Elemento que no arde, pero hace arder un combustible.',
+      'Una sustancia líquida, sólida o gaseosa que apaga el fuego.',
+      'Una reacción química entre un cuerpo combustible y un comburente.'
+    ], 
+    correcta: 1 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>6. Tetraedro del Fuego y Transferencia de Calor</h3>
+      <p>El modelo moderno añade un cuarto componente:</p>
+      <ul>
+        <li><strong>Reacción en cadena:</strong> Proceso químico autosostenido</li>
+      </ul>
+      <h4>Formas de transferencia de calor:</h4>
+      <ul>
+        <li><strong>Conducción:</strong> A través de materiales sólidos</li>
+        <li><strong>Convección:</strong> Por movimiento de fluidos (aire, gases)</li>
+        <li><strong>Radiación:</strong> Ondas electromagnéticas</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de las alternativas se identifica con transferencia del calor que ocurre cuando dos cuerpos están en contacto?', 
+    opciones: [
+      'Compatibilidad',
+      'Radiación',
+      'Conducción',
+      'Convección'
+    ], 
+    correcta: 2 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>12. Principales Causas de Incendio (Parte 1)</h3>
+      <p><strong>Conexiones eléctricas deficientes:</strong></p>
+      <ul>
+        <li>Enchufes no certificados</li>
+        <li>Cables deteriorados</li>
+        <li>Cortocircuitos</li>
+        <li>Líneas recargadas</li>
+        <li>Instalaciones improvisadas</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de las siguientes alternativas se relaciona como una de las principales causas de incendio asociada a conexiones eléctricas deficientes?', 
+    opciones: [
+      'Exceso de basura en el área de trabajo.',
+      'Enchufes no certificados y cables deteriorados.',
+      'Almacenaje inadecuado de materiales inflamables.',
+      'Fumar en lugares prohibidos.'
+    ], 
+    correcta: 1 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>13. Principales Causas de Incendio (Parte 2)</h3>
+      <p><strong>Mal manejo de cilindros de gas:</strong></p>
+      <ul>
+        <li>Alterar conexiones</li>
+        <li>Manipulación incorrecta</li>
+        <li>Almacenamiento inadecuado</li>
+        <li>Fugas no detectadas</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de las siguientes causas implica el mal manejo de cilindros de gas?', 
+    opciones: [
+      'Conexiones eléctricas deficientes.',
+      'Manejo inadecuado de materiales inflamables.',
+      'Exposición de materiales a fuentes de calor.',
+      'Alterar conexiones de gas y manipulación de cilindros a gas.'
+    ], 
+    correcta: 3 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>14. Métodos de Extinción del Fuego (Parte 1)</h3>
+      <p><strong>Por enfriamiento:</strong> Disminuir el calor</p>
+      <ul>
+        <li>Ejemplo: Agua sobre madera</li>
+        <li>Reduce la temperatura por debajo del punto de ignición</li>
+        <li>Efectivo en fuegos Clase A (sólidos)</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: 'Es uno de los métodos de extinción mediante el uso de agua o su mezcla con aditivos, se refiere a:', 
+    opciones: [
+      'Extinción por sofocación.',
+      'Extinción por enfriamiento.',
+      'Extinción por aislación.',
+      'Extinción por inhibición.'
+    ], 
+    correcta: 1 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>15. Métodos de Extinción del Fuego (Parte 2)</h3>
+      <p><strong>Por sofocación:</strong> Eliminación del oxígeno</p>
+      <ul>
+        <li>Ejemplo: Tapar sartén ardiendo</li>
+        <li>Usa mantas, arena o CO₂</li>
+        <li>Efectivo en fuegos Clase B (líquidos) y C (gases)</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de los siguientes métodos de extinción actúa bajando la concentración o eliminación del oxígeno?', 
+    opciones: [
+      'Por enfriamiento.',
+      'Por aislación del combustible.',
+      'Por inhibición de la reacción en cadena.',
+      'Por sofocación.'
+    ], 
+    correcta: 3 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>16. Prevención de Incendios</h3>
+      <p><strong>Medidas generales:</strong></p>
+      <ul>
+        <li>No fumar en zonas riesgosas</li>
+        <li>No sobrecargar tomacorrientes</li>
+        <li>Mantener orden y aseo</li>
+        <li>No bloquear salidas de emergencia</li>
+        <li>Almacenar adecuadamente materiales inflamables</li>
+        <li>Realizar mantención periódica de instalaciones eléctricas</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de las siguientes medidas se recomiendan para prevenir incendios en los centros de trabajo?', 
+    opciones: [
+      'Mantener orden y aseo en los centros de trabajo.',
+      'Encender fuegos y fumar en zonas de alto riesgo de incendio.',
+      'Obstaculizar las salidas de emergencia.',
+      'Sobrecargar tomacorrientes.'
+    ], 
+    correcta: 0 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>18-19. Tipos de Extintores</h3>
+      <p><strong>Clasificación por agente extintor:</strong></p>
+      <ul>
+        <li><strong>Polvo seco:</strong> ABC (multiuso) o BC</li>
+        <li><strong>CO₂:</strong> Para equipos eléctricos</li>
+        <li><strong>Agua:</strong> Solo para fuegos Clase A</li>
+        <li><strong>Espuma:</strong> Para líquidos inflamables</li>
+        <li><strong>Químicos húmedos:</strong> Para cocinas</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de los siguientes agentes se utiliza en un extintor de polvo seco?', 
+    opciones: [
+      'Agua.',
+      'Cloruro de calcio.',
+      'Dióxido de carbono (CO₂).',
+      'Bicarbonato de potasio y sodio.'
+    ], 
+    correcta: 3 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>20. Partes del Extintor y Uso</h3>
+      <p><strong>Pasos para uso seguro del extintor:</strong></p>
+      <ol>
+        <li>Retirar el pasador de seguridad</li>
+        <li>Presionar la palanca de descarga</li>
+        <li>Apuntar la manguera a la base del fuego</li>
+        <li>Mover la manguera en forma de barrido</li>
+        <li>Acercarse con el viento a favor</li>
+        <li>Verificar que el fuego no se reactive</li>
+      </ol>
+    `
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>21. Instrucciones Generales</h3>
+      <p><strong>Recomendaciones importantes:</strong></p>
+      <ul>
+        <li>Conocer la ubicación de los extintores</li>
+        <li>Leer las instrucciones antes de una emergencia</li>
+        <li>Usar el extintor adecuado para cada tipo de fuego</li>
+        <li>No arriesgarse si el fuego es muy grande</li>
+        <li>Dar la alarma y evacuar si no se puede controlar</li>
+      </ul>
+      <div style="text-align: center; margin: 20px 0;">
+        <img src="https://via.placeholder.com/500x300?text=Diagrama+de+Uso+de+Extintor" alt="Diagrama de uso de extintor" style="max-width: 100%; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+      </div>
+    `
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>22. Norma Chilena N°1433</h3>
+      <p><strong>Requisitos para instalación de extintores:</strong></p>
+      <ul>
+        <li>Altura mínima: 20 cm desde el suelo</li>
+        <li>Altura máxima: 1,30 m desde el suelo</li>
+        <li>Deben ser visibles y accesibles</li>
+        <li>Señalizados según NCh 933</li>
+        <li>Libres de obstáculos en un radio de 1 m</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: 'Según la Norma Chilena N° 1433, ¿A qué altura mínima se deben colocar los extintores?', 
+    opciones: [
+      '1 metro.',
+      '50 cm.',
+      '1.30 metros.',
+      '20 cm.'
+    ], 
+    correcta: 3 
+  },
+  { 
+    tipo: 'texto', 
+    contenido: `
+      <h3>23. Mantención y Rotulación</h3>
+      <p><strong>DS N° 594 Art. 51:</strong></p>
+      <ul>
+        <li>Etiqueta visible con información clara</li>
+        <li>Indicar tipo de agente extintor</li>
+        <li>Clase de fuego para el que es efectivo</li>
+        <li>Pictogramas de instrucciones</li>
+        <li>Fecha de última mantención</li>
+        <li>Próxima mantención programada</li>
+      </ul>
+    `
+  },
+  { 
+    tipo: 'eval', 
+    pregunta: '¿Cuál de las siguientes normas establece los requisitos de rotulación que deben cumplir los extintores portátiles?', 
+    opciones: [
+      'Decreto N° 369.',
+      'Norma Chilena N° 2111.',
+      'Norma Chilena N° 1430.',
+      'Decreto supremo N° 594.'
+    ], 
+    correcta: 2 
+  },
+  { 
+    tipo: 'final', 
+    mensaje: `
+      <div class="final-curso">
+        <h3>¡Felicidades!</h3>
+        <p>Has completado exitosamente el curso:</p>
+        <p><strong>Prevención de Incendios y Uso de Extintores</strong></p>
+        <p>Ahora puedes generar tu certificado de aprobación.</p>
+      </div>
+    `
+  }
 ];
 
-let actual = 0;
-const contenedor = document.getElementById('contenedorModulos');
+// Funciones de navegación
+function ocultarTodo() {
+  document.querySelectorAll(".seccion").forEach(s => s.style.display = "none"); 
+  document.getElementById('menuPrincipal').style.display = "none"; 
+  document.getElementById('panelEmpresa').style.display = "none";
+}
 
+function volverMenu() {
+  ocultarTodo();
+  document.getElementById('menuPrincipal').style.display = 'block';
+}
+
+function mostrarTrabajador() {
+  ocultarTodo();
+  document.getElementById('seccionTrabajador').style.display = 'block';
+}
+
+function mostrarLoginEmpresa() {
+  ocultarTodo();
+  document.getElementById('loginEmpresa').style.display = 'block';
+}
+
+function accederTrabajador() {
+  const r = document.getElementById('rutAcceso').value.trim();
+  if(trabajadores.find(t => t.rut === r)) {
+    ocultarTodo();
+    document.getElementById('mosaicoCursos').style.display = 'block';
+  } else {
+    alert("RUT no registrado");
+  }
+}
+
+function volverTrabajador() {
+  mostrarTrabajador();
+}
+
+function verCurso(nombre) { 
+  ocultarTodo();
+  document.getElementById('moduloCurso').style.display = 'block';
+  document.getElementById('tituloCurso').textContent = nombre;
+  actual = 0;
+  mostrarModulo(actual);
+}
+
+function volverCursos() {
+  document.getElementById('mosaicoCursos').style.display = 'block';
+  document.getElementById('moduloCurso').style.display = 'none';
+}
+
+// Funciones del módulo del curso
 function mostrarModulo(index) {
+  const contenedor = document.getElementById('contenedorModulos');
   contenedor.innerHTML = '';
   const m = modulos[index];
   const div = document.createElement('div');
   div.className = 'modulo active';
 
   if (m.tipo === 'texto') {
-    div.innerHTML = `<p>${m.contenido}</p>`;
+    div.innerHTML = m.contenido;
+    
+    const botonesDiv = document.createElement('div');
+    botonesDiv.className = 'botones-navegacion';
+    
+    if (index > 0) {
+      const btnAtras = document.createElement('button');
+      btnAtras.textContent = 'Atrás';
+      btnAtras.onclick = () => avanzar(-1);
+      botonesDiv.appendChild(btnAtras);
+    } else {
+      botonesDiv.appendChild(document.createElement('div'));
+    }
+    
+    if (index < modulos.length - 1) {
+      const btnSiguiente = document.createElement('button');
+      btnSiguiente.textContent = 'Siguiente';
+      btnSiguiente.onclick = () => avanzar();
+      botonesDiv.appendChild(btnSiguiente);
+    }
+    
+    div.appendChild(botonesDiv);
+    
   } else if (m.tipo === 'eval') {
-    div.innerHTML = `<div class='pregunta'><strong>${m.pregunta}</strong></div>`;
+    div.innerHTML = `
+      <div class='pregunta'>${m.pregunta}</div>
+      <div class="opciones-eval" id="opciones-eval"></div>
+    `;
+    
+    const opcionesDiv = div.querySelector('#opciones-eval');
     m.opciones.forEach((opt, i) => {
       const b = document.createElement('button');
+      b.className = 'opcion-btn';
       b.textContent = opt;
       b.onclick = () => {
         if (i === m.correcta) {
-          alert('Respuesta correcta');
+          alert('✅ Respuesta correcta');
           avanzar();
         } else {
-          alert('Respuesta incorrecta. Intente nuevamente.');
+          alert('❌ Respuesta incorrecta. Intente nuevamente.');
         }
       };
-      div.appendChild(b);
+      opcionesDiv.appendChild(b);
     });
+    
+    if (index > 0) {
+      const btnAtras = document.createElement('button');
+      btnAtras.textContent = 'Atrás';
+      btnAtras.onclick = () => avanzar(-1);
+      div.appendChild(btnAtras);
+    }
+    
   } else if (m.tipo === 'final') {
-    div.innerHTML = `<p>${m.mensaje}</p>`;
+    div.innerHTML = m.mensaje;
     const b = document.createElement('button');
     b.textContent = 'Generar certificado';
     b.onclick = generarCertificado;
+    b.style.margin = '20px auto';
+    b.style.display = 'block';
     div.appendChild(b);
-  }
-
-  if (index > 0 && m.tipo !== 'eval') {
-    const b = document.createElement('button');
-    b.textContent = 'Atrás';
-    b.onclick = () => avanzar(-1);
-    div.appendChild(b);
-  }
-
-  if (m.tipo === 'texto' && index < modulos.length - 1) {
-    const b = document.createElement('button');
-    b.textContent = 'Siguiente';
-    b.onclick = () => avanzar();
-    div.appendChild(b);
+    
+    const btnAtras = document.createElement('button');
+    btnAtras.textContent = 'Volver al curso';
+    btnAtras.onclick = () => avanzar(-1);
+    btnAtras.style.margin = '10px auto';
+    btnAtras.style.display = 'block';
+    div.appendChild(btnAtras);
   }
 
   contenedor.appendChild(div);
@@ -168,68 +896,203 @@ function avanzar(delta = 1) {
 function generarCertificado() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
+  
+  // Encabezado
+  doc.setFontSize(20);
+  doc.setTextColor(46, 94, 170); // #2E5EAA
+  doc.text('CERTIFICADO DE APROBACIÓN', 105, 30, null, null, 'center');
+  
+  // Logo
+  doc.addImage('logo.png', 'PNG', 80, 40, 50, 25);
+  
+  // Cuerpo
   doc.setFontSize(16);
-  doc.text('Certificado de Aprobación', 20, 30);
+  doc.text('Se certifica que', 105, 80, null, null, 'center');
+  doc.setFontSize(14);
+  doc.text('el participante ha completado satisfactoriamente el curso:', 105, 90, null, null, 'center');
+  
+  doc.setFontSize(18);
+  doc.setTextColor(76, 124, 70); // #4C7C46
+  const tituloCurso = document.getElementById('tituloCurso').textContent;
+  doc.text(tituloCurso, 105, 105, null, null, 'center');
+  
   doc.setFontSize(12);
-  doc.text('Has aprobado el curso: Prevención de Incendios y Uso de Extintores.', 20, 50);
-  doc.save('certificado_prevencion.pdf');
+  doc.setTextColor(51, 51, 51); // #333333
+  doc.text('Con una duración de 4 horas cronológicas', 105, 120, null, null, 'center');
+  doc.text('y cumpliendo con todos los requisitos establecidos.', 105, 130, null, null, 'center');
+  
+  // Fecha
+  const hoy = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  doc.text(`Fecha: ${hoy.toLocaleDateString('es-CL', options)}`, 105, 160, null, null, 'center');
+  
+  // Firma
+  doc.text('_________________________', 60, 180);
+  doc.text('Firma Instructor', 60, 190);
+  
+  doc.text('_________________________', 140, 180);
+  doc.text('Firma Participante', 140, 190);
+  
+  // Guardar
+  doc.save(`certificado_${tituloCurso.toLowerCase().replace(/ /g, '_')}.pdf`);
 }
 
-mostrarModulo(actual);
-</script>
-<section id="loginEmpresa" class="seccion" style="display:none">
-    <h2>Acceso Empresas</h2>
-    <input type="text" id="usuarioEmpresa" placeholder="Usuario">
-    <input type="password" id="claveEmpresa" placeholder="Contraseña">
-    <button onclick="accederEmpresa()">Entrar</button>
-    <button class="boton-volver" onclick="volverMenu()">Volver</button>
-</section>
-<div id="panelEmpresa">
-    <div id="menuLateral">
-        <h3>Empresa XYZ</h3>
-        <p>RUT: 12.345.678-9</p>
-        <button onclick="mostrarSeccionEmpresa()">Gestión de Trabajadores</button>
-        <button onclick="exportarTrabajadores()">Exportar</button>
-        <button onclick="document.getElementById('importador').click()">Importar</button>
-        <input type="file" id="importador" accept=".csv,.xlsx" style="display:none" onchange="importarTrabajadores(this)">
-        <button onclick="volverMenu()">Cerrar Sesión</button>
-    </div>
-    <div id="contenidoEmpresa">
-        <h2>Listado de Trabajadores</h2>
-        <input type="text" id="nombre"><input type="text" id="rut"><input type="text" id="cargo">
-        <input type="text" id="centro"><input type="date" id="fechaIngreso">
-        <button onclick="registrarTrabajador()">Agregar</button>
-        <table><thead><tr><th>RUT</th><th>Nombre</th><th>Cargo</th><th>Centro</th><th>Fecha</th><th>Eliminar</th></tr></thead>
-        <tbody id="tablaTrabajadores"></tbody></table>
-    </div>
-</div>
-<script>
-const usuarioValido = "empresa", claveValida = "1234";
-let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
-function ocultarTodo(){document.querySelectorAll(".seccion").forEach(s=>s.style.display="none"); document.getElementById('menuPrincipal').style.display="none"; document.getElementById('panelEmpresa').style.display="none";}
-function volverMenu(){ocultarTodo();document.getElementById('menuPrincipal').style.display='block';}
-function mostrarTrabajador(){ocultarTodo();document.getElementById('seccionTrabajador').style.display='block';}
-function mostrarLoginEmpresa(){ocultarTodo();document.getElementById('loginEmpresa').style.display='block';}
-function accederTrabajador(){const r=document.getElementById('rutAcceso').value.trim();if(trabajadores.find(t=>t.rut===r)){ocultarTodo();document.getElementById('mosaicoCursos').style.display='block';}else{alert("RUT no registrado");}}
-function volverTrabajador(){mostrarTrabajador();}
-function verCurso(nombre) { ocultarTodo();document.getElementById('moduloCurso').style.display = 'block';document.getElementById('tituloCurso').textContent = nombre;}
-function volverCursos(){document.getElementById('mosaicoCursos').style.display='block';}
-function volverModulo(){document.getElementById('moduloCurso').style.display='block';}
-function finalizarModulo(){const p1=document.getElementById('p1').value.trim().toLowerCase(),p2=document.getElementById('p2').value.trim().toLowerCase(),p3=document.getElementById('p3').value.trim().toLowerCase();if(p1=="verdadero"&&p2=="falso"&&p3=="verdadero"){ocultarTodo();document.getElementById('evaluacionFinal').style.display='block';cargarEvaluacionFinal();}else{alert("Respuestas incorrectas");}}
-function cargarEvaluacionFinal(){const c=document.getElementById('preguntasFinal');c.innerHTML="";[["¿Extintores visibles?","si"],["¿No necesitan mantención?","no"],["¿Apuntar a base del fuego?","si"]].forEach((p,i)=>{c.innerHTML+=`${p[0]}<br><input id='final${i}'><br>`;});}
-function finalizarEvaluacion(){let c=0;[["¿Extintores visibles?","si"],["¿No necesitan mantención?","no"],["¿Apuntar a base del fuego?","si"]].forEach((p,i)=>{if(document.getElementById(`final${i}`).value.trim().toLowerCase()===p[1])c++;});document.getElementById('resultadoFinal').textContent=c>=3?"¡Aprobado!":"Debe repetir";}
-function accederEmpresa(){if(document.getElementById('usuarioEmpresa').value.trim()===usuarioValido&&document.getElementById('claveEmpresa').value.trim()===claveValida){ocultarTodo();document.getElementById('panelEmpresa').style.display='flex';actualizarTabla();}else{alert("Credenciales incorrectas");}}
-function mostrarSeccionEmpresa(){actualizarTabla();}
-function registrarTrabajador(){const n=document.getElementById('nombre').value.trim(),r=document.getElementById('rut').value.trim(),c=document.getElementById('cargo').value.trim(),ce=document.getElementById('centro').value.trim(),f=document.getElementById('fechaIngreso').value;if(n&&r&&c&&ce&&f){trabajadores.push({nombre:n,rut:r,cargo:c,centro:ce,fechaIngreso:f});localStorage.setItem("trabajadores",JSON.stringify(trabajadores));actualizarTabla();}else{alert("Complete todos los campos");}}
-function actualizarTabla(){const t=document.getElementById('tablaTrabajadores');t.innerHTML="";trabajadores.forEach((tr,i)=>{t.innerHTML+=`<tr><td>${tr.rut}</td><td>${tr.nombre}</td><td>${tr.cargo}</td><td>${tr.centro}</td><td>${tr.fechaIngreso}</td><td><button onclick='eliminarTrabajador(${i})'>Eliminar</button></td></tr>`;});}
-function eliminarTrabajador(i){if(confirm("Eliminar trabajador?")){trabajadores.splice(i,1);localStorage.setItem("trabajadores",JSON.stringify(trabajadores));actualizarTabla();}}
-function exportarTrabajadores(){let c="RUT,Nombre,Cargo,Centro,Fecha Ingreso\n";trabajadores.forEach(t=>{c+=`${t.rut},${t.nombre},${t.cargo},${t.centro},${t.fechaIngreso}\n`;});const b=new Blob([c],{type:'text/csv'}),l=document.createElement("a");l.href=URL.createObjectURL(b);l.download="trabajadores.csv";l.click();}
-function importarTrabajadores(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{if(f.name.endsWith(".csv")){e.target.result.split('\n').forEach(l=>{const[d1,d2,d3,d4,d5]=l.split(',');if(d1&&d2&&d3&&d4&&d5)trabajadores.push({rut:d1,nombre:d2,cargo:d3,centro:d4,fechaIngreso:d5});});}else{const wb=XLSX.read(e.target.result,{type:'binary'});XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]).forEach(d=>{if(d.RUT&&d.Nombre)trabajadores.push({rut:d.RUT,nombre:d.Nombre,cargo:d.Cargo,centro:d.Centro,fechaIngreso:d['Fecha Ingreso']});});}localStorage.setItem("trabajadores",JSON.stringify(trabajadores));actualizarTabla();};if(f.name.endsWith(".xlsx"))r.readAsBinaryString(f);else r.readAsText(f);inp.value="";}
-</script>
-</body>
-</html>
+// Funciones del panel de empresa
+function accederEmpresa() {
+  const usuario = document.getElementById('usuarioEmpresa').value.trim();
+  const clave = document.getElementById('claveEmpresa').value.trim();
+  
+  if(usuario === usuarioValido && clave === claveValida) {
+    ocultarTodo();
+    document.getElementById('panelEmpresa').style.display = 'flex';
+    actualizarTabla();
+  } else {
+    alert("Credenciales incorrectas");
+  }
+}
 
+function mostrarSeccionEmpresa() {
+  actualizarTabla();
+}
 
+function registrarTrabajador() {
+  const n = document.getElementById('nombre').value.trim();
+  const r = document.getElementById('rut').value.trim();
+  const c = document.getElementById('cargo').value.trim();
+  const ce = document.getElementById('centro').value.trim();
+  const f = document.getElementById('fechaIngreso').value;
+  
+  if(n && r && c && ce && f) {
+    trabajadores.push({
+      nombre: n,
+      rut: r,
+      cargo: c,
+      centro: ce,
+      fechaIngreso: f
+    });
+    localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+    actualizarTabla();
+    // Limpiar campos
+    document.getElementById('nombre').value = '';
+    document.getElementById('rut').value = '';
+    document.getElementById('cargo').value = '';
+    document.getElementById('centro').value = '';
+    document.getElementById('fechaIngreso').value = '';
+  } else {
+    alert("Complete todos los campos");
+  }
+}
+
+function actualizarTabla() {
+  const t = document.getElementById('tablaTrabajadores');
+  t.innerHTML = "";
+  
+  trabajadores.forEach((tr, i) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${tr.rut}</td>
+      <td>${tr.nombre}</td>
+      <td>${tr.cargo}</td>
+      <td>${tr.centro}</td>
+      <td>${tr.fechaIngreso}</td>
+      <td><button onclick='eliminarTrabajador(${i})'>Eliminar</button></td>
+    `;
+    t.appendChild(row);
+  });
+}
+
+function eliminarTrabajador(i) {
+  if(confirm("¿Está seguro que desea eliminar este trabajador?")) {
+    trabajadores.splice(i, 1);
+    localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+    actualizarTabla();
+  }
+}
+
+function exportarTrabajadores() {
+  let csv = "RUT,Nombre,Cargo,Centro,Fecha Ingreso\n";
+  
+  trabajadores.forEach(t => {
+    csv += `"${t.rut}","${t.nombre}","${t.cargo}","${t.centro}","${t.fechaIngreso}"\n`;
+  });
+  
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute("href", url);
+  link.setAttribute("download", "trabajadores.csv");
+  link.style.visibility = 'hidden';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function importarTrabajadores(input) {
+  const file = input.files[0];
+  if(!file) return;
+  
+  const reader = new FileReader();
+  
+  reader.onload = function(e) {
+    const data = e.target.result;
+    
+    if(file.name.endsWith(".csv")) {
+      // Procesar CSV
+      const lines = data.split('\n');
+      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      
+      for(let i = 1; i < lines.length; i++) {
+        if(lines[i].trim() === '') continue;
+        
+        const values = lines[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(v => v.trim().replace(/"/g, ''));
+        const trabajador = {};
+        
+        headers.forEach((header, j) => {
+          trabajador[header.toLowerCase().replace(' ', '_')] = values[j];
+        });
+        
+        if(trabajador.rut && trabajador.nombre) {
+          trabajadores.push(trabajador);
+        }
+      }
+    } else if(file.name.endsWith(".xlsx")) {
+      // Procesar Excel
+      const workbook = XLSX.read(data, { type: 'binary' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+      
+      jsonData.forEach(row => {
+        if(row.RUT && row.Nombre) {
+          trabajadores.push({
+            rut: row.RUT,
+            nombre: row.Nombre,
+            cargo: row.Cargo || '',
+            centro: row.Centro || '',
+            fechaIngreso: row['Fecha Ingreso'] || ''
+          });
+        }
+      });
+    }
+    
+    localStorage.setItem("trabajadores", JSON.stringify(trabajadores));
+    actualizarTabla();
+    input.value = '';
+  };
+  
+  if(file.name.endsWith(".xlsx")) {
+    reader.readAsBinaryString(file);
+  } else {
+    reader.readAsText(file);
+  }
+}
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('menuPrincipal').style.display = 'block';
+});
+</script>
 </body>
 </html>
 
