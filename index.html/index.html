@@ -92,6 +92,24 @@ button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+  .boton-volver {
+    border: 1px solid #ddd;
+    transition: all 0.3s;
+}
+
+.boton-volver:hover {
+    background: #e0e0e0 !important;
+}
+
+#seccionTrabajador input {
+    font-size: 16px;
+}
+
+#seccionTrabajador input:focus {
+    outline: none;
+    border-color: #2E5EAA;
+    box-shadow: 0 0 0 2px rgba(46, 94, 170, 0.2);
+}
 
 /* Mosaico de cursos */
 #mosaicoCursos { 
@@ -293,10 +311,21 @@ input[type="date"] {
 
 <!-- Sección Trabajador -->
 <section id="seccionTrabajador" class="seccion" style="display:none">
-    <h2>Ingrese su RUT</h2>
-    <input type="text" id="rutAcceso" placeholder="RUT">
-    <button onclick="accederTrabajador()">Entrar</button>
-    <button class="boton-volver" onclick="volverMenu()">Volver</button>
+   <section id="seccionTrabajador" class="seccion" style="display:none">
+    <h2 style="color: #346a56; margin-bottom: 25px;">Ingrese su RUT</h2>
+    <input type="text" id="rutAcceso" placeholder="Ej: 12345678-9" 
+           style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px;">
+    
+    <div style="display: flex; justify-content: space-between; gap: 15px;">
+        <button class="boton-volver" onclick="volverMenu()" 
+                style="background: #f0f0f0; color: #333; flex: 1;">
+            Volver
+        </button>
+        <button onclick="accederTrabajador()" 
+                style="background-color: #2E5EAA; color: white; flex: 1;">
+            Entrar
+        </button>
+    </div>
 </section>
 
 <!-- Mosaico de Cursos -->
