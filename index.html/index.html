@@ -84,31 +84,59 @@ button:hover {
     border-radius: 6px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+      transition: all 0.3s ease;
 }
 
 #menuPrincipal button:hover {
     background-color: #346a56; /* Azul claro para hover */
-    transform: translateY(-2px);
+  transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-  .boton-volver {
+
+.boton-volver {
     border: 1px solid #ddd;
-    transition: all 0.3s;
+    background-color: #f5f5f5;
+    color: #333;
+    transition: all 0.3s ease;
 }
 
 .boton-volver:hover {
-    background: #e0e0e0 !important;
+    background-color: #e0e0e0;
+    border-color: #ccc;
+    /* Eliminado !important ya que no es necesario con especificidad adecuada */
 }
 
+/* Estilos para el input de RUT */
 #seccionTrabajador input {
     font-size: 16px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 100%;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #seccionTrabajador input:focus {
     outline: none;
     border-color: #2E5EAA;
     box-shadow: 0 0 0 2px rgba(46, 94, 170, 0.2);
+}
+
+/* Estilos para contenedor de botones */
+#seccionTrabajador .botones-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#seccionTrabajador .botones-container button {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 /* Mosaico de cursos */
