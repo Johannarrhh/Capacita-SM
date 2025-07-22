@@ -278,89 +278,23 @@ strong {
   font-size: 26px;
 }
 
-/* Estructura principal */
-#panelEmpresa {
-  display: flex;
-  height: 100vh;
+/* Panel de empresa */
+#panelEmpresa { 
+  display: none; 
+  height: 100vh; 
+  width: 100%; 
 }
 
-#menuLateral {
-  width: 250px;
-  background-color: var(--verde-oscuro); /* #16471C */
-  padding: 20px 0;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-  display: flex;
+#menuLateral { 
+  width: 250px; 
+  background: rgba(255,255,255,0.95); 
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.3); 
+  display: flex; 
   flex-direction: column;
 }
 
-#contenidoEmpresa {
-  flex: 1;
-  padding: 30px;
-  background-color: var(--blanco); /* #FFFFFF */
-  overflow-y: auto;
-}
-
-/* Estilo para los elementos del menú */
-#menuLateral h3 {
-  color: var(--verde-claro); /* #DCE6D4 */
-  font-family: "Calibri", sans-serif;
-  font-size: 1.4rem;
-  font-weight: 600;
-  text-align: center;
-  padding: 15px;
-  margin: 0;
-  border-bottom: 1px solid var(--verde-primario); /* #98C15E */
-}
-
-#menuLateral p {
-  color: var(--verde-claro); /* #DCE6D4 */
-  font-family: "Calibri", sans-serif;
-  text-align: center;
-  padding: 10px 15px;
-  margin: 0 0 20px 0;
-  font-size: 0.9rem;
-}
-
-/* Botones del menú */
-#menuLateral button {
-  background-color: var(--verde-primario); /* #98C15E */
-  color: var(--blanco); /* #FFFFFF */
-  border: none;
-  margin: 8px 15px;
-  padding: 12px;
-  border-radius: 4px;
-  font-family: "Calibri", sans-serif;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: left;
-  padding-left: 20px;
-}
-
-#menuLateral button:hover {
-  background-color: var(--verde-claro); /* #DCE6D4 */
-  color: var(--verde-oscuro); /* #16471C */
-  transform: translateX(5px);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  #panelEmpresa {
-    flex-direction: column;
-  }
-  
-  #menuLateral {
-    width: 100%;
-    padding: 10px;
-  }
-  
-  #menuLateral button {
-    margin: 5px;
-    padding: 10px;
-  }
-}
-  #contenidoEmpresa {
-  background-color: var(--blanco);
+#contenidoEmpresa { 
   flex-grow: 1; 
   padding: 30px; 
   background: rgba(255,255,255,0.9); 
@@ -382,8 +316,8 @@ table th, table td {
 }
 
 table th {
-  background-color: var(--verde-oscuro);
-  color: var(--verde-claro);
+  background-color: var(--azul-capacita);
+  color: white;
 }
 
 table td input { 
