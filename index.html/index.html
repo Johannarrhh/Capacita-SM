@@ -541,28 +541,25 @@ input[type="date"] {
   <div id="contenedorModulos"></div>
 </section>
 
-<!-- Login Empresa -->
-  
-<section id="loginEmpresa" class="seccion" style="display:none">
+ <section id="loginEmpresa" class="seccion" style="display:none">
     <h2>Acceso Empresas</h2>
     <input type="text" id="usuarioEmpresa" placeholder="Usuario">
     <input type="password" id="claveEmpresa" placeholder="Contraseña">
     <button onclick="accederEmpresa()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
-</section>
-
-<!-- Panel Empresa -->
+  </section>
+</div>
+<div id="paginaEmpresa" style="display:none">
+  <div id="panelEmpresa">
+    <!-- Menú Lateral -->
     <div id="menuLateral">
-        <h3>Empresa XYZ</h3>
-        <p>RUT: 12.345.678-9</p>
-        <button onclick="mostrarSeccionEmpresa()">Gestión de Trabajadores</button>
-        <button onclick="exportarTrabajadores()">Exportar</button>
-        <button onclick="document.getElementById('importador').click()">Importar</button>
-        <input type="file" id="importador" accept=".csv,.xlsx" style="display:none" onchange="importarTrabajadores(this)"> 
+      <h3>Empresa XYZ</h3>
+      <p>RUT: 12.345.678-9</p>
+      <button onclick="mostrarSeccion('gestionTrabajadores')">Gestión de Trabajadores</button>
+      <button onclick="mostrarSeccion('registroCapacitaciones')">Registro de Capacitaciones</button>
       <button onclick="volverMenu()">Cerrar Sesión</button>
     </div>
-    
-    <div id="contenidoEmpresa">
+     <div id="contenidoEmpresa">
         <!-- Sección Gestión de Trabajadores -->
         <div id="gestionTrabajadores">
             <h2>Listado de Trabajadores</h2>
