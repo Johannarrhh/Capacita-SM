@@ -279,53 +279,149 @@ strong {
 }
 
 /* Panel de empresa */
-#panelEmpresa { 
-  display: none; 
-  height: 100vh; 
-  width: 100%; 
+#panelEmpresa {
+  display: none;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--verde-claro); /* #DCE6D4 */
+  font-family: "Calibri", sans-serif;
 }
 
-#menuLateral { 
-  width: 250px; 
-  background: rgba(255,255,255,0.95); 
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.3); 
-  display: flex; 
+#menuLateral {
+  width: 280px;
+  background-color: var(--verde-oscuro); /* #16471C */
+  padding: 25px 15px;
+  box-shadow: 3px 0 10px rgba(0,0,0,0.15);
+  display: flex;
   flex-direction: column;
+  color: var(--verde-claro); /* #DCE6D4 */
 }
 
-#contenidoEmpresa { 
-  flex-grow: 1; 
-  padding: 30px; 
-  background: rgba(255,255,255,0.9); 
-  margin: 20px; 
-  border-radius: 10px; 
-  overflow-y: auto; 
+#menuLateral h3 {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--verde-primario); /* #98C15E */
 }
 
-table { 
-  width: 100%; 
-  border-collapse: collapse; 
-  margin-top: 20px;
+#menuLateral p {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+  color: var(--verde-claro); /* #DCE6D4 */
 }
 
-table th, table td { 
-  padding: 12px; 
-  text-align: left; 
-  border: 1px solid #ddd; 
+#menuLateral button {
+  background-color: var(--verde-primario); /* #98C15E */
+  color: var(--blanco); /* #FFFFFF */
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+#menuLateral button:hover {
+  background-color: var(--verde-claro); /* #DCE6D4 */
+  color: var(--verde-oscuro); /* #16471C */
+  transform: translateX(5px);
+}
+
+#menuLateral button::before {
+  content: "→";
+  margin-right: 10px;
+  transition: all 0.3s ease;
+}
+
+#menuLateral button:hover::before {
+  transform: translateX(3px);
+}
+
+#contenidoEmpresa {
+  flex-grow: 1;
+  padding: 30px;
+  background-color: var(--blanco); /* #FFFFFF */
+  margin: 20px;
+  border-radius: 12px;
+  overflow-y: auto;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+
+/* Estilos para tablas */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 25px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+  padding: 14px 16px;
+  text-align: left;
+  border: 1px solid var(--gris-medio); /* #747972 */
 }
 
 table th {
-  background-color: var(--azul-capacita);
-  color: white;
+  background-color: var(--verde-oscuro); /* #16471C */
+  color: var(--verde-claro); /* #DCE6D4 */
+  font-weight: 600;
+  position: sticky;
+  top: 0;
 }
 
-table td input { 
-  width: 100%; 
-  border: none; 
-  background: transparent; 
+table tr:nth-child(even) {
+  background-color: var(--verde-claro); /* #DCE6D4 */
 }
 
+table tr:hover {
+  background-color: rgba(152, 193, 94, 0.2); /* Tinte verde primario */
+}
+
+table td input {
+  width: 100%;
+  border: 1px solid var(--gris-medio); /* #747972 */
+  background: var(--blanco); /* #FFFFFF */
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+table td input:focus {
+  outline: none;
+  border-color: var(--verde-primario); /* #98C15E */
+  box-shadow: 0 0 0 2px rgba(152, 193, 94, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #panelEmpresa {
+    flex-direction: column;
+  }
+  
+  #menuLateral {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  #contenidoEmpresa {
+    margin: 10px;
+    padding: 20px;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
 /* Formularios */
 input[type="text"], 
 input[type="password"], 
