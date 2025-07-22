@@ -8,11 +8,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
-  --azul-capacita: #4C7C46;
-  --azul-claro: #97c15d;
-  --gris-oscuro: #333333;
-  --verde-sm: #4C7C46;
-  --dorado: #FFD700;
+  --verde-primario: #98C15E;      /* Verde claro vibrante */
+  --verde-oscuro: #16471C;        /* Verde oscuro profundo */
+  --gris-medio: #747972;          /* Gris neutro */
+  --gris-oscuro: #161617;         /* Casi negro */
+  --verde-claro: #DCE6D4;         /* Verde claro de fondo */
+  --negro: #000000;               /* Negro puro */
+  --blanco: #FFFFFF;              /* Blanco puro */
 }
 
 html, body {
@@ -26,9 +28,10 @@ html, body {
 }
 
 @media (max-width: 768px) { 
-  body { 
-    background-attachment: scroll; 
-  } 
+ body {
+  background-color: var(--verde-claro);
+  color: var(--gris-oscuro);
+}
 }
 
 /* Estilos generales */
@@ -42,7 +45,7 @@ html, body {
 }
 
 h2 {
-  color: var(--azul-capacita);
+  color: var(--verde-oscuro);
   text-align: center;
   padding: 20px;
   margin: 0;
@@ -51,7 +54,7 @@ h2 {
 }
 
 button {
-  background-color: var(--azul-capacita);
+  background-color: var(--verde-oscuro);
   color: white; 
   border: none; 
   padding: 12px 20px; 
@@ -63,7 +66,7 @@ button {
 }
 
 button:hover {
-  background-color: var(--azul-claro);
+  background-color: var(--verde-oscuro);
 }
 
 #menuPrincipal {
@@ -72,14 +75,14 @@ button:hover {
 
 #menuPrincipal h2 {
     margin-bottom: 25px;
-    color: #4C7C46; /* Azul corporativo */
+    color: var(--verde-oscuro);
     font-size: 24px;
 }
 
 #menuPrincipal button {
-    background-color: #4C7C46; /* Azul corporativo */
-    color: white;
-    border: none;
+  background-color: var(--verde-primario);
+  color: var(--blanco);
+  border: 1px solid var(--verde-oscuro);
     padding: 12px 0;
     border-radius: 6px;
     font-size: 16px;
@@ -88,22 +91,20 @@ button:hover {
 }
 
 #menuPrincipal button:hover {
-    background-color: #4C7C46; /* Azul claro para hover */
+  background-color: var(--verde-oscuro);
+  color: var(--verde-claro);
   transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .boton-volver {
-    border: 1px solid #ddd;
-    background-color: #f5f5f5;
-    color: #333;
-    transition: all 0.3s ease;
+  background-color: var(--gris-medio);
+  color: var(--blanco);
+  border: 1px solid var(--gris-oscuro);
 }
 
 .boton-volver:hover {
-    background-color: #e0e0e0;
-    border-color: #ccc;
-    /* Eliminado !important ya que no es necesario con especificidad adecuada */
+  background-color: var(--gris-oscuro);
 }
 
 /* Estilos para el input de RUT */
@@ -181,14 +182,14 @@ button:hover {
 }
 
 h3 {
-  color: var(--azul-capacita);
+ color: var(--verde-oscuro);
   border-bottom: 2px solid var(--verde-sm);
   padding-bottom: 8px;
   margin-top: 25px;
 }
 
 h4 {
-  color: var(--azul-capacita);
+   color: var(--verde-oscuro);
   margin-top: 20px;
 }
 
@@ -201,13 +202,13 @@ li {
 }
 
 strong {
-  color: var(--azul-capacita);
+  color: var(--verde-oscuro);
 }
 
 .pregunta {
   font-weight: bold; 
   margin: 20px 0 15px 0; 
-  color: var(--azul-capacita); 
+  color: var(--verde-oscuro);
   font-size: 18px;
 }
 
@@ -258,6 +259,8 @@ strong {
 }
 
 #menuLateral { 
+  background-color: var(--verde-oscuro);
+  color: var(--verde-claro);
   width: 250px; 
   background: rgba(255,255,255,0.95); 
   padding: 20px;
@@ -265,8 +268,8 @@ strong {
   display: flex; 
   flex-direction: column;
 }
-
-#contenidoEmpresa { 
+  #contenidoEmpresa {
+  background-color: var(--blanco);
   flex-grow: 1; 
   padding: 30px; 
   background: rgba(255,255,255,0.9); 
@@ -288,8 +291,8 @@ table th, table td {
 }
 
 table th {
-  background-color: var(--azul-capacita);
-  color: white;
+  background-color: var(--verde-oscuro);
+  color: var(--verde-claro);
 }
 
 table td input { 
@@ -350,7 +353,8 @@ input[type="date"] {
 }
 
 #listaParticipantes {
-    border: 1px solid #eee;
+  border: 1px solid var(--verde-primario);
+  background-color: var(--blanco);
     padding: 10px;
     border-radius: 4px;
 }
@@ -359,7 +363,7 @@ input[type="date"] {
     display: flex;
     justify-content: space-between;
     padding: 8px;
-    border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--gris-medio);
 }
 
 .participante-item:last-child {
@@ -368,7 +372,9 @@ input[type="date"] {
 
 /* Estilos para el formulario de capacitación */
 #formularioCapacitacion label {
-    display: block;
+   background-color: var(--verde-claro);
+  border: 1px solid var(--verde-primario);
+  display: block;
     margin-bottom: 5px;
     font-weight: bold;
     color: #333;
