@@ -278,41 +278,86 @@ strong {
   font-size: 26px;
 }
 
-/* Panel de empresa */
-#panelEmpresa { 
-  display: none; 
-  height: 100vh; 
-  width: 100%; 
+/* Estructura principal */
+#panelEmpresa {
+  display: flex;
+  height: 100vh;
 }
 
-#menuLateral h3, 
-#menuLateral p {
-  margin: 0;
-  padding: 8px 15px;
-  font-family: "Calibri", "Candara", "Segoe", "Segoe UI", "Optima", Arial, sans-serif;
-  color: var(--verde-claro); /* #DCE6D4 */
+#menuLateral {
+  width: 250px;
   background-color: var(--verde-oscuro); /* #16471C */
-  border-radius: 4px;
-  text-align: center;
+  padding: 20px 0;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 }
 
+#contenidoEmpresa {
+  flex: 1;
+  padding: 30px;
+  background-color: var(--blanco); /* #FFFFFF */
+  overflow-y: auto;
+}
+
+/* Estilo para los elementos del menú */
 #menuLateral h3 {
+  color: var(--verde-claro); /* #DCE6D4 */
+  font-family: "Calibri", sans-serif;
   font-size: 1.4rem;
-  font-weight: 50;
-  margin-top: 15px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  padding-bottom: 10px;
+  font-weight: 600;
+  text-align: center;
+  padding: 15px;
+  margin: 0;
+  border-bottom: 1px solid var(--verde-primario); /* #98C15E */
 }
 
 #menuLateral p {
+  color: var(--verde-claro); /* #DCE6D4 */
+  font-family: "Calibri", sans-serif;
+  text-align: center;
+  padding: 10px 15px;
+  margin: 0 0 20px 0;
+  font-size: 0.9rem;
+}
+
+/* Botones del menú */
+#menuLateral button {
+  background-color: var(--verde-primario); /* #98C15E */
+  color: var(--blanco); /* #FFFFFF */
+  border: none;
+  margin: 8px 15px;
+  padding: 12px;
+  border-radius: 4px;
+  font-family: "Calibri", sans-serif;
   font-size: 1rem;
-  font-weight: 50;
-  margin-bottom: 20px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  padding-top: 8px;
-  border-top: 1px solid var(--verde-primario); /* #98C15E */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  padding-left: 20px;
+}
+
+#menuLateral button:hover {
+  background-color: var(--verde-claro); /* #DCE6D4 */
+  color: var(--verde-oscuro); /* #16471C */
+  transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #panelEmpresa {
+    flex-direction: column;
+  }
+  
+  #menuLateral {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  #menuLateral button {
+    margin: 5px;
+    padding: 10px;
+  }
 }
   #contenidoEmpresa {
   background-color: var(--blanco);
