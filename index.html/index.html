@@ -555,9 +555,11 @@ input[type="date"] {
     <div id="menuLateral">
         <h3>Empresa XYZ</h3>
         <p>RUT: 12.345.678-9</p>
-        <button onclick="mostrarSeccion('gestionTrabajadores')">Gestión de Trabajadores</button>
-        <button onclick="mostrarSeccion('registroCapacitaciones')">Registro de Capacitaciones</button>
-        <button onclick="volverMenu()">Cerrar Sesión</button>
+        <button onclick="mostrarSeccionEmpresa()">Gestión de Trabajadores</button>
+        <button onclick="exportarTrabajadores()">Exportar</button>
+        <button onclick="document.getElementById('importador').click()">Importar</button>
+        <input type="file" id="importador" accept=".csv,.xlsx" style="display:none" onchange="importarTrabajadores(this)"> 
+      <button onclick="volverMenu()">Cerrar Sesión</button>
     </div>
     
     <div id="contenidoEmpresa">
