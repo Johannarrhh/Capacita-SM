@@ -531,8 +531,7 @@ input[type="date"] {
         <div class="curso-tile" onclick="verCurso('Seguridad en Asaltos - Comercio')">Seguridad en Asaltos - Comercio</div>
         <div class="curso-tile" onclick="verCurso('Seguridad para Reponedores Fiambrerías')">Seguridad para Reponedores Fiambrerías</div>
     </div>
-    
-    <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
+  <button class="boton-volver" onclick="volverTrabajador()">Volver</button>
 </section>
 
 <!-- Módulo del Curso -->
@@ -540,7 +539,7 @@ input[type="date"] {
   <h2>Curso: <span id="tituloCurso"></span></h2>
   <div id="contenedorModulos"></div>
 </section>
-
+  
  <section id="loginEmpresa" class="seccion" style="display:none">
     <h2>Acceso Empresas</h2>
     <input type="text" id="usuarioEmpresa" placeholder="Usuario">
@@ -548,9 +547,11 @@ input[type="date"] {
     <button onclick="accederEmpresa()">Entrar</button>
     <button class="boton-volver" onclick="volverMenu()">Volver</button>
   </section>
-</div>
+
 <div id="paginaEmpresa" style="display:none">
+  </div>
   <div id="panelEmpresa">
+    </div>
     <!-- Menú Lateral -->
     <div id="menuLateral">
       <h3>Empresa XYZ</h3>
@@ -560,8 +561,10 @@ input[type="date"] {
       <button onclick="volverMenu()">Cerrar Sesión</button>
     </div>
      <div id="contenidoEmpresa">
+       </div>
         <!-- Sección Gestión de Trabajadores -->
         <div id="gestionTrabajadores">
+          </div>
             <h2>Listado de Trabajadores</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
                 <input type="text" id="nombre" placeholder="Nombre">
