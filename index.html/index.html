@@ -1545,37 +1545,37 @@ function exportarRegistroCapacitacion(id) {
     
     // 1. ANTECEDENTES DEL SOLICITANTE
     doc.setFontSize(12);
-    doc.text('1. ANTECEDENTES DEL SOLICITANTE', 20, 60);
+    doc.text('1. ANTECEDENTES DEL SOLICITANTE', 15, 60);
     doc.setFontSize(10);
-    doc.text('A continuación, se detallan los antecedentes de la actividad de capacitación implementada', 20, 65);
-    doc.text('para dar cumplimiento a lo establecido en el Sistema de Gestión de SST', 20, 70);
+    doc.text('A continuación, se detallan los antecedentes de la actividad de capacitación implementada', 15, 65);
+    doc.text('para dar cumplimiento a lo establecido en el Sistema de Gestión de SST', 15, 70);
     
     // Tabla de datos de la capacitación
     doc.setFontSize(10);
-    doc.text('Nombre de la actividad:', 20, 80);
+    doc.text('Nombre de la actividad:', 15, 80);
     doc.text(capacitacion.nombreActividad, 60, 80);
     
-    doc.text('Fecha inicio y fin de la actividad:', 20, 85);
+    doc.text('Fecha inicio y fin de la actividad:', 15, 85);
     doc.text(`${new Date(capacitacion.fechaInicio).toLocaleDateString()} - ${new Date(capacitacion.fechaFin).toLocaleDateString()}`, 60, 85);
     
-    doc.text('Modalidad:', 20, 90);
+    doc.text('Modalidad:', 15, 90);
     doc.text(capacitacion.modalidad, 60, 90);
     
-    doc.text('N° de horas:', 20, 95);
+    doc.text('N° de horas:', 15, 95);
     doc.text(capacitacion.horas, 60, 95);
     
-    doc.text('Tipo de actividad:', 20, 100);
+    doc.text('Tipo de actividad:', 15, 100);
     doc.text(capacitacion.tipoActividad, 60, 100);
     
     if(capacitacion.tipoActividad === 'Interna') {
-        doc.text('Nombre:', 20, 105);
+        doc.text('Nombre:', 15, 105);
         doc.text(capacitacion.responsable, 60, 105);
-        doc.text('Cargo:', 20, 110);
+        doc.text('Cargo:', 15, 110);
         doc.text('JEFE DE RRHH', 60, 110);
     }
     
     doc.text('Grupo objetivo de los participantes - Observaciones:', 15, 115);
-    doc.text(capacitacion.grupoObjetivo, 20, 120);
+    doc.text(capacitacion.grupoObjetivo, 15, 120);
     
     // 2. INFORMACIÓN PARTICIPANTES
     doc.setFontSize(12);
