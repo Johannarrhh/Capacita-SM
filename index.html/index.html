@@ -324,6 +324,64 @@ input[type="date"] {
     width: 100%;
   }
 }
+
+/* Estilos para el registro de capacitaciones */
+#tablaCapacitaciones {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#tablaCapacitaciones th, #tablaCapacitaciones td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#tablaCapacitaciones th {
+    background-color: #2E5EAA;
+    color: white;
+}
+
+#listaTrabajadores {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+#listaParticipantes {
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.participante-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.participante-item:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para el formulario de capacitación */
+#formularioCapacitacion label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#formularioCapacitacion input,
+#formularioCapacitacion select,
+#formularioCapacitacion textarea {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -400,35 +458,125 @@ input[type="date"] {
     <div id="menuLateral">
         <h3>Empresa XYZ</h3>
         <p>RUT: 12.345.678-9</p>
-        <button onclick="mostrarSeccionEmpresa()">Gestión de Trabajadores</button>
-        <button onclick="exportarTrabajadores()">Exportar</button>
-        <button onclick="document.getElementById('importador').click()">Importar</button>
-        <input type="file" id="importador" accept=".csv,.xlsx" style="display:none" onchange="importarTrabajadores(this)">
+        <button onclick="mostrarSeccion('gestionTrabajadores')">Gestión de Trabajadores</button>
+        <button onclick="mostrarSeccion('registroCapacitaciones')">Registro de Capacitaciones</button>
         <button onclick="volverMenu()">Cerrar Sesión</button>
     </div>
+    
     <div id="contenidoEmpresa">
-        <h2>Listado de Trabajadores</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
-            <input type="text" id="nombre" placeholder="Nombre">
-            <input type="text" id="rut" placeholder="RUT">
-            <input type="text" id="cargo" placeholder="Cargo">
-            <input type="text" id="centro" placeholder="Centro">
-            <input type="date" id="fechaIngreso">
+        <!-- Sección Gestión de Trabajadores -->
+        <div id="gestionTrabajadores">
+            <h2>Listado de Trabajadores</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="nombre" placeholder="Nombre">
+                <input type="text" id="rut" placeholder="RUT">
+                <input type="text" id="cargo" placeholder="Cargo">
+                <input type="text" id="centro" placeholder="Centro">
+                <input type="date" id="fechaIngreso">
+            </div>
+            <button onclick="registrarTrabajador()">Agregar Trabajador</button>
+            <div style="margin: 20px 0;">
+                <input type="text" id="filtroTrabajadores" placeholder="Filtrar por nombre, RUT o cargo" 
+                       style="width: 100%; padding: 10px;" oninput="filtrarTrabajadores()">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>RUT</th>
+                        <th>Nombre</th>
+                        <th>Cargo</th>
+                        <th>Centro</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaTrabajadores"></tbody>
+            </table>
         </div>
-        <button onclick="registrarTrabajador()">Agregar Trabajador</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>RUT</th>
-                    <th>Nombre</th>
-                    <th>Cargo</th>
-                    <th>Centro</th>
-                    <th>Fecha Ingreso</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tablaTrabajadores"></tbody>
-        </table>
+        
+        <!-- Sección Registro de Capacitaciones -->
+        <div id="registroCapacitaciones" style="display: none;">
+            <h2>Registro de Capacitaciones</h2>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <button onclick="nuevaCapacitacion()">Nueva Capacitación</button>
+                <div>
+                    <input type="text" id="filtroCapacitaciones" placeholder="Filtrar por curso o fecha" 
+                           style="padding: 10px; width: 250px;" oninput="filtrarCapacitaciones()">
+                    <button onclick="exportarCapacitaciones()">Exportar a Word</button>
+                </div>
+            </div>
+            
+            <div id="formularioCapacitacion" style="display: none; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Datos de la Capacitación</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label>Nombre de la actividad:</label>
+                        <input type="text" id="nombreActividad" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label>Fecha inicio y fin:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="date" id="fechaInicio" style="flex: 1;">
+                            <input type="date" id="fechaFin" style="flex: 1;">
+                        </div>
+                    </div>
+                    <div>
+                        <label>Modalidad:</label>
+                        <select id="modalidad" style="width: 100%;">
+                            <option value="Presencial">Presencial</option>
+                            <option value="E-learning">E-learning</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>N° de horas:</label>
+                        <input type="number" id="horasCapacitacion" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label>Tipo de actividad:</label>
+                        <select id="tipoActividad" style="width: 100%;">
+                            <option value="Interna">Interna</option>
+                            <option value="Externa">Externa</option>
+                        </select>
+                    </div>
+                    <div id="responsableContainer">
+                        <label>Responsable:</label>
+                        <input type="text" id="responsable" style="width: 100%;">
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <label>Grupo objetivo - Observaciones:</label>
+                        <textarea id="grupoObjetivo" style="width: 100%; height: 80px;"></textarea>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 20px;">Participantes</h3>
+                <div style="margin-bottom: 15px;">
+                    <select id="listaTrabajadores" multiple style="width: 100%; height: 150px; margin-bottom: 10px;"></select>
+                    <button onclick="agregarParticipantes()">Agregar Participantes</button>
+                </div>
+                
+                <div id="listaParticipantes" style="margin-bottom: 20px;"></div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="boton-volver" onclick="cancelarCapacitacion()">Cancelar</button>
+                    <button onclick="guardarCapacitacion()">Guardar Capacitación</button>
+                </div>
+            </div>
+            
+            <table id="tablaCapacitaciones">
+                <thead>
+                    <tr>
+                        <th>Nombre Actividad</th>
+                        <th>Fecha</th>
+                        <th>Modalidad</th>
+                        <th>Horas</th>
+                        <th>Participantes</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="listaCapacitaciones"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -438,6 +586,10 @@ const usuarioValido = "empresa";
 const claveValida = "1234";
 let trabajadores = JSON.parse(localStorage.getItem("trabajadores")) || [];
 let actual = 0;
+
+// Variables globales para capacitaciones
+let capacitaciones = JSON.parse(localStorage.getItem("capacitaciones")) || [];
+let participantesTemporales = [];
 
 // Módulos del curso "Prevención de Incendios y Uso de Extintores"
 const modulos = [
@@ -1018,14 +1170,21 @@ function accederEmpresa() {
   if(usuario === usuarioValido && clave === claveValida) {
     ocultarTodo();
     document.getElementById('panelEmpresa').style.display = 'flex';
+    mostrarSeccion('gestionTrabajadores');
     actualizarTabla();
   } else {
     alert("Credenciales incorrectas");
   }
 }
 
-function mostrarSeccionEmpresa() {
-  actualizarTabla();
+function mostrarSeccion(seccion) {
+    document.getElementById('gestionTrabajadores').style.display = 'none';
+    document.getElementById('registroCapacitaciones').style.display = 'none';
+    document.getElementById(seccion).style.display = 'block';
+    
+    if(seccion === 'registroCapacitaciones') {
+        cargarListaCapacitaciones();
+    }
 }
 
 function registrarTrabajador() {
@@ -1161,6 +1320,350 @@ function importarTrabajadores(input) {
   }
 }
 
+// Funciones para capacitaciones
+function nuevaCapacitacion() {
+    document.getElementById('formularioCapacitacion').style.display = 'block';
+    participantesTemporales = [];
+    cargarListaTrabajadores();
+    document.getElementById('listaParticipantes').innerHTML = '';
+}
+
+function cancelarCapacitacion() {
+    document.getElementById('formularioCapacitacion').style.display = 'none';
+}
+
+function cargarListaTrabajadores() {
+    const select = document.getElementById('listaTrabajadores');
+    select.innerHTML = '';
+    
+    trabajadores.forEach(trabajador => {
+        const option = document.createElement('option');
+        option.value = trabajador.rut;
+        option.textContent = `${trabajador.nombre} (${trabajador.rut}) - ${trabajador.cargo}`;
+        select.appendChild(option);
+    });
+}
+
+function agregarParticipantes() {
+    const select = document.getElementById('listaTrabajadores');
+    const selectedOptions = Array.from(select.selectedOptions);
+    
+    selectedOptions.forEach(option => {
+        const rut = option.value;
+        if(!participantesTemporales.some(p => p.rut === rut)) {
+            const trabajador = trabajadores.find(t => t.rut === rut);
+            if(trabajador) {
+                participantesTemporales.push(trabajador);
+            }
+        }
+    });
+    
+    actualizarListaParticipantes();
+}
+
+function actualizarListaParticipantes() {
+    const container = document.getElementById('listaParticipantes');
+    container.innerHTML = '';
+    
+    participantesTemporales.forEach((participante, index) => {
+        const div = document.createElement('div');
+        div.className = 'participante-item';
+        div.innerHTML = `
+            <span>${participante.nombre} (${participante.rut}) - ${participante.cargo}</span>
+            <button onclick="eliminarParticipante(${index})" style="color: red; background: none; border: none; cursor: pointer;">✕</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function eliminarParticipante(index) {
+    participantesTemporales.splice(index, 1);
+    actualizarListaParticipantes();
+}
+
+function guardarCapacitacion() {
+    const nombreActividad = document.getElementById('nombreActividad').value;
+    const fechaInicio = document.getElementById('fechaInicio').value;
+    const fechaFin = document.getElementById('fechaFin').value;
+    const modalidad = document.getElementById('modalidad').value;
+    const horas = document.getElementById('horasCapacitacion').value;
+    const tipoActividad = document.getElementById('tipoActividad').value;
+    const responsable = document.getElementById('responsable').value;
+    const grupoObjetivo = document.getElementById('grupoObjetivo').value;
+    
+    if(!nombreActividad || !fechaInicio || !fechaFin || !horas || participantesTemporales.length === 0) {
+        alert("Complete todos los campos obligatorios y agregue al menos un participante");
+        return;
+    }
+    
+    const nuevaCapacitacion = {
+        id: Date.now(),
+        nombreActividad,
+        fechaInicio,
+        fechaFin,
+        modalidad,
+        horas,
+        tipoActividad,
+        responsable,
+        grupoObjetivo,
+        participantes: [...participantesTemporales],
+        fechaRegistro: new Date().toISOString()
+    };
+    
+    capacitaciones.push(nuevaCapacitacion);
+    localStorage.setItem("capacitaciones", JSON.stringify(capacitaciones));
+    
+    // Limpiar formulario
+    document.getElementById('formularioCapacitacion').reset();
+    document.getElementById('formularioCapacitacion').style.display = 'none';
+    participantesTemporales = [];
+    
+    // Actualizar lista
+    cargarListaCapacitaciones();
+}
+
+function cargarListaCapacitaciones() {
+    const tbody = document.getElementById('listaCapacitaciones');
+    tbody.innerHTML = '';
+    
+    capacitaciones.forEach(capacitacion => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${capacitacion.nombreActividad}</td>
+            <td>${new Date(capacitacion.fechaInicio).toLocaleDateString()} - ${new Date(capacitacion.fechaFin).toLocaleDateString()}</td>
+            <td>${capacitacion.modalidad}</td>
+            <td>${capacitacion.horas}</td>
+            <td>${capacitacion.participantes.length}</td>
+            <td>
+                <button onclick="verDetalleCapacitacion(${capacitacion.id})">Ver</button>
+                <button onclick="exportarRegistroCapacitacion(${capacitacion.id})">Descargar</button>
+                <button onclick="eliminarCapacitacion(${capacitacion.id})" style="color: red;">Eliminar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function verDetalleCapacitacion(id) {
+    const capacitacion = capacitaciones.find(c => c.id === id);
+    if(!capacitacion) return;
+    
+    let html = `
+        <h3>${capacitacion.nombreActividad}</h3>
+        <p><strong>Fecha:</strong> ${new Date(capacitacion.fechaInicio).toLocaleDateString()} - ${new Date(capacitacion.fechaFin).toLocaleDateString()}</p>
+        <p><strong>Modalidad:</strong> ${capacitacion.modalidad}</p>
+        <p><strong>Horas:</strong> ${capacitacion.horas}</p>
+        <p><strong>Tipo de actividad:</strong> ${capacitacion.tipoActividad}</p>
+        <p><strong>Responsable:</strong> ${capacitacion.responsable}</p>
+        <p><strong>Grupo objetivo:</strong> ${capacitacion.grupoObjetivo}</p>
+        
+        <h4>Participantes (${capacitacion.participantes.length}):</h4>
+        <table style="width: 100%; margin-top: 10px;">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>RUT</th>
+                    <th>Cargo</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    capacitacion.participantes.forEach(participante => {
+        html += `
+            <tr>
+                <td>${participante.nombre}</td>
+                <td>${participante.rut}</td>
+                <td>${participante.cargo}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: center;">
+            <button onclick="document.getElementById('modalDetalle').style.display = 'none'">Cerrar</button>
+        </div>
+    `;
+    
+    // Crear modal si no existe
+    if(!document.getElementById('modalDetalle')) {
+        const modal = document.createElement('div');
+        modal.id = 'modalDetalle';
+        modal.style.display = 'none';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.style.zIndex = '1000';
+        modal.style.overflow = 'auto';
+        
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.margin = '50px auto';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '8px';
+        modalContent.style.maxWidth = '800px';
+        
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+    }
+    
+    document.getElementById('modalDetalle').style.display = 'block';
+    document.getElementById('modalDetalle').firstChild.innerHTML = html;
+}
+
+function eliminarCapacitacion(id) {
+    if(confirm("¿Está seguro que desea eliminar esta capacitación?")) {
+        capacitaciones = capacitaciones.filter(c => c.id !== id);
+        localStorage.setItem("capacitaciones", JSON.stringify(capacitaciones));
+        cargarListaCapacitaciones();
+    }
+}
+
+function exportarRegistroCapacitacion(id) {
+    const capacitacion = capacitaciones.find(c => c.id === id);
+    if(!capacitacion) return;
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Encabezado
+    doc.setFontSize(16);
+    doc.setTextColor(46, 94, 170); // #2E5EAA
+    doc.text('REGISTRO DE CAPACITACIÓN', 105, 20, { align: 'center' });
+    
+    // Logo y datos de cabecera
+    doc.addImage('logo.png', 'PNG', 15, 25, 40, 20);
+    doc.setFontSize(10);
+    doc.text(`Código: 001`, 150, 30);
+    doc.text(`Versión: 001`, 150, 35);
+    doc.text(`Fecha aprobación: ${new Date().toLocaleDateString()}`, 150, 40);
+    
+    // 1. ANTECEDENTES DEL SOLICITANTE
+    doc.setFontSize(12);
+    doc.text('1. ANTECEDENTES DEL SOLICITANTE', 15, 60);
+    doc.setFontSize(10);
+    doc.text('A continuación, se detallan los antecedentes de la actividad de capacitación implementada', 15, 65);
+    doc.text('para dar cumplimiento a lo establecido en el Sistema de Gestión de SST', 15, 70);
+    
+    // Tabla de datos de la capacitación
+    doc.setFontSize(10);
+    doc.text('Nombre de la actividad:', 15, 80);
+    doc.text(capacitacion.nombreActividad, 60, 80);
+    
+    doc.text('Fecha inicio y fin de la actividad:', 15, 85);
+    doc.text(`${new Date(capacitacion.fechaInicio).toLocaleDateString()} - ${new Date(capacitacion.fechaFin).toLocaleDateString()}`, 60, 85);
+    
+    doc.text('Modalidad:', 15, 90);
+    doc.text(capacitacion.modalidad, 60, 90);
+    
+    doc.text('N° de horas:', 15, 95);
+    doc.text(capacitacion.horas, 60, 95);
+    
+    doc.text('Tipo de actividad:', 15, 100);
+    doc.text(capacitacion.tipoActividad, 60, 100);
+    
+    if(capacitacion.tipoActividad === 'Interna') {
+        doc.text('Nombre:', 15, 105);
+        doc.text(capacitacion.responsable, 60, 105);
+        doc.text('Cargo:', 15, 110);
+        doc.text('JEFE DE RRHH', 60, 110);
+    }
+    
+    doc.text('Grupo objetivo de los participantes - Observaciones:', 15, 115);
+    doc.text(capacitacion.grupoObjetivo, 15, 120);
+    
+    // 2. INFORMACIÓN PARTICIPANTES
+    doc.setFontSize(12);
+    doc.text('2. INFORMACIÓN PARTICIPANTES', 15, 135);
+    doc.setFontSize(10);
+    doc.text('En este apartado se detallan los antecedentes de los participantes de la actividad.', 15, 140);
+    
+    // Tabla de participantes
+    let y = 150;
+    doc.setFontSize(10);
+    doc.text('Nombre del participante', 15, y);
+    doc.text('Rut', 70, y);
+    doc.text('Cargo', 110, y);
+    doc.text('Firma', 150, y);
+    y += 5;
+    doc.line(15, y, 190, y);
+    y += 10;
+    
+    capacitacion.participantes.forEach(participante => {
+        doc.text(participante.nombre, 15, y);
+        doc.text(participante.rut, 70, y);
+        doc.text(participante.cargo, 110, y);
+        y += 10;
+        
+        if(y > 270) {
+            doc.addPage();
+            y = 20;
+        }
+    });
+    
+    // 3. MATERIAL DE COMPLEMENTO
+    doc.setFontSize(12);
+    doc.text('3. MATERIAL DE COMPLEMENTO', 15, y + 10);
+    doc.setFontSize(10);
+    doc.text('Se adjunta material: No ☒ marque una opción', 15, y + 15);
+    
+    // Guardar documento
+    doc.save(`Registro_Capacitacion_${capacitacion.nombreActividad.replace(/ /g, '_')}.pdf`);
+}
+
+function exportarCapacitaciones() {
+    // Esta función requeriría una librería adicional para exportar a Word
+    // Por ahora exportaremos a PDF como alternativa
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.setFontSize(16);
+    doc.text('LISTADO DE CAPACITACIONES', 105, 20, { align: 'center' });
+    
+    let y = 30;
+    capacitaciones.forEach((cap, index) => {
+        doc.setFontSize(12);
+        doc.text(`${index + 1}. ${cap.nombreActividad}`, 15, y);
+        doc.setFontSize(10);
+        doc.text(`Fecha: ${new Date(cap.fechaInicio).toLocaleDateString()} - ${new Date(cap.fechaFin).toLocaleDateString()}`, 15, y + 5);
+        doc.text(`Modalidad: ${cap.modalidad} - Horas: ${cap.horas}`, 15, y + 10);
+        doc.text(`Participantes: ${cap.participantes.length}`, 15, y + 15);
+        
+        y += 25;
+        if(y > 270) {
+            doc.addPage();
+            y = 20;
+        }
+    });
+    
+    doc.save('Listado_Capacitaciones.pdf');
+}
+
+function filtrarCapacitaciones() {
+    const filtro = document.getElementById('filtroCapacitaciones').value.toLowerCase();
+    const filas = document.getElementById('listaCapacitaciones').getElementsByTagName('tr');
+    
+    for(let fila of filas) {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(filtro) ? '' : 'none';
+    }
+}
+
+function filtrarTrabajadores() {
+    const filtro = document.getElementById('filtroTrabajadores').value.toLowerCase();
+    const filas = document.getElementById('tablaTrabajadores').getElementsByTagName('tr');
+    
+    for(let fila of filas) {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(filtro) ? '' : 'none';
+    }
+}
+
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('menuPrincipal').style.display = 'block';
@@ -1168,5 +1671,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
 
