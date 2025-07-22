@@ -1537,7 +1537,7 @@ function exportarRegistroCapacitacion(id) {
     doc.text('REGISTRO DE CAPACITACIÓN', 105, 20, { align: 'center' });
     
     // Logo y datos de cabecera
-    doc.addImage('logo.png', 'PNG', 15, 25, 40, 20);
+    doc.addImage('logo.png', 'PNG', 20, 25, 40, 20);
     doc.setFontSize(10);
     doc.text(`Código: 001`, 150, 30);
     doc.text(`Versión: 001`, 150, 35);
@@ -1545,37 +1545,37 @@ function exportarRegistroCapacitacion(id) {
     
     // 1. ANTECEDENTES DEL SOLICITANTE
     doc.setFontSize(12);
-    doc.text('1. ANTECEDENTES DEL SOLICITANTE', 15, 60);
+    doc.text('1. ANTECEDENTES DEL SOLICITANTE', 20, 60);
     doc.setFontSize(10);
-    doc.text('A continuación, se detallan los antecedentes de la actividad de capacitación implementada', 15, 65);
-    doc.text('para dar cumplimiento a lo establecido en el Sistema de Gestión de SST', 15, 70);
+    doc.text('A continuación, se detallan los antecedentes de la actividad de capacitación implementada', 20, 65);
+    doc.text('para dar cumplimiento a lo establecido en el Sistema de Gestión de SST', 20, 70);
     
     // Tabla de datos de la capacitación
     doc.setFontSize(10);
-    doc.text('Nombre de la actividad:', 15, 80);
+    doc.text('Nombre de la actividad:', 20, 80);
     doc.text(capacitacion.nombreActividad, 60, 80);
     
-    doc.text('Fecha inicio y fin de la actividad:', 15, 85);
+    doc.text('Fecha inicio y fin de la actividad:', 20, 85);
     doc.text(`${new Date(capacitacion.fechaInicio).toLocaleDateString()} - ${new Date(capacitacion.fechaFin).toLocaleDateString()}`, 60, 85);
     
-    doc.text('Modalidad:', 15, 90);
+    doc.text('Modalidad:', 20, 90);
     doc.text(capacitacion.modalidad, 60, 90);
     
-    doc.text('N° de horas:', 15, 95);
+    doc.text('N° de horas:', 20, 95);
     doc.text(capacitacion.horas, 60, 95);
     
-    doc.text('Tipo de actividad:', 15, 100);
+    doc.text('Tipo de actividad:', 20, 100);
     doc.text(capacitacion.tipoActividad, 60, 100);
     
     if(capacitacion.tipoActividad === 'Interna') {
-        doc.text('Nombre:', 15, 105);
+        doc.text('Nombre:', 20, 105);
         doc.text(capacitacion.responsable, 60, 105);
-        doc.text('Cargo:', 15, 110);
+        doc.text('Cargo:', 20, 110);
         doc.text('JEFE DE RRHH', 60, 110);
     }
     
     doc.text('Grupo objetivo de los participantes - Observaciones:', 15, 115);
-    doc.text(capacitacion.grupoObjetivo, 15, 120);
+    doc.text(capacitacion.grupoObjetivo, 20, 120);
     
     // 2. INFORMACIÓN PARTICIPANTES
     doc.setFontSize(12);
@@ -1606,11 +1606,6 @@ function exportarRegistroCapacitacion(id) {
         }
     });
     
-    // 3. MATERIAL DE COMPLEMENTO
-    doc.setFontSize(12);
-    doc.text('3. MATERIAL DE COMPLEMENTO', 15, y + 10);
-    doc.setFontSize(10);
-    doc.text('Se adjunta material: No ☒ marque una opción', 15, y + 15);
     
     // Guardar documento
     doc.save(`Registro_Capacitacion_${capacitacion.nombreActividad.replace(/ /g, '_')}.pdf`);
@@ -1628,11 +1623,11 @@ function exportarCapacitaciones() {
     let y = 30;
     capacitaciones.forEach((cap, index) => {
         doc.setFontSize(12);
-        doc.text(`${index + 1}. ${cap.nombreActividad}`, 15, y);
+        doc.text(`${index + 1}. ${cap.nombreActividad}`, 20, y);
         doc.setFontSize(10);
-        doc.text(`Fecha: ${new Date(cap.fechaInicio).toLocaleDateString()} - ${new Date(cap.fechaFin).toLocaleDateString()}`, 15, y + 5);
-        doc.text(`Modalidad: ${cap.modalidad} - Horas: ${cap.horas}`, 15, y + 10);
-        doc.text(`Participantes: ${cap.participantes.length}`, 15, y + 15);
+        doc.text(`Fecha: ${new Date(cap.fechaInicio).toLocaleDateString()} - ${new Date(cap.fechaFin).toLocaleDateString()}`, 20, y + 5);
+        doc.text(`Modalidad: ${cap.modalidad} - Horas: ${cap.horas}`, 20, y + 10);
+        doc.text(`Participantes: ${cap.participantes.length}`, 20, y + 15);
         
         y += 25;
         if(y > 270) {
