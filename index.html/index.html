@@ -92,7 +92,7 @@ button:hover {
 
 #menuPrincipal button:hover {
   background-color: var(--verde-oscuro);
-  color: var(--verde-claro);
+  color: var(--verde-oscuro);
   transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -260,7 +260,7 @@ strong {
 
 #menuLateral { 
   background-color: var(--verde-oscuro);
-  color: var(--verde-claro);
+  color: var(--verde-oscuro);
   width: 250px; 
   background: rgba(255,255,255,0.95); 
   padding: 20px;
@@ -1156,7 +1156,7 @@ function generarCertificado() {
   
   // Título del certificado
   doc.setFontSize(20);
-  doc.setTextColor(46, 94, 170);
+  doc.setTextColor(22, 71, 28);
   doc.text('CERTIFICADO DE PARTICIPACIÓN', 105, 50, null, null, 'center');
   
   // Datos del trabajador (extraídos del sistema)
@@ -1165,7 +1165,7 @@ function generarCertificado() {
   doc.text('Se certifica que:', 20, 70);
   
   doc.setFontSize(16);
-  doc.setTextColor(46, 94, 170);
+  doc.setTextColor(22, 71, 28);
   doc.text(trabajador.nombre.toUpperCase(), 20, 80);
   
   doc.setFontSize(12);
@@ -1181,7 +1181,7 @@ function generarCertificado() {
   
   const tituloCurso = document.getElementById('tituloCurso').textContent;
   doc.setFontSize(16);
-  doc.setTextColor(46, 94, 170);
+  doc.setTextColor(22, 71, 28);
   doc.text(tituloCurso.toUpperCase(), 20, 120);
   
   doc.setFontSize(12);
@@ -1584,7 +1584,7 @@ function exportarRegistroCapacitacion(id) {
     
     // Encabezado
     doc.setFontSize(16);
-    doc.setTextColor(46, 94, 170); // #2E5EAA
+    doc.setTextColor(22, 71, 28); // #2E5EAA
     doc.text('REGISTRO DE CAPACITACIÓN', 105, 20, { align: 'center' });
     
     // Logo y datos de cabecera
