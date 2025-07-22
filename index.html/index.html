@@ -53,20 +53,31 @@ h2 {
   border-bottom: 1px solid #eaecef;
 }
 
-button {
-  background-color: var(--verde-oscuro);
-  color: white; 
-  border: none; 
-  padding: 12px 20px; 
-  border-radius: 6px; 
-  cursor: pointer; 
-  font-size: 16px;
-  margin: 10px 5px;
-  transition: background-color 0.3s;
+/* Botones principales (Volver y Entrar) */
+button, .boton-volver {
+    background-color: var(--verde-primario); /* #98C15E */
+    color: var(--blanco); /* #FFFFFF */
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    margin: 10px 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
-  background-color: var(--verde-oscuro);
+/* Efecto hover para ambos botones */
+button:hover, .boton-volver:hover {
+    background-color: var(--verde-oscuro); /* #16471C */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Opcional: Estilo para cuando se presiona el botón */
+button:active, .boton-volver:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
 #menuPrincipal {
