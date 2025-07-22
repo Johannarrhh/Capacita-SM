@@ -285,15 +285,34 @@ strong {
   width: 100%; 
 }
 
-#menuLateral { 
-  background-color: var(--verde-oscuro);
-  color: var(--verde-oscuro);
-  width: 250px; 
-  background: rgba(255,255,255,0.95); 
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.3); 
-  display: flex; 
-  flex-direction: column;
+#menuLateral h3, 
+#menuLateral p {
+  margin: 0;
+  padding: 8px 15px;
+  font-family: "Calibri", "Candara", "Segoe", "Segoe UI", "Optima", Arial, sans-serif;
+  color: var(--verde-claro); /* #DCE6D4 */
+  background-color: var(--verde-oscuro); /* #16471C */
+  border-radius: 4px;
+  text-align: center;
+}
+
+#menuLateral h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 15px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-bottom: 10px;
+}
+
+#menuLateral p {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--verde-primario); /* #98C15E */
 }
   #contenidoEmpresa {
   background-color: var(--blanco);
