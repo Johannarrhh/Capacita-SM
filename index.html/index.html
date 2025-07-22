@@ -1122,44 +1122,89 @@ function generarCertificado() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   
-  // Encabezado
+  // Obtener datos del trabajador
+  const rutTrabajador = document.getElementById('rutAcceso').value.trim();
+  const trabajador = trabajadores.find(t => t.rut === rutTrabajador) || {
+    nombre: "Nombre del Trabajador",
+    rut: "12.345.678-9",
+    cargo: "Cargo del Trabajador",
+    centro: "Centro de Trabajo"
+  };
+  
+  // Obtener datos de la empresa del panel
+  const empresaNombre = document.querySelector('#menuLateral h3').textContent || 'CAPACITA SM';
+  const empresaRut = document.querySelector('#menuLateral p').textContent.replace('RUT: ', '') || '76.543.210-1';
+  
+  // Encabezado con logo y datos de la empresa
+  doc.addImage('logo.png', 'PNG', 15, 15, 40, 20);
+  doc.setFontSize(10);
+  doc.setTextColor(100);
+  
+  // Datos de la empresa extraídos del panel
+  doc.text(`Empresa: ${empresaNombre}`, 150, 20);
+  doc.text(`RUT Empresa: ${empresaRut}`, 150, 25);
+  
+  const ahora = new Date();
+  doc.text('Fecha emisión: ' + ahora.toLocaleDateString('es-CL'), 150, 30);
+  doc.text('Hora emisión: ' + ahora.toLocaleTimeString('es-CL', {hour: '2-digit', minute:'2-digit'}), 150, 35);
+  
+  // Título del certificado
   doc.setFontSize(20);
-  doc.setTextColor(46, 94, 170); // #2E5EAA
-  doc.text('CERTIFICADO DE APROBACIÓN', 105, 30, null, null, 'center');
+  doc.setTextColor(46, 94, 170);
+  doc.text('CERTIFICADO DE PARTICIPACIÓN', 105, 50, null, null, 'center');
   
-  // Logo
-  doc.addImage('logo.png', 'PNG', 80, 40, 50, 25);
-  
-  // Cuerpo
-  doc.setFontSize(16);
-  doc.text('Se certifica que', 105, 80, null, null, 'center');
+  // Datos del trabajador (extraídos del sistema)
   doc.setFontSize(14);
-  doc.text('el participante ha completado satisfactoriamente el curso:', 105, 90, null, null, 'center');
+  doc.setTextColor(0, 0, 0);
+  doc.text('Se certifica que:', 20, 70);
   
-  doc.setFontSize(18);
-  doc.setTextColor(76, 124, 70); // #4C7C46
-  const tituloCurso = document.getElementById('tituloCurso').textContent;
-  doc.text(tituloCurso, 105, 105, null, null, 'center');
+  doc.setFontSize(16);
+  doc.setTextColor(46, 94, 170);
+  doc.text(trabajador.nombre.toUpperCase(), 20, 80);
   
   doc.setFontSize(12);
-  doc.setTextColor(51, 51, 51); // #333333
-  doc.text('Con una duración de 4 horas cronológicas', 105, 120, null, null, 'center');
-  doc.text('y cumpliendo con todos los requisitos establecidos.', 105, 130, null, null, 'center');
+  doc.setTextColor(100);
+  doc.text('RUT: ' + trabajador.rut, 20, 86);
+  doc.text('Cargo: ' + trabajador.cargo, 20, 92);
+  doc.text('Centro de trabajo: ' + trabajador.centro, 20, 98);
   
-  // Fecha
-  const hoy = new Date();
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  doc.text(`Fecha: ${hoy.toLocaleDateString('es-CL', options)}`, 105, 160, null, null, 'center');
+  // Detalles del curso
+  doc.setFontSize(14);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Ha completado satisfactoriamente el curso:', 20, 110);
   
-  // Firma
-  doc.text('_________________________', 60, 180);
-  doc.text('Firma Instructor', 60, 190);
+  const tituloCurso = document.getElementById('tituloCurso').textContent;
+  doc.setFontSize(16);
+  doc.setTextColor(46, 94, 170);
+  doc.text(tituloCurso.toUpperCase(), 20, 120);
   
-  doc.text('_________________________', 140, 180);
-  doc.text('Firma Participante', 140, 190);
+  doc.setFontSize(12);
+  doc.setTextColor(100);
+  doc.text('Modalidad: E-Learning', 20, 130);
+  doc.text('Duración: 4 horas cronológicas', 20, 136);
+  doc.text('Fecha inicio: ' + new Date().toLocaleDateString('es-CL'), 20, 142);
+  doc.text('Fecha término: ' + new Date().toLocaleDateString('es-CL'), 20, 148);
   
-  // Guardar
-  doc.save(`certificado_${tituloCurso.toLowerCase().replace(/ /g, '_')}.pdf`);
+  // Vigencia y validación
+  doc.setFontSize(10);
+  doc.text('Vigencia: 2 años a partir de la fecha de término', 20, 160);
+  doc.text('Código de validación: ' + Math.random().toString(36).substring(2, 10).toUpperCase(), 20, 166);
+  
+  // Firmas
+  doc.setFontSize(12);
+  doc.text('_________________________', 40, 190);
+  doc.text('Firma Instructor', 40, 196);
+  
+  doc.text('_________________________', 120, 190);
+  doc.text('Firma Representante Legal', 120, 196);
+  
+  // Pie de página
+  doc.setFontSize(8);
+  doc.setTextColor(150);
+  doc.text('Este certificado es válido solo si puede ser verificado en nuestro sistema', 105, 280, null, null, 'center');
+  
+  // Guardar el PDF
+  doc.save(`Certificado_${trabajador.nombre.replace(/ /g, '_')}_${tituloCurso.replace(/ /g, '_')}.pdf`);
 }
 
 // Funciones del panel de empresa
